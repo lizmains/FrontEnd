@@ -1,24 +1,36 @@
-﻿namespace MauiApp2
+﻿namespace MauiApp2;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+
+    public MainPage()
     {
-        int count = 0;
+        InitializeComponent();
+    }
+    Boolean bt = false;
+    private void OnCounterClicked(object sender, EventArgs e) //bluetooth connection button
+    {
+        bTBtn.Text = $"Pairing...";
+        //steps for actual pairing will go here
+        bt = true;
 
-        public MainPage()
+        SemanticScreenReader.Announce(bTBtn.Text);
+    }
+    private void OnNextBtnClicked(object sender, EventArgs e) //Button to view smartdot stats
+    {
+        if (bt) //check to see if bt connection is established
         {
-            InitializeComponent();
+            Navigation.PushAsync(new NextPage()); //if yes, navigate to stat page
+        }
+        else //else tell user to connect to bt
+        {
+            NextBtn.Text = "Connect To SmartDot";
+            SemanticScreenReader.Announce(NextBtn.Text);
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
+    }
+    private void OnSimBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        Navigation.PushAsync(new SimPage());
     }
 }

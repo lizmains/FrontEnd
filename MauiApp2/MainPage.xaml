@@ -10,28 +10,41 @@
             VerticalOptions="Center">
 
             <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                Source="logo.png"
+                SemanticProperties.Description="the logo for identity purposes idk"
                 HeightRequest="200"
                 HorizontalOptions="Center" />
 
             <Label
-                Text="Hello, World!"
+                Text="RevMetrix"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
 
             <Label
-                Text="Welcome to .NET Multi-platform App UI"
+                Text="Welcome to RevMetrix Bowling Assistant"
                 SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
+                SemanticProperties.Description="Welcome to RevMetrix Bowling Assistant"
                 FontSize="18"
                 HorizontalOptions="Center" />
 
+            <Button 
+                x:Name="NextBtn"
+                Text="Get Stats"
+                SemanticProperties.Hint="Navigate to next page when you click"
+                Clicked="OnNextBtnClicked"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="SimBtn"
+                Text="View Simulator"
+                SemanticProperties.Hint="Navigate to sim page when you click"
+                Clicked="OnSimBtnClicked"
+                HorizontalOptions="Center" />
+
             <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
+                x:Name="bTBtn"
+                Text="Click to Connect to SmartDot"
+                SemanticProperties.Hint="Will activate bluetooth pairing"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
