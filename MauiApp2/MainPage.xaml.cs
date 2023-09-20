@@ -2,30 +2,30 @@
 
 public partial class MainPage : ContentPage
 {
-
+    //AppShell shell = new AppShell();
     public MainPage()
     {
         InitializeComponent();
     }
-    Boolean bt = false;
-    private void OnCounterClicked(object sender, EventArgs e) //bluetooth connection button
+    Boolean bt;
+    private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
     {
         bTBtn.Text = $"Pairing...";
         //steps for actual pairing will go here
+        Navigation.PushAsync(new btPage());
         bt = true;
 
         SemanticScreenReader.Announce(bTBtn.Text);
     }
     private void OnNextBtnClicked(object sender, EventArgs e) //Button to view smartdot stats
     {
-        if (bt) //check to see if bt connection is established
+        if (bt/*shell.GetBluetooth()*/) //check to see if bt connection is established
         {
             Navigation.PushAsync(new NextPage()); //if yes, navigate to stat page
         }
         else //else tell user to connect to bt
         {
-            NextBtn.Text = "Connect To SmartDot";
-            SemanticScreenReader.Announce(NextBtn.Text);
+            DisplayAlert("Alert", "Please Connect to SmartDot", "OK");
         }
 
     }

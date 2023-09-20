@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.btPage">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label
+                Text="Select a Device"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Device selction for BT"
+                FontSize="18"
+                HorizontalOptions="Center" />
+        
+            <Button 
+                x:Name="ConnectBtn"
+                Text="Connected"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="OnConnBtnClicked"
+                HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
