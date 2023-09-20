@@ -22,13 +22,15 @@ public partial class SimPage : ContentPage
     {
         string oldWt = e.OldTextValue;
         string newWt = e.NewTextValue; //Entry for ball weight to be used in sim physics
+        //ballwt = $"Weight: {weight.Text} lbs";
         ballwt = weight.Text;
         WtDisplay.Text = $"Weight: {ballwt} lbs";
     }
 
     void OnWtEnter(object sender, EventArgs e)
     {
-        ballwt = ((Entry)sender).Text;
+        //ballwt = $"Weight: {weight.Text} lbs";
+        ballwt = weight.Text;
         WtDisplay.Text = $"Weight: {ballwt} lbs";
     }
 

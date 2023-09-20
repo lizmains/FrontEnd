@@ -8,7 +8,6 @@ namespace MauiApp2;
 
 public partial class LoginPage : ContentPage
 {
-
     public LoginPage()
     {
         InitializeComponent();
@@ -32,13 +31,15 @@ public partial class LoginPage : ContentPage
     void OnUsrEnter(object sender, EventArgs e)
     {
         usrnm = ((Entry)sender).Text;
+        OnLoginBtnClicked(sender, e);
     }
     void OnPassEnter(object sender, EventArgs e)
     {
         pass = ((Entry)sender).Text;
+        OnLoginBtnClicked(sender, e);
     }
 
-    private void OnLoginBtnClicked(object sender, EventArgs e) //navigate to simulator
+    void OnLoginBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         if (usrnm != null && pass != null)//placeholder until user db set up
         {

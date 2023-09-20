@@ -45,7 +45,7 @@
                 x:Name="bTBtn"
                 Text="Click to Connect to SmartDot"
                 SemanticProperties.Hint="Will activate bluetooth pairing"
-                Clicked="OnCounterClicked"
+                Clicked="OnBTClicked"
                 HorizontalOptions="Center" />
 
         </VerticalStackLayout>
