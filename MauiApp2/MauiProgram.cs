@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Shiny;
 
 namespace MauiApp2
 {
@@ -18,7 +19,8 @@ namespace MauiApp2
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
-
+            
+            builder.Services.AddBluetoothLE();
             return builder.Build();
         }
     }

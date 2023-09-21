@@ -47,7 +47,7 @@
                 SemanticProperties.Hint="Will activate bluetooth pairing"
                 Clicked="OnBTClicked"
                 HorizontalOptions="Center" />
-
+        
         </VerticalStackLayout>
     </ScrollView>
 
