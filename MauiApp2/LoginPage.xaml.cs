@@ -39,10 +39,42 @@ public partial class LoginPage : ContentPage
         OnLoginBtnClicked(sender, e);
     }
 
+    void MakeFile(string fileName)
+    {
+        string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, fileName);
+        if (File.Exists(targetFile))
+        {
+            Console.Write("\nNo need to make file.\n");
+        }
+        else
+        {
+            Console.Write("\nCreating new file\n");
+            FileStream fs = File.Create(targetFile);
+        }
+    }
+
+    void WriteFile(string fileName, string text)
+    {
+        string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, fileName);
+        if (File.Exists(targetFile))
+        {
+            using FileStream outStream = System.IO.File.OpenWrite(targetFile);
+            using StreamWriter streamWriter = new StreamWriter(outStream);
+            streamWriter.Write(text);
+            Console.WriteLine("\n Wrote to File successfully \n");
+        }
+        else
+        {
+            Console.Write("Not Possible Can't do it!\n");
+        }
+    }
+
     void OnLoginBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         if (usrnm != null && pass != null)//placeholder until user db set up
         {
+            MakeFile("test.txt");
+            WriteFile("test.txt", usrnm);
             Navigation.PushAsync(new MainPage());
         }
         else DisplayAlert("Alert", "Please Enter Username and Password", "OK");
