@@ -37,5 +37,10 @@ public partial class MainPage : ContentPage
     private void OnFileBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new FilePage());
+    
+    private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        Navigation.PushAsync(new VideoPage());
+
     }
 }
