@@ -10,6 +10,12 @@
 *.userosscache
 *.sln.docstates
 
+.DS_Store
+.idea/
+MauiApp2/.DS_Store
+MauiApp2/.idea/
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
