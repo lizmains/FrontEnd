@@ -13,11 +13,24 @@
                 HorizontalOptions="Center" />
         
             <Button 
-                x:Name="ConnectBtn"
-                Text="Connected"
+                x:Name="ScanBtn"
+                Text="Scan"
                 SemanticProperties.Hint="Navigate to main page when you click"
-                Clicked="OnConnBtnClicked"
+                Clicked="Connectivity_ConnectivityChanged"
                 HorizontalOptions="Center" />
+            <Label
+                x:Name="Device"
+                Text="Helo"
+                HorizontalOptions="Center"></Label>
+            
+            <!-- <ListView ItemsSource="{Binding Items}"> -->
+            <!--     <ListView.ItemTemplate> -->
+            <!--         <DataTemplate> -->
+            <!--             <TextCell Text="{Binding}" /> -->
+            <!--         </DataTemplate> -->
+            <!--     </ListView.ItemTemplate> -->
+            <!-- </ListView> -->
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
