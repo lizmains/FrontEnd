@@ -47,6 +47,12 @@
                 SemanticProperties.Hint="Will activate bluetooth pairing"
                 Clicked="OnBTClicked"
                 HorizontalOptions="Center" />
+            <Button
+                x:Name="vidBtn"
+                Text="Analyze my throw"
+                SemanticProperties.Hint="Navigates to throw analyzer page"
+                Clicked="OnVidBtnClicked"
+                HorizontalOptions="Center" />
         
         </VerticalStackLayout>
     </ScrollView>
