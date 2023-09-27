@@ -21,6 +21,10 @@ public partial class NextPage : ContentPage
     {
         Navigation.PushAsync(new SimPage());
     }
+    private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        Navigation.PushAsync(new VideoPage());
+    }
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new MainPage());

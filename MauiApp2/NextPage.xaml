@@ -19,6 +19,12 @@
             Clicked="OnSimBtnClicked"
             HorizontalOptions="Center" />
         <Button 
+            x:Name="VidBtn"
+            Text="Analyze Throw"
+            SemanticProperties.Hint="Navigate to throw video analyzer page"
+            Clicked="OnVidBtnClicked"
+            HorizontalOptions="Center" />
+        <Button 
             x:Name="HomeBtn"
             Text="Home"
             SemanticProperties.Hint="Navigate to main page when you click"
