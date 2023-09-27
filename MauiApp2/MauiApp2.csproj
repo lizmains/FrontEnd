@@ -53,6 +53,26 @@
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
+		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
+		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
+		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="FilePage.xaml">
+	    <SubType>Designer</SubType>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="FilePage.xaml.cs">
+	    <DependentUpon>FilePage.xaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
+		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
+		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
+        
 	</ItemGroup>
 
 	<ItemGroup>
