@@ -33,4 +33,9 @@ public partial class MainPage : ContentPage
     {
         Navigation.PushAsync(new SimPage());
     }
+    
+    private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        Navigation.PushAsync(new VideoPage());
+    }
 }
