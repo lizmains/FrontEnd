@@ -4,25 +4,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plugin.BLE;
+using Plugin.BLE.Abstractions;
+using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BLE.Abstractions.Exceptions;
+using Plugin.BLE.Abstractions.Extensions;
 using Shiny;
+//using Device = Plugin.BLE.iOS.Device;
 
 // using Shiny.BluetoothLE;
-
 
 namespace MauiApp2;
 public partial class btPage : ContentPage
 {
-    // private IBleManager bleManager;
-    private ILogger<btPage> logger;
-    private string[] stuff;
-    private ConnectivityChangedEventArgs c;
+    //AppShell shelly = new AppShell();
+    IBluetoothLE ble = CrossBluetoothLE.Current;
+    IAdapter adapter = CrossBluetoothLE.Current.Adapter;
+    private List<IDevice> deviceList = new List<IDevice>();
+    IDevice device;
     
+    
+    // private IBleManager bleManager;
+    /*private ILogger<btPage> logger;
+    private string[] stuff;
+    private ConnectivityChangedEventArgs c;*/
     public btPage()
     {
         InitializeComponent();
+        adapter.ScanMode = ScanMode.LowLatency;
+        deviceList.Clear();
+        //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
     }
-
-    private void ScanClicked(object sender, EventArgs e)
+    private void OnConnBtnClicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new MainPage());
+    }
+    
+    async void ScanClicked(object sender, EventArgs e)
     {
         // var scanner = this.bleManager.Scan().Subscribe(result =>
         // {
@@ -32,12 +51,50 @@ public partial class btPage : ContentPage
         // });
         // Device.Text = "result.Peripheral.ToString()";
         // scanner.Dispose();
+        deviceList.Clear();
+        ScanBtn.Text = "Scanning...";
+        adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
+        await adapter.StartScanningForDevicesAsync();//scans for devices and adds discovered devices to device list
+    }
+    
+    void Checkcheck(object sender, EventArgs e)//temporary check to see if scanner is working
+    {
+        if (deviceList[0].Name == null)
+        {
+            DisplayAlert("Alert", "fuck", "OK");
+        }
+        else
+        {
+            DeviceO.Text = $"Name: {deviceList[0].Name}, ID: {deviceList[0].Id}\n";
+            for (int i = 1; i < 10; i++)
+            {
+                DeviceO.Text += $"Name: {deviceList[i].Name}, ID: {deviceList[i].Id}\n";
+            }
+        }
+    }
+
+    void BtEntered(object sender, EventArgs e)
+    {
+        //device.Name = ((Entry)sender).Text;
+        Guid devId = device.Id;
+        if (device.IsConnectable)
+        {
+            try
+            {
+                adapter.ConnectToKnownDeviceAsync(devId);
+            }
+            catch(DeviceConnectionException erm)
+            {
+                // ... could not connect to device
+                DisplayAlert("Alert", "Unable to connect to device", "OK");
+            }
+        } else DisplayAlert("Alert", "Unable to connect to device", "OK");
         
     }
 
     private void Connectivity_ConnectivityChanged(object sender, EventArgs e)
     {
-        if (c.NetworkAccess == NetworkAccess.ConstrainedInternet)
+        /*if (c.NetworkAccess == NetworkAccess.ConstrainedInternet)
             Console.WriteLine("Internet access is available but is limited.");
 
         else if (c.NetworkAccess != NetworkAccess.Internet)
@@ -67,6 +124,11 @@ public partial class btPage : ContentPage
             }
         }
 
-        Console.WriteLine();
+        Console.WriteLine();*/
+        
+    }
+    private void OnHomeBtnClicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new MainPage());
     }
 }

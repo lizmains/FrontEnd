@@ -2,13 +2,13 @@
 {
     public partial class AppShell : Shell
     {
-        //bool blue;
+        bool blue;
         public AppShell()
         {
             InitializeComponent();
         }
 
-        /*public void SetBluetooth(bool set)
+        public void SetBluetooth(bool set)
         {
             blue = set;
         }
@@ -16,6 +16,6 @@
         public bool GetBluetooth()
         {
             return blue;
-        }*/
+        }
     }
 }

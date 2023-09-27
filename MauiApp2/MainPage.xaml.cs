@@ -1,4 +1,9 @@
-﻿namespace MauiApp2;
+﻿using Plugin.BLE;
+using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BLE.Abstractions.Extensions;
+
+namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {
@@ -6,8 +11,17 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        IBluetoothLE ble = CrossBluetoothLE.Current;
+        BluetoothState blue = ble.State;
+        BlueStat.Text = $"Bluetooth: {blue}";
+        ble.StateChanged += (s, e) =>
+        {
+            BluetoothState blue = ble.State;
+            BlueStat.Text = $"Bluetooth: {blue}";
+        };
     }
     Boolean bt;
+    
     private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
     {
         bTBtn.Text = $"Pairing...";
@@ -32,5 +46,6 @@ public partial class MainPage : ContentPage
     private void OnSimBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         Navigation.PushAsync(new SimPage());
+        //Shell.Current.GoToAsync("//SimPage");
     }
 }

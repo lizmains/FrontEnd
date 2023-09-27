@@ -11,16 +11,33 @@
                 SemanticProperties.Description="Device selction for BT"
                 FontSize="18"
                 HorizontalOptions="Center" />
+            
+            <Label x:Name="BTState"
+                   Text="{Binding state}"
+                   SemanticProperties.HeadingLevel="Level2"
+                   SemanticProperties.Description="Bluetooth connection state"
+                   FontSize="18"
+                   HorizontalOptions="Center"
+            />
         
             <Button 
                 x:Name="ScanBtn"
                 Text="Scan"
                 SemanticProperties.Hint="Navigate to main page when you click"
-                Clicked="Connectivity_ConnectivityChanged"
+                Clicked="ScanClicked"
                 HorizontalOptions="Center" />
+            
+            <Button 
+                x:Name="CheckBtn"
+                Text="Check"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="Checkcheck"
+                HorizontalOptions="Center" />
+            
+            <!--"Connectivity_ConnectivityChanged"-->
             <Label
-                x:Name="Device"
-                Text="Helo"
+                x:Name="DeviceO"
+                Text="{Binding name, id}"
                 HorizontalOptions="Center"></Label>
             
             <!-- <ListView ItemsSource="{Binding Items}"> -->
@@ -30,6 +47,12 @@
             <!--         </DataTemplate> -->
             <!--     </ListView.ItemTemplate> -->
             <!-- </ListView> -->
+            <Button 
+                x:Name="HomeBtn"
+                Text="Home"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="OnHomeBtnClicked"
+                HorizontalOptions="Center" />
             
         </VerticalStackLayout>
     </ScrollView>

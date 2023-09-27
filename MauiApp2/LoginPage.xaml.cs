@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Plugin.BLE;
+using Plugin.BLE.Abstractions.Contracts;
 
 namespace MauiApp2;
 
@@ -14,6 +16,7 @@ public partial class LoginPage : ContentPage
     }
     string usrnm;
     string pass;
+    IBluetoothLE ble = CrossBluetoothLE.Current;
 
     private void OnUsrChanged(object sender, TextChangedEventArgs e)
     {
@@ -75,6 +78,7 @@ public partial class LoginPage : ContentPage
         {
             MakeFile("test.txt");
             WriteFile("test.txt", usrnm);
+            BluetoothState state = ble.State;
             Navigation.PushAsync(new MainPage());
         }
         else DisplayAlert("Alert", "Please Enter Username and Password", "OK");

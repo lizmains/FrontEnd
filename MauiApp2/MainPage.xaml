@@ -8,6 +8,15 @@
             Spacing="25"
             Padding="30,0"
             VerticalOptions="Center">
+            
+            <Label
+                x:Name="BlueStat"
+                Text="{Binding blue}"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Status of Bluetooth"
+                FontSize="18"
+                HorizontalOptions="End"
+                VerticalOptions="Start"/>
 
             <Image
                 Source="logo.png"
