@@ -7,7 +7,7 @@
         VerticalOptions="Center">
         
         <Label
-            Text="I am going to attempt to implement the FilePicker and fileCreation functionality on this page"
+            Text="testing"
             SemanticProperties.HeadingLevel="Level1"
             FontSize="32"
             HorizontalOptions="Center" />
