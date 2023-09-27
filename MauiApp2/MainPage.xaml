@@ -47,6 +47,13 @@
                 SemanticProperties.Hint="Will activate bluetooth pairing"
                 Clicked="OnBTClicked"
                 HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="FileBtn"
+                Text="File Testing"
+                SemanticProperties.Hint="Navigate to File Picker Screen"
+                Clicked="OnFileBtnClicked"
+                HorizontalOptions="Center" />
         
         </VerticalStackLayout>
     </ScrollView>

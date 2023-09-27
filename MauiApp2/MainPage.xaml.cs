@@ -33,4 +33,9 @@ public partial class MainPage : ContentPage
     {
         Navigation.PushAsync(new SimPage());
     }
+
+    private void OnFileBtnClicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new FilePage());
+    }
 }
