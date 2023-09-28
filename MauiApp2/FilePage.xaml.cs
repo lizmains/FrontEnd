@@ -6,25 +6,18 @@ using System.Threading.Tasks;
 
 namespace MauiApp2;
 
-public partial class NextPage : ContentPage
+public partial class FilePage : ContentPage
 {
-    public NextPage()
+    public FilePage()
     {
         InitializeComponent();
     }
-
+    
     private void OnPrevBtnClicked(object sender, EventArgs e)
     {
         Navigation.PopAsync();
     }
-    private void OnSimBtnClicked(object sender, EventArgs e) //navigate to simulator
-    {
-        Navigation.PushAsync(new SimPage());
-    }
-    private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
-    {
-        Navigation.PushAsync(new VideoPage());
-    }
+    
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new MainPage());
