@@ -7,7 +7,6 @@ namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {
-    //AppShell shell = new AppShell();
     public MainPage()
     {
         InitializeComponent();

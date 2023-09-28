@@ -34,11 +34,29 @@
                 Clicked="Checkcheck"
                 HorizontalOptions="Center" />
             
+            <Button 
+                x:Name="ConnectBtn"
+                Text="Connect to Michael's Headphones"
+                SemanticProperties.Hint="Connects to michael's headphones"
+                Clicked="BtEntered"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="ServBtn"
+                Text="Get Services"
+                SemanticProperties.Hint="Displays device services in console"
+                Clicked="getServices"
+                HorizontalOptions="Center" />
+            
             <!--"Connectivity_ConnectivityChanged"-->
             <Label
                 x:Name="DeviceO"
                 Text="{Binding name, id}"
                 HorizontalOptions="Center"></Label>
+            
+            <Label
+                x:Name="ConDev"
+                Text="{Binding devName}"
+                HorizontalOptions="End"></Label>
             
             <!-- <ListView ItemsSource="{Binding Items}"> -->
             <!--     <ListView.ItemTemplate> -->

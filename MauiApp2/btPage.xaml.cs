@@ -18,21 +18,20 @@ using Shiny;
 namespace MauiApp2;
 public partial class btPage : ContentPage
 {
-    //AppShell shelly = new AppShell();
-    IBluetoothLE ble = CrossBluetoothLE.Current;
-    IAdapter adapter = CrossBluetoothLE.Current.Adapter;
-    private List<IDevice> deviceList = new List<IDevice>();
+    IBluetoothLE ble;// = CrossBluetoothLE.Current;
+    IAdapter  adapter = CrossBluetoothLE.Current.Adapter;
+    List<IDevice> deviceList;
+    //ObservableCollection<IDevice> deviceList;
     IDevice device;
-    
-    
-    // private IBleManager bleManager;
-    /*private ILogger<btPage> logger;
-    private string[] stuff;
-    private ConnectivityChangedEventArgs c;*/
+    IReadOnlyList<IService> services;
+
     public btPage()
     {
         InitializeComponent();
         adapter.ScanMode = ScanMode.LowLatency;
+        ble = CrossBluetoothLE.Current;
+        //adapter = CrossBluetoothLE.Current.Adapter; //this being here is causing btpage not to open?????
+        deviceList = new List<IDevice>();
         deviceList.Clear();
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
     }
@@ -43,23 +42,30 @@ public partial class btPage : ContentPage
     
     async void ScanClicked(object sender, EventArgs e)
     {
-        // var scanner = this.bleManager.Scan().Subscribe(result =>
-        // {
-        //     stuff.Append(result.Peripheral.ToString());
-        //     stuff.Append(result.AdvertisementData.ToString());
-        //     
-        // });
-        // Device.Text = "result.Peripheral.ToString()";
-        // scanner.Dispose();
-        deviceList.Clear();
-        ScanBtn.Text = "Scanning...";
-        adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
-        await adapter.StartScanningForDevicesAsync();//scans for devices and adds discovered devices to device list
+        try
+        {
+            //deviceList.Clear();
+            ScanBtn.Text = "Scanning...";
+            adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
+            //DeviceO.Text = $"Name: {deviceList[0].Name}, ID: {deviceList[0].Id}\n";
+            if (!ble.Adapter.IsScanning)
+            {
+                //DisplayAlert("Alert", "Nice", "OK");
+                Console.WriteLine("Scanning...");
+                await adapter.StartScanningForDevicesAsync();
+            }
+            //scans for devices and adds discovered devices to device list
+        }
+        catch (Exception ex)
+        {
+            DisplayAlert("Alert", "Scan didn't work", "OK");
+        }
+        
     }
     
     void Checkcheck(object sender, EventArgs e)//temporary check to see if scanner is working
     {
-        if (deviceList[0].Name == null)
+        if (deviceList[0] == null)
         {
             DisplayAlert("Alert", "fuck", "OK");
         }
@@ -73,23 +79,43 @@ public partial class btPage : ContentPage
         }
     }
 
-    void BtEntered(object sender, EventArgs e)
+    async void BtEntered(object sender, EventArgs e)
     {
-        //device.Name = ((Entry)sender).Text;
-        Guid devId = device.Id;
-        if (device.IsConnectable)
-        {
+        Guid devId = new Guid("62bee4be-e214-6607-7526-91db3e197832"); 
+        //this uses the bluetooth id of michael's headphones for testing 
+        //if (deviceList[0].IsConnectable)
+        //{
+            //Console.WriteLine("Gate 1 passed");
             try
             {
-                adapter.ConnectToKnownDeviceAsync(devId);
+                Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
+                device = await adapter.ConnectToKnownDeviceAsync(devId);
+                //await adapter.ConnectToDeviceAsync(deviceList[0]);
             }
-            catch(DeviceConnectionException erm)
+            catch (DeviceConnectionException erm)
             {
                 // ... could not connect to device
                 DisplayAlert("Alert", "Unable to connect to device", "OK");
             }
-        } else DisplayAlert("Alert", "Unable to connect to device", "OK");
+            finally
+            {
+                if (device != null) //if a device is connected, write to console, get its services, and display the name
+                {
+                    Console.WriteLine("Connected to Device");
+                    services = await device.GetServicesAsync();
+                    ConDev.Text = device.Name;
+                } else Console.WriteLine("Failed to Connect");
+            }
+        //} else DisplayAlert("Alert", "Unable to connect to device", "OK");
         
+    }
+
+    async void getServices(object sender, EventArgs e)
+    {
+        if (device != null)//displays the first service of the device in the console
+        {
+            Console.WriteLine("Service 1: " + services[0].Name);
+        } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
 
     private void Connectivity_ConnectivityChanged(object sender, EventArgs e)
