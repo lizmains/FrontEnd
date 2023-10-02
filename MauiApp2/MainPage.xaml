@@ -60,7 +60,7 @@
             
             <Button
                 x:Name="FileBtn"
-                Text="File Testing"
+                Text="UI Page"
                 SemanticProperties.Hint="Navigate to File Picker Screen"
                 Clicked="OnFileBtnClicked"
                 HorizontalOptions="Center" />

@@ -12,6 +12,18 @@
             FontSize="32"
             HorizontalOptions="Center" />
         
+        <Entry x:Name="UserInput"
+               Placeholder="Say Something"
+               TextChanged="OnUsrChanged"
+               Completed="OnUsrEnter"
+         />
+        
+        <Button 
+            x:Name="LoginBtn"
+            Text="Print To Console"
+            SemanticProperties.Hint="Navigate to main page when you click"
+            Clicked="OnLoginBtnClicked"
+            HorizontalOptions="Center" />
         
         
         <Button 
@@ -20,7 +32,15 @@
             SemanticProperties.Hint="Navigate to main page when you click"
             Clicked="OnHomeBtnClicked"
             HorizontalOptions="Center" />
-
+        
+        
+        <Label
+            BindingContext="{x:Reference UserInput}"
+            Text="bla"
+            SemanticProperties.HeadingLevel="Level1"
+            FontSize="32"
+            HorizontalOptions="Center"
+            />
         
     </VerticalStackLayout>
 </ContentPage>
