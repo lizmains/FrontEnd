@@ -21,8 +21,31 @@ public partial class VideoPage : ContentPage
     {
         Navigation.PushAsync(new NextPage()); //navigate to stat page
     }
-    private void OnHomeBtnClicked(object sender, EventArgs e)
+    private void OnTakeVidBtnClicked(object sender, EventArgs e)
+    {
+        TakePhoto(); //Take photo
+    }
+    private void OnPicVidBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new MainPage()); //navigate to main page
+    }
+    
+    public async void TakePhoto()
+    {
+        if (MediaPicker.Default.IsCaptureSupported)
+        {
+            FileResult photo = await MediaPicker.Default.CapturePhotoAsync();
+
+            if (photo != null)
+            {
+                // save the file into local storage
+                string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+                using Stream sourceStream = await photo.OpenReadAsync();
+                using FileStream localFileStream = File.OpenWrite(localFilePath);
+
+                await sourceStream.CopyToAsync(localFileStream);
+            }
+        }
     }
 }

@@ -13,22 +13,20 @@
                 SemanticProperties.Description="Device selction for BT"
                 FontSize="18"
                 HorizontalOptions="Center" />
-            <!-- -->
-            <!-- <Button -->
-            <!--     x:Name="RecBtn" -->
-            <!--     Text="Record New Throw" -->
-            <!--     SemanticProperties.Hint="Record new throw video" -->
-            <!--     Clicked="OnHomeBtnClicked" -->
-            <!--     HorizontalOptions="Center" /> -->
-            <!-- //when button is clicked need to allow access to camera/mic -->
             
-            <!-- <Button -->
-            <!--     x:Name="RollBtn" -->
-            <!--     Text="Select Throw From Camera Roll" -->
-            <!--     SemanticProperties.Hint="Select existing throw video from camera roll" -->
-            <!--     Clicked="OnSimBtnClicked" -->
-            <!--     HorizontalOptions="Center" /> -->
-            <!-- //Clicked="OnNextBtnClicked" -> pull up camera roll -->
+            <Button
+                x:Name="RecBtn"
+                Text="Record New Throw"
+                SemanticProperties.Hint="Record new throw video"
+                Clicked="OnTakeVidBtnClicked"
+                HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="RollBtn"
+                Text="Select Throw From Camera Roll"
+                SemanticProperties.Hint="Select existing throw video from camera roll"
+                Clicked="OnPicVidBtnClicked"
+                HorizontalOptions="Center" />
             <Label x:Name="WtDisplay"
                    Text="{Binding ballwt}"
                    SemanticProperties.HeadingLevel="Level2"
