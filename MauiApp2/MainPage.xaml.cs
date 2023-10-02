@@ -25,7 +25,8 @@ public partial class MainPage : ContentPage
     {
         bTBtn.Text = $"Pairing...";
         //steps for actual pairing will go here
-        Navigation.PushAsync(new btPage());
+        // Navigation.PushAsync(new btPage());
+        Shell.Current.GoToAsync(nameof(btPage));
         bt = true;
 
         SemanticScreenReader.Announce(bTBtn.Text);
@@ -55,6 +56,7 @@ public partial class MainPage : ContentPage
 
     private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
-        Navigation.PushAsync(new VideoPage());
+        // Navigation.PushAsync(new VideoPage());
+        Shell.Current.GoToAsync(nameof(VideoPage));
     }
 }

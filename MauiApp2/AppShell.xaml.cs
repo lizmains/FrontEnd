@@ -6,6 +6,9 @@
         public AppShell()
         {
             InitializeComponent();
+            Routing.RegisterRoute(nameof(MainPage),typeof(MainPage));
+            Routing.RegisterRoute(nameof(VideoPage),typeof(VideoPage));
+            Routing.RegisterRoute(nameof(btPage),typeof(btPage));
         }
 
         public void SetBluetooth(bool set)
