@@ -34,7 +34,7 @@ public partial class FilePage : ContentPage
     {
         string oldUsr = e.OldTextValue;
         string newUsr = e.NewTextValue;  //Events for assigning 
-        userI = userInput.Text;
+        userI = UserInput.Text;
     }
     
     void OnUsrEnter(object sender, EventArgs e)
