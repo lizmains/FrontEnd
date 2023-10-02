@@ -27,7 +27,8 @@ public partial class FilePage : ContentPage
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new MainPage());
+        // Navigation.PushAsync(new MainPage());
+        Shell.Current.GoToAsync(nameof(MainPage));
     }
     
     private void OnUsrChanged(object sender, TextChangedEventArgs e)
