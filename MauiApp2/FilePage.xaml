@@ -14,14 +14,13 @@
         
         <Entry x:Name="UserInput"
                Placeholder="Say Something"
-               TextChanged="OnUsrChanged"
                Completed="OnUsrEnter"
          />
         
         <Button 
             x:Name="LoginBtn"
-            Text="Print To Console"
-            SemanticProperties.Hint="Navigate to main page when you click"
+            Text="Display Input"
+            SemanticProperties.Hint="Changes userI variable"
             Clicked="OnLoginBtnClicked"
             HorizontalOptions="Center" />
         
@@ -35,8 +34,8 @@
         
         
         <Label
-            BindingContext="{x:Reference UserInput}"
-            Text="bla"
+            x:Name="userIO"
+            Text="{Binding userI}"
             SemanticProperties.HeadingLevel="Level1"
             FontSize="32"
             HorizontalOptions="Center"

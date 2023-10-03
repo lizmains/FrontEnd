@@ -13,7 +13,7 @@ public partial class FilePage : ContentPage
         InitializeComponent();
     }
 
-    public string userI = "bla";
+    string userI = "N/A";
     
     private void OnPrevBtnClicked(object sender, EventArgs e)
     {
@@ -35,7 +35,6 @@ public partial class FilePage : ContentPage
     {
         string oldUsr = e.OldTextValue;
         string newUsr = e.NewTextValue;  //Events for assigning 
-        userI = UserInput.Text;
     }
     
     void OnUsrEnter(object sender, EventArgs e)
@@ -46,8 +45,9 @@ public partial class FilePage : ContentPage
     
     void OnLoginBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
-        Console.WriteLine(userI);
-        Console.WriteLine("-----------------");
+        userI = UserInput.Text;
+        userIO.Text = $"{userI}";
+        //this only changes the variable stored when the button is pressed
     }
     
     
