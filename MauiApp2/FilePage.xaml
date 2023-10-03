@@ -12,6 +12,17 @@
             FontSize="32"
             HorizontalOptions="Center" />
         
+        <Entry x:Name="UserInput"
+               Placeholder="Say Something"
+               Completed="OnUsrEnter"
+         />
+        
+        <Button 
+            x:Name="LoginBtn"
+            Text="Display Input"
+            SemanticProperties.Hint="Changes userI variable"
+            Clicked="OnLoginBtnClicked"
+            HorizontalOptions="Center" />
         
         
         <Button 
@@ -20,7 +31,15 @@
             SemanticProperties.Hint="Navigate to main page when you click"
             Clicked="OnHomeBtnClicked"
             HorizontalOptions="Center" />
-
+        
+        
+        <Label
+            x:Name="userIO"
+            Text="{Binding userI}"
+            SemanticProperties.HeadingLevel="Level1"
+            FontSize="32"
+            HorizontalOptions="Center"
+            />
         
     </VerticalStackLayout>
 </ContentPage>
