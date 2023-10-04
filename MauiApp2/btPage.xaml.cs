@@ -24,6 +24,9 @@ public partial class btPage : ContentPage
     //ObservableCollection<IDevice> deviceList;
     IDevice device;
     IReadOnlyList<IService> services;
+    private IReadOnlyList<ICharacteristic> charstics;
+    private IReadOnlyList<IDescriptor> descs;
+    string deviceName;
 
     public btPage()
     {
@@ -47,10 +50,8 @@ public partial class btPage : ContentPage
             //deviceList.Clear();
             ScanBtn.Text = "Scanning...";
             adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
-            //DeviceO.Text = $"Name: {deviceList[0].Name}, ID: {deviceList[0].Id}\n";
             if (!ble.Adapter.IsScanning)
             {
-                //DisplayAlert("Alert", "Nice", "OK");
                 Console.WriteLine("Scanning...");
                 await adapter.StartScanningForDevicesAsync();
             }
@@ -58,7 +59,7 @@ public partial class btPage : ContentPage
         }
         catch (Exception ex)
         {
-            DisplayAlert("Alert", "Scan didn't work", "OK");
+            DisplayAlert("Alert", "Scan Failed", "OK");
         }
         
     }
@@ -67,14 +68,14 @@ public partial class btPage : ContentPage
     {
         if (deviceList[0] == null)
         {
-            DisplayAlert("Alert", "fuck", "OK");
+            DisplayAlert("Alert", "Scan failed", "OK");
         }
         else
         {
-            DeviceO.Text = $"Name: {deviceList[0].Name}, ID: {deviceList[0].Id}\n";
+            Devices.Text = $"Name: {deviceList[0].Name}, ID: {deviceList[0].Id}\n";
             for (int i = 1; i < 10; i++)
             {
-                DeviceO.Text += $"Name: {deviceList[i].Name}, ID: {deviceList[i].Id}\n";
+                Devices.Text += $"Name: {deviceList[i].Name}, ID: {deviceList[i].Id}\n";
             }
         }
     }
@@ -85,7 +86,6 @@ public partial class btPage : ContentPage
         //this uses the bluetooth id of michael's headphones for testing 
         //if (deviceList[0].IsConnectable)
         //{
-            //Console.WriteLine("Gate 1 passed");
             try
             {
                 Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
@@ -99,60 +99,89 @@ public partial class btPage : ContentPage
             }
             finally
             {
-                if (device != null) //if a device is connected, write to console, get its services, and display the name
+                if (device != null) //if a device is connected, write to console, get device info
                 {
                     Console.WriteLine("Connected to Device");
                     services = await device.GetServicesAsync();
-                    ConDev.Text = device.Name;
+                    //charstics = await services[0].GetCharacteristicsAsync();
+                    ConDev.Text = "Connected: " + device.Name;
                 } else Console.WriteLine("Failed to Connect");
             }
         //} else DisplayAlert("Alert", "Unable to connect to device", "OK");
         
     }
-
-    async void getServices(object sender, EventArgs e)
+    
+    private void OnDevChanged(object sender, TextChangedEventArgs e)
     {
-        if (device != null)//displays the first service of the device in the console
-        {
-            Console.WriteLine("Service 1: " + services[0].Name);
-        } else DisplayAlert("Alert", "Connect to a device", "OK");
+        string oldName = e.OldTextValue;
+        string newName = e.NewTextValue;
+        deviceName = devName.Text;
     }
 
-    private void Connectivity_ConnectivityChanged(object sender, EventArgs e)
+    async void OnDevEnter(object sender, EventArgs e)
     {
-        /*if (c.NetworkAccess == NetworkAccess.ConstrainedInternet)
-            Console.WriteLine("Internet access is available but is limited.");
-
-        else if (c.NetworkAccess != NetworkAccess.Internet)
-            Console.WriteLine("Internet access has been lost.");
-
-        // Log each active connection
-        Console.Write("Connections active: ");
-
-        foreach (var item in c.ConnectionProfiles)
+        Console.WriteLine("Searching List...");
+        deviceName = devName.Text;
+        for (int i = 0; i < deviceList.Count(); i++)
         {
-            switch (item)
+            if (deviceList[i].Name == deviceName)
             {
-                case ConnectionProfile.Bluetooth:
-                    Console.Write("Bluetooth");
-                    break;
-                case ConnectionProfile.Cellular:
-                    Console.Write("Cell");
-                    break;
-                case ConnectionProfile.Ethernet:
-                    Console.Write("Ethernet");
-                    break;
-                case ConnectionProfile.WiFi:
-                    Console.Write("WiFi");
-                    break;
-                default:
-                    break;
+                try
+                {
+                   await adapter.ConnectToDeviceAsync(deviceList[i]);
+                   device = deviceList[i];
+                }
+                catch (DeviceConnectionException erm)
+                {
+                    DisplayAlert("Alert", "Unable to connect to device", "OK");
+                }
+                finally
+                {
+                    if (device != null) //if a device is connected, write to console, get device info
+                    {
+                        Console.WriteLine("Connected to Device");
+                        services = await device.GetServicesAsync();
+                        //charstics = await services[0].GetCharacteristicsAsync();
+                        ConDev.Text = "Connected: " + device.Name;
+                    } else Console.WriteLine("Failed to Connect");
+                }
+                break;
             }
         }
 
-        Console.WriteLine();*/
-        
+        if (device == null)
+        {
+            DisplayAlert("Alert", "Unknown Device", "OK");
+        }
     }
+
+
+    async void getServices(object sender, EventArgs e)
+    {
+        if (device != null)//displays all device info from service down to characteristic
+        {
+            for (int j = 0; j < services.Count(); j++)
+            {
+                Console.WriteLine("Service "+j+": " + services[j].Name);
+                DevInfo.Text += $"Service: {services[j].Name}\n";
+                charstics = await services[j].GetCharacteristicsAsync();
+                for (int i = 0; i < charstics.Count(); i++)
+                {
+                    Console.WriteLine("Characteristic "+j+"-" + i + ": " + charstics[0].Name);
+                    DevInfo.Text += $"      Characteristic: {charstics[i].Name}\n";
+                    descs = await charstics[i].GetDescriptorsAsync();
+                    for (int c = 0; c < descs.Count(); c++)
+                    {
+                        Console.WriteLine("Descriptor "+j+"-" + i + "-" + c+ ": " + descs[0].Name);
+                        DevInfo.Text += $"                Descriptor: {descs[i].Name}\n";
+                    }
+                }
+            }
+            var bytes = await charstics[0].ReadAsync();
+            Console.WriteLine("Characteristic 1-1 Bytes: " + bytes);
+        } else DisplayAlert("Alert", "Connect to a device", "OK");
+    }
+    
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
