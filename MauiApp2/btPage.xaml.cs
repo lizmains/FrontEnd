@@ -27,6 +27,8 @@ public partial class btPage : ContentPage
     private IReadOnlyList<ICharacteristic> charstics;
     private IReadOnlyList<IDescriptor> descs;
     string deviceName;
+    private IReadOnlyList<ICharacteristic> batteryChars;
+    private IReadOnlyList<IDescriptor> batCharDescs;
 
     public btPage()
     {
@@ -162,23 +164,39 @@ public partial class btPage : ContentPage
         {
             for (int j = 0; j < services.Count(); j++)
             {
+                Console.WriteLine("------------------------------------");
                 Console.WriteLine("Service "+j+": " + services[j].Name);
                 DevInfo.Text += $"Service: {services[j].Name}\n";
                 charstics = await services[j].GetCharacteristicsAsync();
                 for (int i = 0; i < charstics.Count(); i++)
                 {
-                    Console.WriteLine("Characteristic "+j+"-" + i + ": " + charstics[0].Name);
+                    Console.WriteLine(".....Characteristic "+j+"-" + i + ": " + charstics[i].Name);
+                    if (charstics[i].CanRead)
+                    {
+                        var charBytes = await charstics[i].ReadAsync();
+                        Console.WriteLine("     Read Bytes: " + charstics[i].StringValue);
+                    }
                     DevInfo.Text += $"      Characteristic: {charstics[i].Name}\n";
+                    
                     descs = await charstics[i].GetDescriptorsAsync();
                     for (int c = 0; c < descs.Count(); c++)
                     {
-                        Console.WriteLine("Descriptor "+j+"-" + i + "-" + c+ ": " + descs[0].Name);
+                        Console.WriteLine("..........Descriptor "+j+"-" + i + "-" + c+ ": " + descs[0].Name);
                         DevInfo.Text += $"                Descriptor: {descs[i].Name}\n";
                     }
                 }
             }
-            var bytes = await charstics[0].ReadAsync();
-            Console.WriteLine("Characteristic 1-1 Bytes: " + bytes);
+            Console.WriteLine("------------------------------------");
+            //read bytes from 1st characteristic of 3rd service for iPhone battery
+            batteryChars = await services[3].GetCharacteristicsAsync();
+            if (batteryChars[0].CanRead)
+            {
+               var bytes = await batteryChars[0].ReadAsync();
+               //var stringBytes = batteryChars[0].StringValue;// same as bytes.data;
+               Console.WriteLine("Battery: " + bytes.data[0] + "%");
+               DevInfo.Text += $"Battery: {bytes.data[0]}%";
+            } else Console.WriteLine("Can't Do it Boss");
+            
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
     
