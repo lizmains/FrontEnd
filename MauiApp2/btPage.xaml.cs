@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MauiApp2.ViewModel;
 using Microsoft.Extensions.Logging;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
@@ -10,6 +11,7 @@ using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
+//using Plugin.BLE.iOS;
 using Shiny;
 //using Device = Plugin.BLE.iOS.Device;
 
@@ -29,6 +31,11 @@ public partial class btPage : ContentPage
     string deviceName;
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
+    private List<Ball> savedDots;
+    public List<Ball> Saved
+    {
+        get { return savedDots; }
+    }
 
     public btPage()
     {
@@ -38,6 +45,9 @@ public partial class btPage : ContentPage
         //adapter = CrossBluetoothLE.Current.Adapter; //this being here is causing btpage not to open?????
         deviceList = new List<IDevice>();
         deviceList.Clear();
+        savedDots = new List<Ball>();//dont keep this
+        savedDots.Add(new Ball(null));
+        DotsList.ItemsSource = savedDots;
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
     }
     private void OnConnBtnClicked(object sender, EventArgs e)
@@ -145,6 +155,13 @@ public partial class btPage : ContentPage
                         services = await device.GetServicesAsync();
                         //charstics = await services[0].GetCharacteristicsAsync();
                         ConDev.Text = "Connected: " + device.Name;
+                        savedDots.Add(new Ball(device)); //adds device to list of saved balls
+                        if (savedDots[0] != null)
+                        {
+                            Dots.Text += savedDots[0].getName();
+                            //Dots.Text += savedDots[0].getDev().Id;
+                        }
+                        else Console.WriteLine("ball class no work");
                     } else Console.WriteLine("Failed to Connect");
                 }
                 break;

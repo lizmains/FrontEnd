@@ -78,6 +78,28 @@
                 x:Name="DevInfo"
                 Text="{Binding names}"
                 HorizontalOptions="Center"></Label>
+            <Label
+                Text = "Saved SmartDots"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="List of previously connected dots"
+                FontSize="18"
+                HorizontalOptions="Center"></Label>
+            <Label
+                x:Name="Dots"
+                Text="{Binding dotNames}"
+                HorizontalOptions="Center">
+            </Label>
+            <CollectionView x:Name="DotsList" ItemsSource="{Binding Saved}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnHomeBtnClicked">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label
+                            Text="{Binding name}"
+                            HorizontalOptions="Center"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             
         </VerticalStackLayout>
     </ScrollView>
