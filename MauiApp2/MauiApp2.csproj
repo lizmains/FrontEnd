@@ -49,6 +49,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Plugin.BLE" Version="3.0.0-rc.1" />
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
@@ -89,8 +90,6 @@
 	  </Compile>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="ViewModel\" />
-	</ItemGroup>
+
 
 </Project>

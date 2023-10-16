@@ -5,19 +5,29 @@
              x:Class="MauiApp2.btPage">
     <ScrollView>
         <VerticalStackLayout>
+            <Button 
+                x:Name="HomeBtn"
+                Text="Home"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="OnHomeBtnClicked"
+                HorizontalOptions="Start"/>
             <Label
                 Text="Select a Device"
                 SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Device selction for BT"
+                SemanticProperties.Description="Device selection for BT"
                 FontSize="18"
                 HorizontalOptions="Center" />
+            <Label
+                x:Name="ConDev"
+                Text="{Binding devName}"
+                HorizontalOptions="End"></Label>
             
             <Label x:Name="BTState"
                    Text="{Binding state}"
                    SemanticProperties.HeadingLevel="Level2"
                    SemanticProperties.Description="Bluetooth connection state"
                    FontSize="18"
-                   HorizontalOptions="Center"
+                   HorizontalOptions="End"
             />
         
             <Button 
@@ -34,43 +44,62 @@
                 Clicked="Checkcheck"
                 HorizontalOptions="Center" />
             
+            <Label
+                x:Name="Devices"
+                Text="{Binding name, id}"
+                HorizontalOptions="Center"></Label>
+            
             <Button 
                 x:Name="ConnectBtn"
                 Text="Connect to Michael's Headphones"
                 SemanticProperties.Hint="Connects to michael's headphones"
                 Clicked="BtEntered"
                 HorizontalOptions="Center" />
+            
+                <Entry x:Name="devName"
+                       Placeholder="Enter Device Name"
+                       TextChanged="OnDevChanged"
+                       Completed="OnDevEnter"
+                />
+                <Button 
+                    x:Name="ConnectNameBtn"
+                    Text="Connect"
+                    SemanticProperties.Hint="Connects to typed device"
+                    Clicked="OnDevEnter"
+                    HorizontalOptions="Center" />
+            
             <Button 
                 x:Name="ServBtn"
-                Text="Get Services"
-                SemanticProperties.Hint="Displays device services in console"
+                Text="Get Device Info"
+                SemanticProperties.Hint="Displays device info in console"
                 Clicked="getServices"
                 HorizontalOptions="Center" />
-            
-            <!--"Connectivity_ConnectivityChanged"-->
             <Label
-                x:Name="DeviceO"
-                Text="{Binding name, id}"
+                x:Name="DevInfo"
+                Text="{Binding names}"
                 HorizontalOptions="Center"></Label>
-            
             <Label
-                x:Name="ConDev"
-                Text="{Binding devName}"
-                HorizontalOptions="End"></Label>
-            
-            <!-- <ListView ItemsSource="{Binding Items}"> -->
-            <!--     <ListView.ItemTemplate> -->
-            <!--         <DataTemplate> -->
-            <!--             <TextCell Text="{Binding}" /> -->
-            <!--         </DataTemplate> -->
-            <!--     </ListView.ItemTemplate> -->
-            <!-- </ListView> -->
-            <Button 
-                x:Name="HomeBtn"
-                Text="Home"
-                SemanticProperties.Hint="Navigate to main page when you click"
-                Clicked="OnHomeBtnClicked"
-                HorizontalOptions="Center" />
+                Text = "Saved SmartDots"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="List of previously connected dots"
+                FontSize="18"
+                HorizontalOptions="Center"></Label>
+            <Label
+                x:Name="Dots"
+                Text="{Binding dotNames}"
+                HorizontalOptions="Center">
+            </Label>
+            <CollectionView x:Name="DotsList" ItemsSource="{Binding Saved}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnHomeBtnClicked">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label
+                            Text="{Binding name}"
+                            HorizontalOptions="Center"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             
         </VerticalStackLayout>
     </ScrollView>
