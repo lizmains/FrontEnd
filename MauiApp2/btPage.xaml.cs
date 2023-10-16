@@ -158,7 +158,7 @@ public partial class btPage : ContentPage
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
                         if (savedDots[0] != null)
                         {
-                            Dots.Text += savedDots[0].getName();
+                            Dots.Text += savedDots[0].name;
                             //Dots.Text += savedDots[0].getDev().Id;
                         }
                         else Console.WriteLine("ball class no work");
