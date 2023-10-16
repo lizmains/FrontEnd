@@ -32,32 +32,30 @@ public class Ball
     {
         name = newName;
     }
-
     public string getName()
     {
         return name;
     }
-    
+
     public void setColor(string newCol)
     {
         color = newCol;
     }
-    
+
     public string getColor()
     {
         return color;
     }
-    
+
     public void setWeight(int newWt)
     {
         weight = newWt;
     }
-    
+
     public int getWeight()
     {
         return weight;
     }
-
     public IDevice getDev()
     {
         return dev;
