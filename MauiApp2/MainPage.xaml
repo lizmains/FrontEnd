@@ -71,6 +71,14 @@
                 SemanticProperties.Hint="Navigates to throw analyzer page"
                 Clicked="OnVidBtnClicked"
                 HorizontalOptions="Center" />
+            <!--
+            <Button
+                x:Name="testBtn"
+                Text="test"
+                SemanticProperties.Hint="Navigates to throw analyzer page"
+                Clicked="OntestBtnClicked"
+                HorizontalOptions="Center" />
+                -->
         
         </VerticalStackLayout>
     </ScrollView>

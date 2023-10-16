@@ -32,6 +32,7 @@ public partial class btPage : ContentPage
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
     private List<Ball> savedDots;
+    public IList<object/*Ball*/> selectBall;
     public List<Ball> Saved
     {
         get { return savedDots; }
@@ -48,7 +49,18 @@ public partial class btPage : ContentPage
         savedDots = new List<Ball>();//dont keep this
         savedDots.Add(new Ball(null));
         DotsList.ItemsSource = savedDots;
+        DotsList.SelectedItems = selectBall;
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
+        
+        Ball ball1 = new Ball(null); //test balls for display purposes
+        ball1.name="ball one";
+        Ball ball2 = new Ball(null);
+        ball2.name="ball two";
+        Ball ball3 = new Ball(null);
+        ball3.name="ball three";
+        savedDots.Add(ball1);
+        savedDots.Add(ball2);
+        savedDots.Add(ball3);
     }
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
@@ -158,7 +170,7 @@ public partial class btPage : ContentPage
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
                         if (savedDots[0] != null)
                         {
-                            Dots.Text += savedDots[0].getName();
+                            Dots.Text += savedDots[0].name;
                             //Dots.Text += savedDots[0].getDev().Id;
                         }
                         else Console.WriteLine("ball class no work");
@@ -215,6 +227,15 @@ public partial class btPage : ContentPage
             } else Console.WriteLine("Can't Do it Boss");
             
         } else DisplayAlert("Alert", "Connect to a device", "OK");
+    }
+
+    private void OnBallSelect(object sender, EventArgs e)
+    {
+        DisplayAlert("Ball Specs", selectBall[0]/*.name*/ + "\n" + 
+                                   "Weight: " + selectBall[0]/*.weight*/ + "lbs.\n" + 
+                                   "Color: " + selectBall[0]/*.color*/ + "\n" + 
+                                   "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
+                    "Done");
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
