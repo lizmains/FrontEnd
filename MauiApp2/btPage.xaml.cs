@@ -32,11 +32,9 @@ public partial class btPage : ContentPage
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
     private List<Ball> savedDots;
-    public IList<object/*Ball*/> selectBall;
-    public List<Ball> Saved
-    {
-        get { return savedDots; }
-    }
+    private object selectBall;
+    private Ball theBall;
+
 
     public btPage()
     {
@@ -49,7 +47,6 @@ public partial class btPage : ContentPage
         savedDots = new List<Ball>();//dont keep this
         savedDots.Add(new Ball(null));
         DotsList.ItemsSource = savedDots;
-        DotsList.SelectedItems = selectBall;
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
         
         Ball ball1 = new Ball(null); //test balls for display purposes
@@ -231,11 +228,16 @@ public partial class btPage : ContentPage
 
     private void OnBallSelect(object sender, EventArgs e)
     {
-        DisplayAlert("Ball Specs", selectBall[0]/*.name*/ + "\n" + 
-                                   "Weight: " + selectBall[0]/*.weight*/ + "lbs.\n" + 
-                                   "Color: " + selectBall[0]/*.color*/ + "\n" + 
-                                   "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
-                    "Done");
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
+        if (selectBall != null)
+        {
+           DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                                      "Weight: " + theBall.weight + "lbs.\n" + 
+                                      "Color: " + theBall.color + "\n" + 
+                                      "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
+                               "Done"); 
+        } else Console.WriteLine("Selection failed");
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)

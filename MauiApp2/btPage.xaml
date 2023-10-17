@@ -98,7 +98,7 @@
             <CollectionView Grid.Row="1" x:Name="DotsList" ItemsSource="{Binding savedDots}"
                             SelectionMode="Single"
                             SelectionChanged="OnBallSelect"
-                            SelectedItems="{Binding selectBall}">
+                            SelectedItem="{Binding selectBall}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
