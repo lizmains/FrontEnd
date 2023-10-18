@@ -9,7 +9,7 @@
             Routing.RegisterRoute(nameof(MainPage),typeof(MainPage));
             Routing.RegisterRoute(nameof(VideoPage),typeof(VideoPage));
             Routing.RegisterRoute(nameof(btPage),typeof(btPage));
-            Routing.RegisterRoute(nameof(test), typeof(test));
+            //Routing.RegisterRoute(nameof(test), typeof(test));
         }
 
         public void SetBluetooth(bool set)
