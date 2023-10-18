@@ -62,6 +62,6 @@ public partial class MainPage : ContentPage
     private void OntestBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         // Navigation.PushAsync(new VideoPage());
-        Shell.Current.GoToAsync(nameof(test));
+        //Shell.Current.GoToAsync(nameof(test));
     }
 }
