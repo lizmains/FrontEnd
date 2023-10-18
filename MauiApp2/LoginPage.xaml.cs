@@ -10,11 +10,11 @@ namespace MauiApp2;
 
 public partial class LoginPage : ContentPage
 {
+    public string usrnm;
     public LoginPage()
     {
         InitializeComponent();
     }
-    string usrnm;
     string pass;
     IBluetoothLE ble = CrossBluetoothLE.Current;
 
@@ -79,7 +79,7 @@ public partial class LoginPage : ContentPage
             MakeFile("test.txt");
             WriteFile("test.txt", usrnm);
             BluetoothState state = ble.State;
-            Navigation.PushAsync(new MainPage());
+            Navigation.PushAsync(new MainPage(usrnm));
         }
         else DisplayAlert("Alert", "Please Enter Username and Password", "OK");
 
