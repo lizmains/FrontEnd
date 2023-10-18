@@ -17,7 +17,9 @@
                 FontSize="18"
                 HorizontalOptions="End"
                 VerticalOptions="Start"/>
-
+            
+            
+            
             <Image
                 Source="logo.png"
                 SemanticProperties.Description="the logo for identity purposes idk"
@@ -36,7 +38,14 @@
                 SemanticProperties.Description="Welcome to RevMetrix Bowling Assistant"
                 FontSize="18"
                 HorizontalOptions="Center" />
-
+            
+            <Label x:Name="UsrDisplay"
+                Text ="{Binding user}"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Dynamically Display Username"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            
             <Button 
                 x:Name="NextBtn"
                 Text="Get Stats"

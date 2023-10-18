@@ -1,4 +1,5 @@
-﻿using Plugin.BLE;
+﻿
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Extensions;
@@ -7,6 +8,7 @@ namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {
+    string user = "N/A";
     public MainPage()
     {
         InitializeComponent();
@@ -20,6 +22,20 @@ public partial class MainPage : ContentPage
         };
     }
     Boolean bt;
+    public MainPage(String usernm)
+    {
+        InitializeComponent();
+        IBluetoothLE ble = CrossBluetoothLE.Current;
+        BluetoothState blue = ble.State;
+        BlueStat.Text = $"Bluetooth: {blue}";
+        ble.StateChanged += (s, e) =>
+        {
+            BluetoothState blue = ble.State;
+            BlueStat.Text = $"Bluetooth: {blue}";
+        };
+        user = usernm;
+        UsrDisplay.Text = $"Hello {user}!";
+    }
     
     private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
     {
