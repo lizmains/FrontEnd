@@ -9,10 +9,12 @@ namespace MauiApp2;
 
 public partial class EditBall : ContentPage
 {
-    private Ball tempBall = new Ball(null);
-    public EditBall()
+    private Ball tempBall;
+    public EditBall(Ball toEdit)
     {
         InitializeComponent();
+        tempBall = toEdit;
+        BallName.Text = tempBall.name + "\n";
     }
     void OnNameChanged(object sender, TextChangedEventArgs e)
     {

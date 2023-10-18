@@ -5,12 +5,19 @@
              x:Class="MauiApp2.EditBall">
        <ScrollView>
               <VerticalStackLayout>
-                  <Entry x:Name="ballName"
-                         Placeholder="Enter Ball Name"
-                         TextChanged="OnNameChanged"
-                         Completed="OnNameEnter"
-                         ReturnType="Next"
-                  />
+                     <Label x:Name = "BallName"
+                            Text="Ball to Edit"
+                            SemanticProperties.HeadingLevel="Level1"
+                            FontSize="20"
+                            HorizontalOptions="Center"
+                     />
+                     
+                     <Entry x:Name="ballName"
+                            Placeholder="Enter Ball Name"
+                            TextChanged="OnNameChanged"
+                            Completed="OnNameEnter"
+                            ReturnType="Next"
+                     />
         
                 <Entry x:Name="ballWeight"
                        Placeholder="Enter Ball Weight"

@@ -34,6 +34,7 @@ public partial class btPage : ContentPage
     private List<Ball> savedDots;
     private object selectBall;
     private Ball theBall;
+    private bool IsRefreshing;
 
 
     public btPage()
@@ -244,12 +245,18 @@ public partial class btPage : ContentPage
 
     async void OnBallEdit(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new EditBall());
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
+        await Navigation.PushModalAsync(new EditBall(theBall));
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
         Shell.Current.GoToAsync(nameof(MainPage));
+    }
+    private void OnRefreshBtnClicked(object sender, EventArgs e)
+    {
+
     }
 }

@@ -89,7 +89,6 @@
                 Text="{Binding dotNames}"
                 HorizontalOptions="Center">
             </Label>
-            
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -132,16 +131,13 @@
                                             SemanticProperties.Hint="Edit Ball Info"
                                             Clicked="OnBallEdit"
                                             />
-                    
                                 </Grid>
                             </Frame>
                         </ContentView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            
             </Grid>
-            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
