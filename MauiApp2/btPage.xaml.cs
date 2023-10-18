@@ -235,9 +235,16 @@ public partial class btPage : ContentPage
            DisplayAlert("Ball Specs", theBall.name + "\n" + 
                                       "Weight: " + theBall.weight + "lbs.\n" + 
                                       "Color: " + theBall.color + "\n" + 
+                                      "Core: " + theBall.core + "\n" + 
+                                      "CoverStock: " + theBall.cover + "\n" + 
                                       "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
                                "Done"); 
         } else Console.WriteLine("Selection failed");
+    }
+
+    async void OnBallEdit(object sender, EventArgs e)
+    {
+        await Navigation.PushModalAsync(new EditBall());
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)

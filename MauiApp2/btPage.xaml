@@ -111,9 +111,10 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                             
-                                    <Ellipse Stroke="White" Grid.RowSpan="2" 
+                                    <Ellipse Grid.Column="1" Stroke="White" Grid.RowSpan="2" 
                                              WidthRequest="60"
                                              HeightRequest="60"
                                              HorizontalOptions="Start"
@@ -121,9 +122,16 @@
                                              StrokeThickness="1" 
                                              Margin="0,0,10,0"/>
                             
-                                    <Label Grid.Column="1" TextColor="White"
+                                    <Label Grid.Column="2" TextColor="White"
                                            Text="{Binding name}"
                                     />
+                                    
+                                    <Button Grid.Column="0" 
+                                            x:Name ="editBtn"
+                                            Text="Edit"
+                                            SemanticProperties.Hint="Edit Ball Info"
+                                            Clicked="OnBallEdit"
+                                            />
                     
                                 </Grid>
                             </Frame>
