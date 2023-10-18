@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.NewGame">
+    <ContentPage.Content>
+        <VerticalStackLayout>
+            <Label x:Name="FrameNum"
+                   Text="Frame 1"
+                   SemanticProperties.HeadingLevel="Level2"
+                   SemanticProperties.Description="Frame: "
+                   FontSize="18"
+                   HorizontalOptions="Center"/>
+            
+            <Button
+                x:Name="NextFrameBtn"
+                Text="Next frame"
+                SemanticProperties.Hint="Go to next frame"
+                Clicked="OnNextFrameClicked"
+                HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="PrevFrameBtn"
+                Text="Previous frame"
+                SemanticProperties.Hint="Go to previous frame"
+                Clicked="OnPrevFrameClicked"
+                HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="StrikeBtn"
+                Text="Strike"
+                SemanticProperties.Hint="Count frame as a strike"
+                Clicked="OnStrikeBtnClicked"
+                HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="SpareBtn"
+                Text="Spare"
+                SemanticProperties.Hint="Count spare"
+                Clicked="OnSpareBtnClicked"
+                HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="MissBtn"
+                Text="Miss"
+                SemanticProperties.Hint="Count miss"
+                Clicked="OnMissBtnClicked"
+                HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>

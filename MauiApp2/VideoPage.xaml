@@ -27,6 +27,14 @@
                 SemanticProperties.Hint="Select existing throw video from camera roll"
                 Clicked="OnPicVidBtnClicked"
                 HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="HomeBtn"
+                Text="Home"
+                SemanticProperties.Hint="Navigate to Home Screen"
+                Clicked="OnPrevBtnClicked"
+                HorizontalOptions="Center" />
+            
             <Label x:Name="WtDisplay"
                    Text="{Binding ballwt}"
                    SemanticProperties.HeadingLevel="Level2"
