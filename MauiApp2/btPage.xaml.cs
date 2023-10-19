@@ -32,10 +32,10 @@ public partial class btPage : ContentPage
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
     private List<Ball> savedDots;
-    public List<Ball> Saved
-    {
-        get { return savedDots; }
-    }
+    private object selectBall;
+    private Ball theBall;
+    private bool IsRefreshing;
+
 
     public btPage()
     {
@@ -49,6 +49,16 @@ public partial class btPage : ContentPage
         savedDots.Add(new Ball(null));
         DotsList.ItemsSource = savedDots;
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
+        
+        Ball ball1 = new Ball(null); //test balls for display purposes
+        ball1.name="ball one";
+        Ball ball2 = new Ball(null);
+        ball2.name="ball two";
+        Ball ball3 = new Ball(null);
+        ball3.name="ball three";
+        savedDots.Add(ball1);
+        savedDots.Add(ball2);
+        savedDots.Add(ball3);
     }
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
@@ -216,10 +226,37 @@ public partial class btPage : ContentPage
             
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
+
+    private void OnBallSelect(object sender, EventArgs e)
+    {
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
+        if (selectBall != null)
+        {
+           DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                                      "Weight: " + theBall.weight + "lbs.\n" + 
+                                      "Color: " + theBall.color + "\n" + 
+                                      "Core: " + theBall.core + "\n" + 
+                                      "CoverStock: " + theBall.cover + "\n" + 
+                                      "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
+                               "Done"); 
+        } else Console.WriteLine("Selection failed");
+    }
+
+    async void OnBallEdit(object sender, EventArgs e)
+    {
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
+        await Navigation.PushModalAsync(new EditBall(theBall));
+    }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
         Shell.Current.GoToAsync(nameof(MainPage));
+    }
+    private void OnRefreshBtnClicked(object sender, EventArgs e)
+    {
+
     }
 }

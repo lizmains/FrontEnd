@@ -19,6 +19,8 @@ public class Ball
     public string name { get; set; }
     public int weight{ get; set; }
     public string color{ get; set; }
+    public string core { get; set; }
+    public string cover { get; set; }
 
     public Ball(IDevice newDev)
     {
@@ -26,6 +28,8 @@ public class Ball
         name = "Unnamed Ball";
         weight = 1;
         color = "Unknown";
+        core = "Symmetric";
+        cover = "Polyester";
     }
 
     /*public void setName(string newName)
