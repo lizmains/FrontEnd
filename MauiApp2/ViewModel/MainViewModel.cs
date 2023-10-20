@@ -5,6 +5,7 @@ namespace MauiApp2.ViewModel;
 public partial class MainViewModel: ObservableObject
 {
     //Variable to hold Username in this model
+    [ObservableProperty]
     string username;
     
     //This is an Observable Property, meaning it's a variable that interacts with the xaml. 

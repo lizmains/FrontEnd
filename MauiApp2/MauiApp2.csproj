@@ -59,6 +59,7 @@
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -90,6 +91,7 @@
 	    <SubType>Code</SubType>
 	  </Compile>
 	</ItemGroup>
+
 
 
 

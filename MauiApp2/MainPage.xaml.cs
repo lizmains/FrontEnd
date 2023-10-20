@@ -11,10 +11,25 @@ public partial class MainPage : ContentPage
     public MainPage(string usrname, MainViewModel mvm)
     {
         InitializeComponent();
+        App.UserRepository.GetAllUsers();
+        App.UserRepository.Add(new User
+        {
+            LastLogin = DateTime.Now,
+            Password = mvm.Password,
+            UserName = mvm.Username
+        });
         BindingContext = mvm;
         IBluetoothLE ble = CrossBluetoothLE.Current;
         BluetoothState blue = ble.State;
         BlueStat.Text = $"Bluetooth: {blue}";
+        
+        for (int i = 0; i < App.UserRepository.GetAllUsers().Count; i++)
+        {
+            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
+            
+        }
+        
+        
         ble.StateChanged += (s, e) =>
         {
             BluetoothState blue = ble.State;

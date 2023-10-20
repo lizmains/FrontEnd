@@ -1,4 +1,5 @@
-﻿using MauiApp2.ViewModel;
+﻿using MauiApp2.Data;
+using MauiApp2.ViewModel;
 using Microsoft.Extensions.Logging;
 using Shiny;
 
@@ -16,6 +17,10 @@ namespace MauiApp2
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+            
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "revmetrix.db");
+            builder.Services.AddSingleton(s =>
+                ActivatorUtilities.CreateInstance<UserRepository>(s, dbPath));
 
 #if DEBUG
 		builder.Logging.AddDebug();
