@@ -1,4 +1,5 @@
-﻿using Plugin.BLE;
+﻿using MauiApp2.ViewModel;
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Extensions;
@@ -7,9 +8,10 @@ namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    public MainPage(string usrname, MainViewModel mvm)
     {
         InitializeComponent();
+        BindingContext = mvm;
         IBluetoothLE ble = CrossBluetoothLE.Current;
         BluetoothState blue = ble.State;
         BlueStat.Text = $"Bluetooth: {blue}";

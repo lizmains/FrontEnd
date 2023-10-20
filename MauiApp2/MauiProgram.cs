@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MauiApp2.ViewModel;
+using Microsoft.Extensions.Logging;
 using Shiny;
 
 namespace MauiApp2
@@ -19,7 +20,8 @@ namespace MauiApp2
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
-            
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<MainViewModel>();
             builder.Services.AddBluetoothLE();
             return builder.Build();
         }
