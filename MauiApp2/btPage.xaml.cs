@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
+using System.Windows.Input;
 //using Plugin.BLE.iOS;
 using Shiny;
 //using Device = Plugin.BLE.iOS.Device;
@@ -31,11 +33,10 @@ public partial class btPage : ContentPage
     string deviceName;
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
-    private List<Ball> savedDots;
+    private /*List*/ObservableCollection<Ball> savedDots;
     private object selectBall;
     private Ball theBall;
-    private bool IsRefreshing;
-
+    private bool refsh;//for refreshview, not used currently
 
     public btPage()
     {
@@ -45,9 +46,10 @@ public partial class btPage : ContentPage
         //adapter = CrossBluetoothLE.Current.Adapter; //this being here is causing btpage not to open?????
         deviceList = new List<IDevice>();
         deviceList.Clear();
-        savedDots = new List<Ball>();//dont keep this
+        savedDots = new /*List*/ObservableCollection<Ball>(); //dont keep this when db made
         savedDots.Add(new Ball(null));
         DotsList.ItemsSource = savedDots;
+        RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
         
         Ball ball1 = new Ball(null); //test balls for display purposes
@@ -63,6 +65,13 @@ public partial class btPage : ContentPage
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new MainPage());
+    }
+
+    async Task RefreshItems()
+    {
+        RefView.IsRefreshing = true;
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        RefView.IsRefreshing = false;
     }
     
     async void ScanClicked(object sender, EventArgs e)
@@ -166,12 +175,7 @@ public partial class btPage : ContentPage
                         //charstics = await services[0].GetCharacteristicsAsync();
                         ConDev.Text = "Connected: " + device.Name;
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
-                        if (savedDots[0] != null)
-                        {
-                            Dots.Text += savedDots[0].name;
-                            //Dots.Text += savedDots[0].getDev().Id;
-                        }
-                        else Console.WriteLine("ball class no work");
+                        
                     } else Console.WriteLine("Failed to Connect");
                 }
                 break;
@@ -246,7 +250,7 @@ public partial class btPage : ContentPage
     async void OnBallEdit(object sender, EventArgs e)
     {
         selectBall = DotsList.SelectedItem;
-        theBall = (Ball) selectBall;
+        theBall = (Ball) selectBall; 
         await Navigation.PushModalAsync(new EditBall(theBall));
     }
     
@@ -254,9 +258,5 @@ public partial class btPage : ContentPage
     {
         // Navigation.PushAsync(new MainPage());
         Shell.Current.GoToAsync(nameof(MainPage));
-    }
-    private void OnRefreshBtnClicked(object sender, EventArgs e)
-    {
-
     }
 }

@@ -3,6 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.btPage">
+    <RefreshView x:Name="RefView" IsRefreshing="{Binding refsh}" Command="{Binding StopRef}">
     <ScrollView>
         <VerticalStackLayout>
             <Button 
@@ -89,6 +90,7 @@
                 Text="{Binding dotNames}"
                 HorizontalOptions="Center">
             </Label>
+
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -138,6 +140,8 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
+    </RefreshView>
 </ContentPage>
