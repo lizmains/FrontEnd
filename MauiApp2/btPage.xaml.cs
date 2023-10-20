@@ -37,6 +37,7 @@ public partial class btPage : ContentPage
     private object selectBall;
     private Ball theBall;
     private bool refsh;//for refreshview, not used currently
+    private ObservableCollection<Ball> displayList;
 
     public btPage()
     {
@@ -47,8 +48,9 @@ public partial class btPage : ContentPage
         deviceList = new List<IDevice>();
         deviceList.Clear();
         savedDots = new /*List*/ObservableCollection<Ball>(); //dont keep this when db made
+        displayList = new ObservableCollection<Ball>();
         savedDots.Add(new Ball(null));
-        DotsList.ItemsSource = savedDots;
+        DotsList.ItemsSource = displayList;//savedDots;
         RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
         
@@ -62,6 +64,23 @@ public partial class btPage : ContentPage
         savedDots.Add(ball2);
         savedDots.Add(ball3);
     }
+
+    private void LoadData() //updates collectionView to reflect savedDots list
+    {                       //For UI to update properly, collection bound to view is separate from working list
+        displayList.Clear();
+        foreach (Ball ball in savedDots)
+        {
+            displayList.Add(ball);
+        }
+        DotsList.ItemsSource = displayList;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        LoadData();
+    }
+
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new MainPage());
@@ -175,7 +194,7 @@ public partial class btPage : ContentPage
                         //charstics = await services[0].GetCharacteristicsAsync();
                         ConDev.Text = "Connected: " + device.Name;
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
-                        
+                        LoadData();
                     } else Console.WriteLine("Failed to Connect");
                 }
                 break;
@@ -243,7 +262,7 @@ public partial class btPage : ContentPage
                                       "Core: " + theBall.core + "\n" + 
                                       "CoverStock: " + theBall.cover + "\n" + 
                                       "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
-                               "Done"); 
+                               "Done");
         } else Console.WriteLine("Selection failed");
     }
 
@@ -252,6 +271,44 @@ public partial class btPage : ContentPage
         selectBall = DotsList.SelectedItem;
         theBall = (Ball) selectBall; 
         await Navigation.PushModalAsync(new EditBall(theBall));
+        LoadData();
+    }
+
+    async void OnBallConnect(object sender, EventArgs e)
+    {
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
+        try
+        {
+            Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
+            device = await adapter.ConnectToKnownDeviceAsync(theBall.dev.Id);
+            //await adapter.ConnectToDeviceAsync(deviceList[0]);
+        }
+        catch (DeviceConnectionException erm)
+        {
+            // ... could not connect to device
+            DisplayAlert("Alert", "Unable to connect to device", "OK");
+        }
+        finally
+        {
+            if (device != null) //if a device is connected, write to console, get device info
+            {
+                Console.WriteLine("Connected to Device");
+                services = await device.GetServicesAsync();
+                //charstics = await services[0].GetCharacteristicsAsync();
+                ConDev.Text = "Connected: " + device.Name;
+            } else Console.WriteLine("Failed to Connect");
+        }
+    }
+
+    async void OnDisconnect(object sender, EventArgs e)
+    {
+        if (device != null)
+        {
+           await adapter.DisconnectDeviceAsync(device); 
+           Console.WriteLine("Disconnected from " + device.Name); 
+        } else Console.WriteLine("No device conneccted");
+        
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)

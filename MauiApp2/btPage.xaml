@@ -22,6 +22,12 @@
                 x:Name="ConDev"
                 Text="{Binding devName}"
                 HorizontalOptions="End"></Label>
+            <Button 
+                x:Name="DiscBtn"
+                Text="Disconnect"
+                SemanticProperties.Hint="Disconnect from connected device"
+                Clicked="OnDisconnect"
+                HorizontalOptions="End" />
             
             <Label x:Name="BTState"
                    Text="{Binding state}"
@@ -96,7 +102,7 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
-            <CollectionView Grid.Row="1" x:Name="DotsList" ItemsSource="{Binding savedDots}"
+            <CollectionView Grid.Row="1" x:Name="DotsList" ItemsSource="{Binding displayList}"
                             SelectionMode="Single"
                             SelectionChanged="OnBallSelect"
                             SelectedItem="{Binding selectBall}">
@@ -113,9 +119,10 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                             
-                                    <Ellipse Grid.Column="1" Stroke="White" Grid.RowSpan="2" 
+                                    <Ellipse Grid.Column="2" Stroke="White" Grid.RowSpan="2" 
                                              WidthRequest="60"
                                              HeightRequest="60"
                                              HorizontalOptions="Start"
@@ -123,16 +130,22 @@
                                              StrokeThickness="1" 
                                              Margin="0,0,10,0"/>
                             
-                                    <Label Grid.Column="2" TextColor="White"
+                                    <Label Grid.Column="3" TextColor="White"
                                            Text="{Binding name}"
                                     />
                                     
-                                    <Button Grid.Column="0" 
+                                    <Button Grid.Column="1" 
                                             x:Name ="editBtn"
                                             Text="Edit"
                                             SemanticProperties.Hint="Edit Ball Info"
                                             Clicked="OnBallEdit"
                                             />
+                                    <Button Grid.Column="0" 
+                                            x:Name ="conBtn"
+                                            Text="Connect"
+                                            SemanticProperties.Hint="Connect to ball"
+                                            Clicked="OnBallConnect"
+                                    />
                                 </Grid>
                             </Frame>
                         </ContentView>
