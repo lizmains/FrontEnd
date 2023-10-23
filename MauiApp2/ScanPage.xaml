@@ -2,7 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp2.btPage">
+             x:Class="MauiApp2.ScanPage">
     <RefreshView x:Name="RefView" IsRefreshing="{Binding refsh}" Command="{Binding StopRef}">
     <ScrollView>
         <VerticalStackLayout>
@@ -12,6 +12,13 @@
                 SemanticProperties.Hint="Navigate to main page when you click"
                 Clicked="OnHomeBtnClicked"
                 HorizontalOptions="Start"/>
+            <Button
+                x:Name="BackBtn"
+                Text="Back"
+                SemanticProperties.Hint="Go back to ball list page"
+                Clicked="OnBack"
+                HorizontalOptions="Start"
+            />
             <Label
                 Text="Select a Device"
                 SemanticProperties.HeadingLevel="Level2"
@@ -36,22 +43,53 @@
                    FontSize="18"
                    HorizontalOptions="End"
             />
+        
             <Button 
-                x:Name="ScanPageBtn"
-                Text="Connect to a New Device"
-                SemanticProperties.Hint="Navigate to scan page"
-                Clicked="OnScanPage"
+                x:Name="ScanBtn"
+                Text="Scan"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="ScanClicked"
                 HorizontalOptions="Center" />
+            
+            <Button 
+                x:Name="CheckBtn"
+                Text="Check"
+                SemanticProperties.Hint="load data into display list"
+                Clicked="LoadData"
+                HorizontalOptions="Center" />
+            
+                <Entry x:Name="devName"
+                       Placeholder="Enter Device Name"
+                       TextChanged="OnDevChanged"
+                       Completed="OnDevEnter"
+                />
+                <Button 
+                    x:Name="ConnectNameBtn"
+                    Text="Connect"
+                    SemanticProperties.Hint="Connects to typed device"
+                    Clicked="OnDevEnter"
+                    HorizontalOptions="Center" />
+            
+            <Button 
+                x:Name="ServBtn"
+                Text="Get Device Info"
+                SemanticProperties.Hint="Displays device info in console"
+                Clicked="getServices"
+                HorizontalOptions="Center" />
+            <Label
+                x:Name="DevInfo"
+                Text="{Binding names}"
+                HorizontalOptions="Center"></Label>
 
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
-            <CollectionView Grid.Row="1" x:Name="DotsList" ItemsSource="{Binding displayList}"
+            <CollectionView Grid.Row="1" x:Name="DevsList" ItemsSource="{Binding devDisplay}"
                             SelectionMode="Single"
-                            SelectionChanged="OnBallSelect"
-                            SelectedItem="{Binding selectBall}">
+                            SelectionChanged="OnDevSelect"
+                            SelectedItem="{Binding selectDev}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
@@ -65,10 +103,9 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                             
-                                    <Ellipse Grid.Column="2" Stroke="White" Grid.RowSpan="2" 
+                                    <Ellipse Grid.Column="0" Stroke="White" Grid.RowSpan="2" 
                                              WidthRequest="60"
                                              HeightRequest="60"
                                              HorizontalOptions="Start"
@@ -76,21 +113,11 @@
                                              StrokeThickness="1" 
                                              Margin="0,0,10,0"/>
                             
-                                    <Label Grid.Column="3" TextColor="White"
-                                           Text="{Binding name}"
+                                    <Label Grid.Column="1" TextColor="White"
+                                           Text="{Binding Name}"
                                     />
-                                    
-                                    <Button Grid.Column="1" 
-                                            x:Name ="editBtn"
-                                            Text="Edit"
-                                            SemanticProperties.Hint="Edit Ball Info"
-                                            Clicked="OnBallEdit"
-                                            />
-                                    <Button Grid.Column="0" 
-                                            x:Name ="conBtn"
-                                            Text="Connect"
-                                            SemanticProperties.Hint="Connect to ball"
-                                            Clicked="OnBallConnect"
+                                    <Label Grid.Column="2" TextColor="White"
+                                           Text="{Binding Id}"
                                     />
                                 </Grid>
                             </Frame>

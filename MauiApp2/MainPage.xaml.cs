@@ -1,5 +1,4 @@
-﻿using MauiApp2.ViewModel;
-using Plugin.BLE;
+﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Extensions;
@@ -8,28 +7,13 @@ namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage(string usrname, MainViewModel mvm)
+    string user = "N/A";
+    public MainPage()
     {
         InitializeComponent();
-        App.UserRepository.GetAllUsers();
-        App.UserRepository.Add(new User
-        {
-            LastLogin = DateTime.Now,
-            Password = mvm.Password,
-            UserName = mvm.Username
-        });
-        BindingContext = mvm;
         IBluetoothLE ble = CrossBluetoothLE.Current;
         BluetoothState blue = ble.State;
         BlueStat.Text = $"Bluetooth: {blue}";
-        
-        for (int i = 0; i < App.UserRepository.GetAllUsers().Count; i++)
-        {
-            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
-            
-        }
-        
-        
         ble.StateChanged += (s, e) =>
         {
             BluetoothState blue = ble.State;
@@ -37,6 +21,20 @@ public partial class MainPage : ContentPage
         };
     }
     Boolean bt;
+    public MainPage(String usernm)
+    {
+        InitializeComponent();
+        IBluetoothLE ble = CrossBluetoothLE.Current;
+        BluetoothState blue = ble.State;
+        BlueStat.Text = $"Bluetooth: {blue}";
+        ble.StateChanged += (s, e) =>
+        {
+            BluetoothState blue = ble.State;
+            BlueStat.Text = $"Bluetooth: {blue}";
+        };
+        user = usernm;
+        UsrDisplay.Text = $"Hello {user}!";
+    }
     
     private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
     {
@@ -75,5 +73,10 @@ public partial class MainPage : ContentPage
     {
         // Navigation.PushAsync(new VideoPage());
         Shell.Current.GoToAsync(nameof(VideoPage));
+    }
+    
+    private void OnGameBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        Navigation.PushAsync(new GamePage());
     }
 }
