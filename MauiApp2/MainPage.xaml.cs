@@ -1,4 +1,5 @@
-﻿using Plugin.BLE;
+﻿using MauiApp2.ViewModel;
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Extensions;
@@ -11,6 +12,7 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        
         IBluetoothLE ble = CrossBluetoothLE.Current;
         BluetoothState blue = ble.State;
         BlueStat.Text = $"Bluetooth: {blue}";
@@ -21,7 +23,7 @@ public partial class MainPage : ContentPage
         };
     }
     Boolean bt;
-    public MainPage(String usernm)
+    public MainPage(String usernm, MainViewModel mvm)
     {
         InitializeComponent();
         IBluetoothLE ble = CrossBluetoothLE.Current;
@@ -33,6 +35,19 @@ public partial class MainPage : ContentPage
             BlueStat.Text = $"Bluetooth: {blue}";
         };
         user = usernm;
+        App.UserRepository.GetAllUsers();
+        App.UserRepository.Add(new User
+        {
+            LastLogin = DateTime.Now,
+            Password = mvm.Password,
+            UserName = mvm.Username
+        });
+        
+        for (int i = 0; i < App.UserRepository.GetAllUsers().Count; i++)
+        {
+            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
+            
+        }
         UsrDisplay.Text = $"Hello {user}!";
     }
     
