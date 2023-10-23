@@ -10,69 +10,81 @@ namespace MauiApp2;
 public partial class EditBall : ContentPage
 {
     private Ball tempBall;
+    private Ball prevBall;
+    private string cName;
+    private int cWt;
+    private string cCol;
+    private string cCor;
+    private string cCov;
     public EditBall(Ball toEdit)
     {
         InitializeComponent();
         tempBall = toEdit;
+        //prevBall = toEdit;
         BallName.Text = tempBall.name + "\n";
     }
     void OnNameChanged(object sender, TextChangedEventArgs e)
     {
         string oldName = e.OldTextValue;
         string newName = e.NewTextValue;  //Events for assigning 
-        tempBall.name = ballName.Text;
+        cName = ballName.Text;
     }
     void OnNameEnter(object sender, EventArgs e)
     {
-        tempBall.name = ((Entry)sender).Text;
+        cName = ((Entry)sender).Text;
     }
     
     void OnWtChanged(object sender, TextChangedEventArgs e)
     {
         string oldWt = e.OldTextValue;
         string newWT = e.NewTextValue;  //Events for assigning 
-        tempBall.weight = 15;//ballWeight.Text; need to figure out how to get an int
+        cWt = 15;//ballWeight.Text; need to figure out how to get an int
     }
     void OnWtEnter(object sender, EventArgs e)
     {
-        tempBall.weight = 15;//((Entry)sender).Text;
+        cWt = 15;//((Entry)sender).Text;
     }
     
     void OnColorChanged(object sender, TextChangedEventArgs e)
     {
         string oldCol = e.OldTextValue;
         string newCol = e.NewTextValue;  //Events for assigning 
-        tempBall.color = ballColor.Text;
+        cCol = ballColor.Text;
     }
     void OnColorEnter(object sender, EventArgs e)
     {
-        tempBall.color = ((Entry)sender).Text;
+        cCol = ((Entry)sender).Text;
     }
     
     void OnCoreChanged(object sender, TextChangedEventArgs e)
     {
         string oldCor = e.OldTextValue;
         string newCor = e.NewTextValue;  //Events for assigning 
-        tempBall.core = ballCore.Text;
+        cCor = ballCore.Text;
     }
     void OnCoreEnter(object sender, EventArgs e)
     {
-        tempBall.core = ((Entry)sender).Text;
+        cCor = ((Entry)sender).Text;
     }
     
     void OnCovChanged(object sender, TextChangedEventArgs e)
     {
         string oldCov = e.OldTextValue;
         string newCov = e.NewTextValue;  //Events for assigning 
-        tempBall.cover = ballCover.Text;
+        cCov = ballCover.Text;
     }
     void OnCovEnter(object sender, EventArgs e)
     {
-        tempBall.cover = ((Entry)sender).Text;
+        cCov = ((Entry)sender).Text;
     }
 
     async void OnSave(object sender, EventArgs e)
     {
+        tempBall.name = cName;
+        tempBall.weight = cWt;
+        tempBall.color = cCol;
+        tempBall.core = cCor;
+        tempBall.cover = cCov;
         await Navigation.PopModalAsync();
     }
     

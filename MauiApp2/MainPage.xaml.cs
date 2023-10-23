@@ -7,6 +7,7 @@ namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {
+    string user = "N/A";
     public MainPage()
     {
         InitializeComponent();
@@ -20,6 +21,20 @@ public partial class MainPage : ContentPage
         };
     }
     Boolean bt;
+    public MainPage(String usernm)
+    {
+        InitializeComponent();
+        IBluetoothLE ble = CrossBluetoothLE.Current;
+        BluetoothState blue = ble.State;
+        BlueStat.Text = $"Bluetooth: {blue}";
+        ble.StateChanged += (s, e) =>
+        {
+            BluetoothState blue = ble.State;
+            BlueStat.Text = $"Bluetooth: {blue}";
+        };
+        user = usernm;
+        UsrDisplay.Text = $"Hello {user}!";
+    }
     
     private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
     {
@@ -58,5 +73,10 @@ public partial class MainPage : ContentPage
     {
         // Navigation.PushAsync(new VideoPage());
         Shell.Current.GoToAsync(nameof(VideoPage));
+    }
+    
+    private void OnGameBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        Navigation.PushAsync(new GamePage());
     }
 }
