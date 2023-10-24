@@ -93,6 +93,13 @@
 	</ItemGroup>
 
 
-
+	<ItemGroup>
+	  <Reference Include="Client">
+	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Client.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Common">
+	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Common.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 
 </Project>
