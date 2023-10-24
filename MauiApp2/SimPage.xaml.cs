@@ -41,7 +41,7 @@ public partial class SimPage : ContentPage
     }
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new MainPage());
+        Shell.Current.GoToAsync("..");
     }
 }
 
