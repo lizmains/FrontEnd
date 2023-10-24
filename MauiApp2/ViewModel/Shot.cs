@@ -20,14 +20,10 @@ public class Shot
     public long frame_id { get; set; }
     public long ball_id{ get; set; }
     public long video_id{ get; set; }
-    public bool[,] pins_remaning { get; set; }
-    //somehow make this binary data
+    public byte[]pins_remaining { get; set; }
     public string curTime { get; set; }
     //date time can be stored in a string variable if formatted correctly
-    public int[,] laneNum { get; set; }
-    //somehow make this binary data
-    //convert this to a 2D Binary array
-    //does int work for representing binary data?
+    public byte[]laneNum { get; set; }
     public float[,] ddx { get; set; }
     //make this float(8)[100]
     public float[,] ddy { get; set; }
@@ -47,58 +43,8 @@ public class Shot
     {
         shot_id = identifier;
         ball_id = ballId;
-        
+        pins_remaining = new byte[2];
+        laneNum = new byte[2];
     }
-
-    public void setShotID(int ID)
-    {
-        shot_id = ID;
-    }
-
-    public int getShotID()
-    {
-        return shot_id;
-    }
-
-    public void setFrameID(long ID)
-    {
-        frame_id = ID;
-    }
-
-    public long getFrameID()
-    {
-        return frame_id;
-    }
-    
-    public void setBallID(long ID)
-    {
-        ball_id = ID;
-    }
-
-    public long getBallID()
-    {
-        return ball_id;
-    }
-
-    public void setVidID(long ID)
-    {
-        video_id = ID;
-    }
-
-    public long getVidID()
-    {
-        return video_id;
-    }
-
-    public void setCurrentTime(String time)
-    {
-        curTime = time;
-    }
-
-    public String getCurrentTime()
-    {
-        return curTime;
-    }
-    
     
 }
