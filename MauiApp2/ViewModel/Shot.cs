@@ -24,17 +24,17 @@ public class Shot
     public string curTime { get; set; }
     //date time can be stored in a string variable if formatted correctly
     public byte[]laneNum { get; set; }
-    public float[,] ddx { get; set; }
+    public float[] ddx { get; set; }
     //make this float(8)[100]
-    public float[,] ddy { get; set; }
+    public float[] ddy { get; set; }
     //make this float(8)[100]
-    public float[,] ddz { get; set; }
+    public float[] ddz { get; set; }
     //make this float(8)[100]
-    public float[,] x_pos { get; set; }
+    public float[] x_pos { get; set; }
     //make this float(8)[100]
-    public float[,] y_pos { get; set; }
+    public float[] y_pos { get; set; }
     //make this float(8)[100]
-    public float[,] z_pos { get; set; }
+    public float[] z_pos { get; set; }
     //make this float(8)[100]
     
 
@@ -46,5 +46,36 @@ public class Shot
         pins_remaining = new byte[2];
         laneNum = new byte[2];
     }
+
+    public void setzPosSize(int length)
+    {
+        z_pos = new float[length];
+    }
+
+    public void setyPosSize(int length)
+    {
+        y_pos = new float[length];
+    }
+
+    public void setxPosSize(int length)
+    {
+        x_pos = new float[length];
+    }
+    
+    public void setddxSize(int length)
+    {
+        ddx = new float[length];
+    }
+
+    public void setddySize(int length)
+    {
+        ddy = new float[length];
+    }
+
+    public void setddzSize(int length)
+    {
+        ddz = new float[length];
+    }
+    
     
 }
