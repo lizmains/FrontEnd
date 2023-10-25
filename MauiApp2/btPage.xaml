@@ -43,7 +43,7 @@
                 Clicked="OnScanPage"
                 HorizontalOptions="Center" />
 
-            <Grid Margin="5">
+            <Grid Margin="5" ColumnSpacing="6">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="9*" />
@@ -62,9 +62,10 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="150" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                             
@@ -78,6 +79,9 @@
                             
                                     <Label Grid.Column="3" TextColor="White"
                                            Text="{Binding name}"
+                                    />
+                                    <Label Grid.Column="4" TextColor="White"
+                                           Text="{Binding comments}"
                                     />
                                     
                                     <Button Grid.Column="1" 

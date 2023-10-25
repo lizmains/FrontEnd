@@ -44,8 +44,14 @@
                          Placeholder="Enter Ball Coverstock"
                          TextChanged="OnCovChanged"
                          Completed="OnCovEnter"
-                         ReturnType="Go"
+                         ReturnType="Next"
                   />
+                     <Entry x:Name="ballComm"
+                            Placeholder="Enter Comments"
+                            TextChanged="OnComChanged"
+                            Completed="OnComEnter"
+                            ReturnType="Go"
+                     />
                   <HorizontalStackLayout>
                      <Button
                          x:Name="SaveBtn"

@@ -10,17 +10,16 @@ namespace MauiApp2;
 public partial class EditBall : ContentPage
 {
     private Ball tempBall;
-    private Ball prevBall;
     private string cName;
     private int cWt;
     private string cCol;
     private string cCor;
     private string cCov;
+    private string cCom;
     public EditBall(Ball toEdit)
     {
         InitializeComponent();
         tempBall = toEdit;
-        //prevBall = toEdit;
         BallName.Text = tempBall.name + "\n";
     }
     void OnNameChanged(object sender, TextChangedEventArgs e)
@@ -38,11 +37,11 @@ public partial class EditBall : ContentPage
     {
         string oldWt = e.OldTextValue;
         string newWT = e.NewTextValue;  //Events for assigning 
-        cWt = 15;//ballWeight.Text; need to figure out how to get an int
+        cWt = Convert.ToInt32(ballWeight.Text); //15;//ballWeight.Text; need to figure out how to get an int
     }
     void OnWtEnter(object sender, EventArgs e)
     {
-        cWt = 15;//((Entry)sender).Text;
+        cWt = Convert.ToInt32(((Entry)sender).Text);//((Entry)sender).Text;
     }
     
     void OnColorChanged(object sender, TextChangedEventArgs e)
@@ -77,14 +76,44 @@ public partial class EditBall : ContentPage
     {
         cCov = ((Entry)sender).Text;
     }
+    
+    void OnComChanged(object sender, TextChangedEventArgs e)
+    {
+        string oldCom = e.OldTextValue;
+        string newCom = e.NewTextValue;  //Events for assigning 
+        cCom = ballComm.Text;
+    }
+    void OnComEnter(object sender, EventArgs e)
+    {
+        cCom = ((Entry)sender).Text;
+    }
 
     async void OnSave(object sender, EventArgs e)
     {
-        tempBall.name = cName;
-        tempBall.weight = cWt;
-        tempBall.color = cCol;
-        tempBall.core = cCor;
-        tempBall.cover = cCov;
+        if (cName != null)
+        {
+           tempBall.name = cName; 
+        }
+        if (cWt != null)
+        {
+            tempBall.weight = cWt;
+        }
+        if (cCol != null)
+        {
+            tempBall.color = cCol;
+        }
+        if (cCor != null)
+        {
+          tempBall.core = cCor;  
+        }
+        if (cCov != null)
+        {
+            tempBall.cover = cCov;
+        }
+        if (cCom != null)
+        {
+           tempBall.comments = cCom; 
+        }
         await Navigation.PopModalAsync();
     }
     

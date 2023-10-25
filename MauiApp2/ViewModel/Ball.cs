@@ -21,6 +21,9 @@ public class Ball
     public string color{ get; set; }
     public string core { get; set; }
     public string cover { get; set; }
+    
+    public Guid serial { get; set; }
+    public string comments { get; set; }
 
     public Ball(IDevice newDev)
     {
@@ -30,6 +33,7 @@ public class Ball
         color = "Unknown";
         core = "Symmetric";
         cover = "Polyester";
+        comments = "No Comments";
     }
 
     /*public void setName(string newName)
