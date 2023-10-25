@@ -20,25 +20,21 @@ public class Shot
     public long frame_id { get; set; }
     public long ball_id{ get; set; }
     public long video_id{ get; set; }
-    public bool[,] pins_remaning { get; set; }
-    //somehow make this binary data
+    public byte[]pins_remaining { get; set; }
     public string curTime { get; set; }
     //date time can be stored in a string variable if formatted correctly
-    public int[,] laneNum { get; set; }
-    //somehow make this binary data
-    //convert this to a 2D Binary array
-    //does int work for representing binary data?
-    public float[,] ddx { get; set; }
+    public byte[]laneNum { get; set; }
+    public float[] ddx { get; set; }
     //make this float(8)[100]
-    public float[,] ddy { get; set; }
+    public float[] ddy { get; set; }
     //make this float(8)[100]
-    public float[,] ddz { get; set; }
+    public float[] ddz { get; set; }
     //make this float(8)[100]
-    public float[,] x_pos { get; set; }
+    public float[] x_pos { get; set; }
     //make this float(8)[100]
-    public float[,] y_pos { get; set; }
+    public float[] y_pos { get; set; }
     //make this float(8)[100]
-    public float[,] z_pos { get; set; }
+    public float[] z_pos { get; set; }
     //make this float(8)[100]
     
 
@@ -47,57 +43,38 @@ public class Shot
     {
         shot_id = identifier;
         ball_id = ballId;
-        
+        pins_remaining = new byte[2];
+        laneNum = new byte[2];
     }
 
-    public void setShotID(int ID)
+    public void setzPosSize(int length)
     {
-        shot_id = ID;
+        z_pos = new float[length];
     }
 
-    public int getShotID()
+    public void setyPosSize(int length)
     {
-        return shot_id;
+        y_pos = new float[length];
     }
 
-    public void setFrameID(long ID)
+    public void setxPosSize(int length)
     {
-        frame_id = ID;
-    }
-
-    public long getFrameID()
-    {
-        return frame_id;
+        x_pos = new float[length];
     }
     
-    public void setBallID(long ID)
+    public void setddxSize(int length)
     {
-        ball_id = ID;
+        ddx = new float[length];
     }
 
-    public long getBallID()
+    public void setddySize(int length)
     {
-        return ball_id;
+        ddy = new float[length];
     }
 
-    public void setVidID(long ID)
+    public void setddzSize(int length)
     {
-        video_id = ID;
-    }
-
-    public long getVidID()
-    {
-        return video_id;
-    }
-
-    public void setCurrentTime(String time)
-    {
-        curTime = time;
-    }
-
-    public String getCurrentTime()
-    {
-        return curTime;
+        ddz = new float[length];
     }
     
     
