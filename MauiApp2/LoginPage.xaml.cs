@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MauiApp2.ViewModel;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 
@@ -79,7 +80,8 @@ public partial class LoginPage : ContentPage
             MakeFile("test.txt");
             WriteFile("test.txt", usrnm);
             BluetoothState state = ble.State;
-            Navigation.PushAsync(new MainPage(usrnm));
+            MainViewModel mvm = new MainViewModel(usrnm, pass);
+            Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
         else DisplayAlert("Alert", "Please Enter Username and Password", "OK");
 

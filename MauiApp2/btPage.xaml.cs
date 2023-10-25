@@ -83,7 +83,7 @@ public partial class btPage : ContentPage
 
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new MainPage());
+        // Navigation.PushAsync(new MainPage());
     }
 
     async Task RefreshItems()
@@ -157,7 +157,7 @@ public partial class btPage : ContentPage
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
-        Shell.Current.GoToAsync(nameof(MainPage));
+        Shell.Current.GoToAsync("..");
     }
     
     async void OnScanPage(object sender, EventArgs e)
