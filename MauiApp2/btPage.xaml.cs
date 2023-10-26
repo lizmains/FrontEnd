@@ -36,6 +36,8 @@ public partial class btPage : ContentPage
     private /*List*/ObservableCollection<Ball> savedDots;
     private object selectBall;
     private Ball theBall;
+    private Ball newBall;
+    private Ball addedBall;
     private bool refsh;//for refreshview, not used currently
     private ObservableCollection<Ball> displayList;
 
@@ -50,6 +52,8 @@ public partial class btPage : ContentPage
         savedDots = new /*List*/ObservableCollection<Ball>(); //dont keep this when db made
         displayList = new ObservableCollection<Ball>();
         savedDots.Add(new Ball(null));
+        newBall = new Ball(null);
+        addedBall = new Ball(null);
         DotsList.ItemsSource = displayList;//savedDots;
         RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
@@ -78,6 +82,12 @@ public partial class btPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        if (newBall.dev != null)
+        {
+            addedBall.dev = newBall.dev;
+            savedDots.Add(new Ball(addedBall.dev));
+            newBall.dev = null;
+        }
         LoadData();
     }
 
@@ -99,13 +109,27 @@ public partial class btPage : ContentPage
         theBall = (Ball) selectBall;
         if (selectBall != null)
         {
-           DisplayAlert("Ball Specs", theBall.name + "\n" + 
-                                      "Weight: " + theBall.weight + "lbs.\n" + 
-                                      "Color: " + theBall.color + "\n" + 
-                                      "Core: " + theBall.core + "\n" + 
-                                      "CoverStock: " + theBall.cover + "\n" + 
-                                      "ID: " + /*savedDots[2].dev.Id*/"Device Placeholder" + "\n", 
-                               "Done");
+            if (theBall.dev != null)
+            {
+                DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                                                      "Weight: " + theBall.weight + "lbs.\n" + 
+                                                      "Color: " + theBall.color + "\n" + 
+                                                      "Core: " + theBall.core + "\n" + 
+                                                      "CoverStock: " + theBall.cover + "\n" + 
+                                                      "ID: " + theBall.dev.Id + "\n", 
+                                               "Done");
+            }
+            else
+            {
+                DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                                           "Weight: " + theBall.weight + "lbs.\n" + 
+                                           "Color: " + theBall.color + "\n" + 
+                                           "Core: " + theBall.core + "\n" + 
+                                           "CoverStock: " + theBall.cover + "\n" + 
+                                           "ID: No Device" + "\n", 
+                    "Done");
+            }
+           
         } else Console.WriteLine("Selection failed");
     }
 
@@ -150,7 +174,7 @@ public partial class btPage : ContentPage
         {
            await adapter.DisconnectDeviceAsync(device); 
            Console.WriteLine("Disconnected from " + device.Name); 
-        } else Console.WriteLine("No device conneccted");
+        } else Console.WriteLine("No device connected");
         
     }
     
@@ -162,7 +186,10 @@ public partial class btPage : ContentPage
     
     async void OnScanPage(object sender, EventArgs e)
     {
-        // Navigation.PushAsync(new MainPage());
-        await Navigation.PushModalAsync(new ScanPage());
+        //newBall = new Ball(null);
+        await Navigation.PushModalAsync(new ScanPage(newBall));
+        //savedDots.Add(newBall);
+        //LoadData();
     }
+    
 }

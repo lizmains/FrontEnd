@@ -58,6 +58,13 @@
                 Clicked="LoadData"
                 HorizontalOptions="Center" />
             
+            <Button 
+                x:Name="MoreBtn"
+                Text="Load More"
+                SemanticProperties.Hint="load more data into display list"
+                Clicked="MoreData"
+                HorizontalOptions="Center" />
+            
                 <Entry x:Name="devName"
                        Placeholder="Enter Device Name"
                        TextChanged="OnDevChanged"

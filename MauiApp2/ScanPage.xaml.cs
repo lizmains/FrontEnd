@@ -32,8 +32,10 @@ public partial class ScanPage : ContentPage
     private /*List*/ObservableCollection<Ball> savedDots;
     private object selectDev;
     private ObservableCollection<IDevice> devDisplay;
+    private int dataRange;
+    private Ball tempNew;
     
-    public ScanPage()
+    public ScanPage(Ball newBall)
     {
         InitializeComponent();
         adapter.ScanMode = ScanMode.LowLatency;
@@ -46,6 +48,8 @@ public partial class ScanPage : ContentPage
         savedDots.Add(new Ball(null));
         DevsList.ItemsSource = deviceList; //displayList;
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
+        dataRange = 0;
+        tempNew = newBall;
     }
     
     private void OnConnBtnClicked(object sender, EventArgs e)
@@ -55,8 +59,23 @@ public partial class ScanPage : ContentPage
     
     private void LoadData(object sender, EventArgs e) //updates collectionView to reflect deviceList
     {                       //For UI to update properly, collection bound to view is separate from working list
-        devDisplay.Clear();
+        devDisplay.Clear(); //called directly by button
         for (int i=0; i<10; i++)
+        {
+            devDisplay.Add(deviceList[i]);
+        }
+        DevsList.ItemsSource = devDisplay;
+    }
+
+    private void MoreData(object sender, EventArgs e)
+    {
+        dataRange += 10;
+        LoadData(dataRange);
+    }
+    private void LoadData(int range) //updates collectionView to reflect deviceList
+    {                       //For UI to update properly, collection bound to view is separate from working list
+        devDisplay.Clear(); //called indirectly by xaml to chnage range
+        for (int i=range; i<10+range; i++)
         {
             devDisplay.Add(deviceList[i]);
         }
@@ -118,6 +137,7 @@ public partial class ScanPage : ContentPage
                         //charstics = await services[0].GetCharacteristicsAsync();
                         ConDev.Text = "Connected: " + device.Name;
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
+                        tempNew.dev = device;
                     } else Console.WriteLine("Failed to Connect");
                 }
                 break;
@@ -179,7 +199,7 @@ public partial class ScanPage : ContentPage
         {
             await adapter.DisconnectDeviceAsync(device); 
             Console.WriteLine("Disconnected from " + device.Name); 
-        } else Console.WriteLine("No device conneccted");
+        } else Console.WriteLine("No device connected");
         
     }
 
@@ -203,7 +223,8 @@ public partial class ScanPage : ContentPage
                 services = await device.GetServicesAsync();
                 //charstics = await services[0].GetCharacteristicsAsync();
                 ConDev.Text = "Connected: " + device.Name;
-                savedDots.Add(new Ball(device)); //adds device to list of saved balls
+                tempNew.dev = device;
+                savedDots.Add(tempNew); //adds device to list of saved balls
             } else Console.WriteLine("Failed to Connect");
         }
     }
