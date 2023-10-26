@@ -37,6 +37,7 @@ public partial class btPage : ContentPage
     private object selectBall;
     private Ball theBall;
     private Ball newBall;
+    private Ball addedBall;
     private bool refsh;//for refreshview, not used currently
     private ObservableCollection<Ball> displayList;
 
@@ -52,6 +53,7 @@ public partial class btPage : ContentPage
         displayList = new ObservableCollection<Ball>();
         savedDots.Add(new Ball(null));
         newBall = new Ball(null);
+        addedBall = new Ball(null);
         DotsList.ItemsSource = displayList;//savedDots;
         RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
@@ -82,7 +84,9 @@ public partial class btPage : ContentPage
         base.OnAppearing();
         if (newBall.dev != null)
         {
-            savedDots.Add(newBall); 
+            addedBall.dev = newBall.dev;
+            savedDots.Add(new Ball(addedBall.dev));
+            newBall.dev = null;
         }
         LoadData();
     }
@@ -112,8 +116,7 @@ public partial class btPage : ContentPage
                                                       "Color: " + theBall.color + "\n" + 
                                                       "Core: " + theBall.core + "\n" + 
                                                       "CoverStock: " + theBall.cover + "\n" + 
-                                                      "ID: " + theBall.dev.Id + "\n" +
-                                                      "Comments: " + theBall.comments, 
+                                                      "ID: " + theBall.dev.Id + "\n", 
                                                "Done");
             }
             else
@@ -123,8 +126,7 @@ public partial class btPage : ContentPage
                                            "Color: " + theBall.color + "\n" + 
                                            "Core: " + theBall.core + "\n" + 
                                            "CoverStock: " + theBall.cover + "\n" + 
-                                           "ID: No Device" + "\n" +
-                                           "Comments: " + theBall.comments, 
+                                           "ID: No Device" + "\n", 
                     "Done");
             }
            
