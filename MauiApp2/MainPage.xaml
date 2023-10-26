@@ -87,6 +87,7 @@
                 x:Name="gameBtn"
                 Text="Games"
                 SemanticProperties.Hint="Navigates to game page"
+                Clicked="OnGameBtnClicked"
                 HorizontalOptions="Center" />
         
         </VerticalStackLayout>

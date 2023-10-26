@@ -17,7 +17,7 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
-        api = new FeaturedAPI("https://localhost:2738/api/");
+        api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/Test/TestTime");
         
     }
     string pass;
@@ -86,11 +86,11 @@ public partial class LoginPage : ContentPage
             BluetoothState state = ble.State;
             MainViewModel mvm = new MainViewModel(usrnm, pass);
             //ApiLogin();
-            //await api.Login(usrnm, pass); //commented out until db server active
+            await api.Login(usrnm, pass); //commented out until db server active
             Console.WriteLine("logged in maybe");
             await Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
-        else DisplayAlert("Alert", "Please Enter Username and Password", "OK");
+        else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
 
     }
     
