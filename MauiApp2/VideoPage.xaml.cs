@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// using Android.Media;
+// using Android.Media;
+// using Android.Hardware.Camera2;
+// using Android.Media;
+using Stream = System.IO.Stream;
 
 namespace MauiApp2;
 
@@ -29,7 +34,8 @@ public partial class VideoPage : ContentPage
     private void OnPicVidBtnClicked(object sender, EventArgs e)
     {
         //Navigation.PushAsync(new MainPage()); //navigate to main page
-        PickVideo(); //Pick video from camera roll
+        //PickVideo(); //Pick video from camera roll
+        PickImage();
     }
     
     public async void TakePhoto()
@@ -41,6 +47,7 @@ public partial class VideoPage : ContentPage
             if (photo != null)
             {
                 // save the file into camera roll
+                // string cameraRollPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), photo.FileName);
                 string cameraRollPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), photo.FileName);
 
                 using Stream sourceStream = await photo.OpenReadAsync();
@@ -62,22 +69,60 @@ public partial class VideoPage : ContentPage
             if (video != null)
             {
                 // save the file into local storage
-                string localFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), video.FileName); //not sure if this is the right directory
+                // string localFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), video.FileName); //not sure if this is the right directory
+                string localFilePath = Path.Combine(FileSystem.CacheDirectory, video.FileName); //not sure if this is the right directory
 
                 using Stream sourceStream = await video.OpenReadAsync();
                 using FileStream localFileStream = File.OpenWrite(localFilePath);
 
                 await sourceStream.CopyToAsync(localFileStream);
+                await Shell.Current.DisplayAlert("OOPS", localFileStream.Name, "Ok");
             }
         }
     }
     
     public async void PickVideo()
     {
-        if (MediaPicker.Default.IsCaptureSupported)
+        // if (MediaPicker.Default.IsCaptureSupported)
+        // {
+        //     FileResult video = await MediaPicker.Default.PickVideoAsync(); //opens camera roll, nothing happens after select video as of right now
+        // }
+
+        var result = await FilePicker.PickAsync(new PickOptions
         {
-            FileResult video = await MediaPicker.Default.PickVideoAsync(); //opens camera roll, nothing happens after select video as of right now
+            PickerTitle = "Pick video",
+            FileTypes = FilePickerFileType.Images
+        });
+
+        if (result == null)
+        {
+            return;
         }
+
+        var stream = await result.OpenReadAsync();
+        myVideo.Source = ImageSource.FromStream(() => stream); //I think this has something to do with why it wont come up
+    }
+    
+    public async void PickImage()
+    {
+        // if (MediaPicker.Default.IsCaptureSupported)
+        // {
+        //     FileResult video = await MediaPicker.Default.PickVideoAsync(); //opens camera roll, nothing happens after select video as of right now
+        // }
+
+        var result = await FilePicker.PickAsync(new PickOptions
+        {
+            PickerTitle = "Pick video",
+            FileTypes = FilePickerFileType.Images
+        });
+
+        if (result == null)
+        {
+            return;
+        }
+
+        var stream = await result.OpenReadAsync();
+        myVideo.Source = ImageSource.FromStream(() => stream);
     }
     //public System.Threading.Tasks.Task<Microsoft.Maui.Storage.FileResult> PickVideoAsync (Microsoft.Maui.Media.MediaPickerOptions? options = default);
     

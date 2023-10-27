@@ -8,11 +8,16 @@
             VerticalOptions="Center">
             
             <Label
-                Text="Select a Device"
+                Text="Video"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Device selction for BT"
                 FontSize="18"
                 HorizontalOptions="Center" />
+            
+            <Image
+                x:Name="myVideo"
+                Source="logo.png"
+                HorizontalOptions="Center"/>
             
             <Button
                 x:Name="RecBtn"
@@ -34,14 +39,6 @@
                 SemanticProperties.Hint="Navigate to Home Screen"
                 Clicked="OnPrevBtnClicked"
                 HorizontalOptions="Center" />
-            
-            <Label x:Name="WtDisplay"
-                   Text="{Binding ballwt}"
-                   SemanticProperties.HeadingLevel="Level2"
-                   SemanticProperties.Description="Entered Ball Weight"
-                   FontSize="18"
-                   HorizontalOptions="Center"
-            />
    
         </VerticalStackLayout>
         
