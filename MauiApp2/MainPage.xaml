@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp2.MainPage">
+             x:Class="MauiApp2.MainPage"
+             xmlns:viewmodel="clr-namespace:MauiApp2.ViewModel"
+             x:DataType="viewmodel:MainViewModel">
 
     <ScrollView>
         <VerticalStackLayout
@@ -11,7 +13,7 @@
             
             <Label
                 x:Name="BlueStat"
-                Text="{Binding blue}"
+                Text=""
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Status of Bluetooth"
                 FontSize="18"
@@ -33,14 +35,14 @@
                 HorizontalOptions="Center" />
 
             <Label
-                Text="Welcome to RevMetrix Bowling Assistant"
+                Text="{Binding WelcomePhrase}"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to RevMetrix Bowling Assistant"
                 FontSize="18"
                 HorizontalOptions="Center" />
             
             <Label x:Name="UsrDisplay"
-                Text ="{Binding user}"
+                Text =""
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Dynamically Display Username"
                 FontSize="18"

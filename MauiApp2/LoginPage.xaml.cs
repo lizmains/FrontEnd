@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Client;
+using MauiApp2.ViewModel;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 
@@ -11,9 +13,12 @@ namespace MauiApp2;
 public partial class LoginPage : ContentPage
 {
     public string usrnm;
+    public FeaturedAPI api;
     public LoginPage()
     {
         InitializeComponent();
+        api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
+        
     }
     string pass;
     IBluetoothLE ble = CrossBluetoothLE.Current;
@@ -72,18 +77,24 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    void OnLoginBtnClicked(object sender, EventArgs e) //navigate to simulator
+    async void OnLoginBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         if (usrnm != null && pass != null)//placeholder until user db set up
         {
             MakeFile("test.txt");
             WriteFile("test.txt", usrnm);
             BluetoothState state = ble.State;
-            Navigation.PushAsync(new MainPage(usrnm));
+            MainViewModel mvm = new MainViewModel(usrnm, pass);
+            //ApiLogin();
+            await api.Login(usrnm, pass); //commented out until db server active
+            //Console.WriteLine("logged in maybe");
+            Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
+            await Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
-        else DisplayAlert("Alert", "Please Enter Username and Password", "OK");
+        else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
 
     }
+    
 }
 
 

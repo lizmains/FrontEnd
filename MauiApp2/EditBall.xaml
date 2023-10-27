@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.EditBall">
+       <ScrollView>
+              <VerticalStackLayout>
+                     <Label x:Name = "BallName"
+                            Text="Ball to Edit"
+                            SemanticProperties.HeadingLevel="Level1"
+                            FontSize="20"
+                            HorizontalOptions="Center"
+                     />
+                     
+                     <Entry x:Name="ballName"
+                            Placeholder="Enter Ball Name"
+                            TextChanged="OnNameChanged"
+                            Completed="OnNameEnter"
+                            ReturnType="Next"
+                     />
+        
+                <Entry x:Name="ballWeight"
+                       Placeholder="Enter Ball Weight"
+                       TextChanged="OnWtChanged"
+                       Completed="OnWtEnter"
+                       Keyboard="Numeric"
+                       ReturnType="Next"
+                />
+                  
+                  <Entry x:Name="ballColor"
+                         Placeholder="Enter Ball Color"
+                         TextChanged="OnColorChanged"
+                         Completed="OnColorEnter"
+                         ReturnType="Next"
+                  />
+                  
+                  <Entry x:Name="ballCore"
+                         Placeholder="Core (Symmetric/Asymmetric)"
+                         TextChanged="OnCoreChanged"
+                         Completed="OnCoreEnter"
+                         ReturnType="Next"
+                  />
+                  <Entry x:Name="ballCover"
+                         Placeholder="Enter Ball Coverstock"
+                         TextChanged="OnCovChanged"
+                         Completed="OnCovEnter"
+                         ReturnType="Next"
+                  />
+                     <Entry x:Name="ballComm"
+                            Placeholder="Enter Comments"
+                            TextChanged="OnComChanged"
+                            Completed="OnComEnter"
+                            ReturnType="Go"
+                     />
+                  <HorizontalStackLayout>
+                     <Button
+                         x:Name="SaveBtn"
+                         Text="Save Changes"
+                         SemanticProperties.Hint="Save changes"
+                         Clicked="OnSave"
+                         />
+                  <Button
+                         x:Name="CancelBtn"
+                         Text="Cancel"
+                         SemanticProperties.Hint="Cancel changes"
+                         Clicked="OnCancel"
+                  />    
+                  </HorizontalStackLayout>
+                  
+              </VerticalStackLayout>
+        </ScrollView>
+</ContentPage>

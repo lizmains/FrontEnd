@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
+using System.Windows.Input;
 //using Plugin.BLE.iOS;
 using Shiny;
 //using Device = Plugin.BLE.iOS.Device;
@@ -31,11 +33,13 @@ public partial class btPage : ContentPage
     string deviceName;
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
-    private List<Ball> savedDots;
-    public List<Ball> Saved
-    {
-        get { return savedDots; }
-    }
+    private /*List*/ObservableCollection<Ball> savedDots;
+    private object selectBall;
+    private Ball theBall;
+    private Ball newBall;
+    private Ball addedBall;
+    private bool refsh;//for refreshview, not used currently
+    private ObservableCollection<Ball> displayList;
 
     public btPage()
     {
@@ -45,181 +49,147 @@ public partial class btPage : ContentPage
         //adapter = CrossBluetoothLE.Current.Adapter; //this being here is causing btpage not to open?????
         deviceList = new List<IDevice>();
         deviceList.Clear();
-        savedDots = new List<Ball>();//dont keep this
+        savedDots = new /*List*/ObservableCollection<Ball>(); //dont keep this when db made
+        displayList = new ObservableCollection<Ball>();
         savedDots.Add(new Ball(null));
-        DotsList.ItemsSource = savedDots;
+        newBall = new Ball(null);
+        addedBall = new Ball(null);
+        DotsList.ItemsSource = displayList;//savedDots;
+        RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
+        
+        Ball ball1 = new Ball(null); //test balls for display purposes
+        ball1.name="ball one";
+        Ball ball2 = new Ball(null);
+        ball2.name="ball two";
+        Ball ball3 = new Ball(null);
+        ball3.name="ball three";
+        savedDots.Add(ball1);
+        savedDots.Add(ball2);
+        savedDots.Add(ball3);
     }
+
+    private void LoadData() //updates collectionView to reflect savedDots list
+    {                       //For UI to update properly, collection bound to view is separate from working list
+        displayList.Clear();
+        foreach (Ball ball in savedDots)
+        {
+            displayList.Add(ball);
+        }
+        DotsList.ItemsSource = displayList;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (newBall.dev != null)
+        {
+            addedBall.dev = newBall.dev;
+            savedDots.Add(new Ball(addedBall.dev));
+            newBall.dev = null;
+        }
+        LoadData();
+    }
+
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new MainPage());
+        // Navigation.PushAsync(new MainPage());
     }
-    
-    async void ScanClicked(object sender, EventArgs e)
+
+    async Task RefreshItems()
     {
+        RefView.IsRefreshing = true;
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        RefView.IsRefreshing = false;
+    }
+
+    private void OnBallSelect(object sender, EventArgs e)
+    {
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
+        if (selectBall != null)
+        {
+            if (theBall.dev != null)
+            {
+                DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                                                      "Weight: " + theBall.weight + "lbs.\n" + 
+                                                      "Color: " + theBall.color + "\n" + 
+                                                      "Core: " + theBall.core + "\n" + 
+                                                      "CoverStock: " + theBall.cover + "\n" + 
+                                                      "ID: " + theBall.dev.Id + "\n", 
+                                               "Done");
+            }
+            else
+            {
+                DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                                           "Weight: " + theBall.weight + "lbs.\n" + 
+                                           "Color: " + theBall.color + "\n" + 
+                                           "Core: " + theBall.core + "\n" + 
+                                           "CoverStock: " + theBall.cover + "\n" + 
+                                           "ID: No Device" + "\n", 
+                    "Done");
+            }
+           
+        } else Console.WriteLine("Selection failed");
+    }
+
+    async void OnBallEdit(object sender, EventArgs e)
+    {
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall; 
+        await Navigation.PushModalAsync(new EditBall(theBall));
+        LoadData();
+    }
+
+    async void OnBallConnect(object sender, EventArgs e)
+    {
+        selectBall = DotsList.SelectedItem;
+        theBall = (Ball) selectBall;
         try
         {
-            //deviceList.Clear();
-            ScanBtn.Text = "Scanning...";
-            adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
-            if (!ble.Adapter.IsScanning)
-            {
-                Console.WriteLine("Scanning...");
-                await adapter.StartScanningForDevicesAsync();
-            }
-            //scans for devices and adds discovered devices to device list
+            Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
+            device = await adapter.ConnectToKnownDeviceAsync(theBall.dev.Id);
+            //await adapter.ConnectToDeviceAsync(deviceList[0]);
         }
-        catch (Exception ex)
+        catch (DeviceConnectionException erm)
         {
-            DisplayAlert("Alert", "Scan Failed", "OK");
+            // ... could not connect to device
+            DisplayAlert("Alert", "Unable to connect to device", "OK");
         }
+        finally
+        {
+            if (device != null) //if a device is connected, write to console, get device info
+            {
+                Console.WriteLine("Connected to Device");
+                services = await device.GetServicesAsync();
+                //charstics = await services[0].GetCharacteristicsAsync();
+                ConDev.Text = "Connected: " + device.Name;
+            } else Console.WriteLine("Failed to Connect");
+        }
+    }
+
+    async void OnDisconnect(object sender, EventArgs e)
+    {
+        if (device != null)
+        {
+           await adapter.DisconnectDeviceAsync(device); 
+           Console.WriteLine("Disconnected from " + device.Name); 
+        } else Console.WriteLine("No device connected");
         
-    }
-    
-    void Checkcheck(object sender, EventArgs e)//temporary check to see if scanner is working
-    {
-        if (deviceList[0] == null)
-        {
-            DisplayAlert("Alert", "Scan failed", "OK");
-        }
-        else
-        {
-            Devices.Text = $"Name: {deviceList[0].Name}, ID: {deviceList[0].Id}\n";
-            for (int i = 1; i < 10; i++)
-            {
-                Devices.Text += $"Name: {deviceList[i].Name}, ID: {deviceList[i].Id}\n";
-            }
-        }
-    }
-
-    async void BtEntered(object sender, EventArgs e)
-    {
-        Guid devId = new Guid("62bee4be-e214-6607-7526-91db3e197832"); 
-        //this uses the bluetooth id of michael's headphones for testing 
-        //if (deviceList[0].IsConnectable)
-        //{
-            try
-            {
-                Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
-                device = await adapter.ConnectToKnownDeviceAsync(devId);
-                //await adapter.ConnectToDeviceAsync(deviceList[0]);
-            }
-            catch (DeviceConnectionException erm)
-            {
-                // ... could not connect to device
-                DisplayAlert("Alert", "Unable to connect to device", "OK");
-            }
-            finally
-            {
-                if (device != null) //if a device is connected, write to console, get device info
-                {
-                    Console.WriteLine("Connected to Device");
-                    services = await device.GetServicesAsync();
-                    //charstics = await services[0].GetCharacteristicsAsync();
-                    ConDev.Text = "Connected: " + device.Name;
-                } else Console.WriteLine("Failed to Connect");
-            }
-        //} else DisplayAlert("Alert", "Unable to connect to device", "OK");
-        
-    }
-    
-    private void OnDevChanged(object sender, TextChangedEventArgs e)
-    {
-        string oldName = e.OldTextValue;
-        string newName = e.NewTextValue;
-        deviceName = devName.Text;
-    }
-
-    async void OnDevEnter(object sender, EventArgs e)
-    {
-        Console.WriteLine("Searching List...");
-        deviceName = devName.Text;
-        for (int i = 0; i < deviceList.Count(); i++)
-        {
-            if (deviceList[i].Name == deviceName)
-            {
-                try
-                {
-                   await adapter.ConnectToDeviceAsync(deviceList[i]);
-                   device = deviceList[i];
-                }
-                catch (DeviceConnectionException erm)
-                {
-                    DisplayAlert("Alert", "Unable to connect to device", "OK");
-                }
-                finally
-                {
-                    if (device != null) //if a device is connected, write to console, get device info
-                    {
-                        Console.WriteLine("Connected to Device");
-                        services = await device.GetServicesAsync();
-                        //charstics = await services[0].GetCharacteristicsAsync();
-                        ConDev.Text = "Connected: " + device.Name;
-                        savedDots.Add(new Ball(device)); //adds device to list of saved balls
-                        if (savedDots[0] != null)
-                        {
-                            Dots.Text += savedDots[0].name;
-                            //Dots.Text += savedDots[0].getDev().Id;
-                        }
-                        else Console.WriteLine("ball class no work");
-                    } else Console.WriteLine("Failed to Connect");
-                }
-                break;
-            }
-        }
-
-        if (device == null)
-        {
-            DisplayAlert("Alert", "Unknown Device", "OK");
-        }
-    }
-
-
-    async void getServices(object sender, EventArgs e)
-    {
-        if (device != null)//displays all device info from service down to characteristic
-        {
-            for (int j = 0; j < services.Count(); j++)
-            {
-                Console.WriteLine("------------------------------------");
-                Console.WriteLine("Service "+j+": " + services[j].Name);
-                DevInfo.Text += $"Service: {services[j].Name}\n";
-                charstics = await services[j].GetCharacteristicsAsync();
-                for (int i = 0; i < charstics.Count(); i++)
-                {
-                    Console.WriteLine(".....Characteristic "+j+"-" + i + ": " + charstics[i].Name);
-                    if (charstics[i].CanRead)
-                    {
-                        var charBytes = await charstics[i].ReadAsync();
-                        Console.WriteLine("     Read Bytes: " + charstics[i].StringValue);
-                    }
-                    DevInfo.Text += $"      Characteristic: {charstics[i].Name}\n";
-                    
-                    descs = await charstics[i].GetDescriptorsAsync();
-                    for (int c = 0; c < descs.Count(); c++)
-                    {
-                        Console.WriteLine("..........Descriptor "+j+"-" + i + "-" + c+ ": " + descs[0].Name);
-                        DevInfo.Text += $"                Descriptor: {descs[i].Name}\n";
-                    }
-                }
-            }
-            Console.WriteLine("------------------------------------");
-            //read bytes from 1st characteristic of 3rd service for iPhone battery
-            batteryChars = await services[3].GetCharacteristicsAsync();
-            if (batteryChars[0].CanRead)
-            {
-               var bytes = await batteryChars[0].ReadAsync();
-               //var stringBytes = batteryChars[0].StringValue;// same as bytes.data;
-               Console.WriteLine("Battery: " + bytes.data[0] + "%");
-               DevInfo.Text += $"Battery: {bytes.data[0]}%";
-            } else Console.WriteLine("Can't Do it Boss");
-            
-        } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
-        Shell.Current.GoToAsync(nameof(MainPage));
+        Shell.Current.GoToAsync("..");
     }
+    
+    async void OnScanPage(object sender, EventArgs e)
+    {
+        //newBall = new Ball(null);
+        await Navigation.PushModalAsync(new ScanPage(newBall));
+        //savedDots.Add(newBall);
+        //LoadData();
+    }
+    
 }
