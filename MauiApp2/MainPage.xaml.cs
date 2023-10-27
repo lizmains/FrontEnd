@@ -43,7 +43,7 @@ public partial class MainPage : ContentPage
             UserName = mvm.Username
         });
         
-        for (int i = 0; i < App.UserRepository.GetAllUsers().Count; i++)
+        for (int i = /*0*/App.UserRepository.GetAllUsers().Count-1; i < App.UserRepository.GetAllUsers().Count; i++)
         {
             Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
             
