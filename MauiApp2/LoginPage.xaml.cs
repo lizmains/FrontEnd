@@ -17,7 +17,7 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
-        api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/Test/TestTime");
+        api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
         
     }
     string pass;
@@ -87,7 +87,8 @@ public partial class LoginPage : ContentPage
             MainViewModel mvm = new MainViewModel(usrnm, pass);
             //ApiLogin();
             await api.Login(usrnm, pass); //commented out until db server active
-            Console.WriteLine("logged in maybe");
+            //Console.WriteLine("logged in maybe");
+            Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
             await Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
         else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
