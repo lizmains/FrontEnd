@@ -13,8 +13,8 @@ public partial class GamePage : ContentPage
         InitializeComponent();
     }
     
-    private void OnNewGameBtnClicked(object sender, EventArgs e) //navigate to simulator
+    private async void OnNewGameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
-        Navigation.PushAsync(new NewGame());
+        await Navigation.PushAsync(new NewGame());
     }
 }

@@ -17,7 +17,7 @@ public partial class NewGame : ContentPage
         InitializeComponent();
     }
     
-    private void OnNextFrameClicked(object sender, EventArgs e)
+    private async void OnNextFrameClicked(object sender, EventArgs e)
     {
         if (count <= 10)
         {
@@ -27,7 +27,7 @@ public partial class NewGame : ContentPage
         SemanticScreenReader.Announce(FrameNum.Text); //not too sure what this does
     }
     
-    private void OnPrevFrameClicked(object sender, EventArgs e)
+    private async void OnPrevFrameClicked(object sender, EventArgs e)
     {
         if (count > 1)
         {

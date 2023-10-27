@@ -103,7 +103,7 @@ public partial class btPage : ContentPage
         RefView.IsRefreshing = false;
     }
 
-    private void OnBallSelect(object sender, EventArgs e)
+    async private void OnBallSelect(object sender, EventArgs e)
     {
         selectBall = DotsList.SelectedItem;
         theBall = (Ball) selectBall;
@@ -111,7 +111,7 @@ public partial class btPage : ContentPage
         {
             if (theBall.dev != null)
             {
-                DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                await DisplayAlert("Ball Specs", theBall.name + "\n" + 
                                                       "Weight: " + theBall.weight + "lbs.\n" + 
                                                       "Color: " + theBall.color + "\n" + 
                                                       "Core: " + theBall.core + "\n" + 
@@ -121,7 +121,7 @@ public partial class btPage : ContentPage
             }
             else
             {
-                DisplayAlert("Ball Specs", theBall.name + "\n" + 
+                await DisplayAlert("Ball Specs", theBall.name + "\n" + 
                                            "Weight: " + theBall.weight + "lbs.\n" + 
                                            "Color: " + theBall.color + "\n" + 
                                            "Core: " + theBall.core + "\n" + 
@@ -154,7 +154,7 @@ public partial class btPage : ContentPage
         catch (DeviceConnectionException erm)
         {
             // ... could not connect to device
-            DisplayAlert("Alert", "Unable to connect to device", "OK");
+            await DisplayAlert("Alert", "Unable to connect to device", "OK");
         }
         finally
         {
@@ -178,10 +178,10 @@ public partial class btPage : ContentPage
         
     }
     
-    private void OnHomeBtnClicked(object sender, EventArgs e)
+    async private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
-        Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync("..");
     }
     
     async void OnScanPage(object sender, EventArgs e)

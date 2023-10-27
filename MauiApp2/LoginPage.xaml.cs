@@ -36,12 +36,12 @@ public partial class LoginPage : ContentPage
         pass = password.Text;
     }
 
-    void OnUsrEnter(object sender, EventArgs e)
+    async void OnUsrEnter(object sender, EventArgs e)
     {
         usrnm = ((Entry)sender).Text;
         OnLoginBtnClicked(sender, e);
     }
-    void OnPassEnter(object sender, EventArgs e)
+    async void OnPassEnter(object sender, EventArgs e)
     {
         pass = ((Entry)sender).Text;
         OnLoginBtnClicked(sender, e);
