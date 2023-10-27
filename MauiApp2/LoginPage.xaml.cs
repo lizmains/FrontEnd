@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Client;
+using Common.POCOs;
 using MauiApp2.ViewModel;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
@@ -86,9 +87,9 @@ public partial class LoginPage : ContentPage
             BluetoothState state = ble.State;
             MainViewModel mvm = new MainViewModel(usrnm, pass);
             //ApiLogin();
-            await api.Login(usrnm, pass); //commented out until db server active
+            Console.WriteLine(await api.Login(usrnm, pass)); //commented out until db server active
             //Console.WriteLine("logged in maybe");
-            Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
+            Console.WriteLine((await api.Get<DateTimePoco>("Test/TestTime")).Result.DateTime);
             await Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
         else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
