@@ -1,4 +1,5 @@
-﻿using MauiApp2.ViewModel;
+using Client;
+using MauiApp2.ViewModel;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
@@ -11,6 +12,7 @@ public partial class MainPage : ContentPage
     string user = "N/A";
     public MainPage()
     {
+        //Client.APIConnection;
         InitializeComponent();
         
         IBluetoothLE ble = CrossBluetoothLE.Current;
