@@ -10,6 +10,15 @@
         Title="Login"
         ContentTemplate="{DataTemplate local:LoginPage}"
         Route="LoginPage" />
+    
+    <!-- To make the Create Account Page the first page displayed, uncomment
+the CreateAccount Page Comment-->
+    
+    <!-- <ShellContent -->
+    <!--     Title="CreateAccount" -->
+    <!--     ContentTemplate="{DataTemplate local:CreateAccountPage}" -->
+    <!--     Route="CreateAccountPage"></ShellContent> -->
+    
     <!--<ShellContent
         Title="Sim"
         ContentTemplate="{DataTemplate local:SimPage}"

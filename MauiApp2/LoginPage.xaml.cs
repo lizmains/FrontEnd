@@ -24,7 +24,7 @@ public partial class LoginPage : ContentPage
     IBluetoothLE ble = CrossBluetoothLE.Current;
 
     private void OnUsrChanged(object sender, TextChangedEventArgs e)
-    {
+    {   
         string oldUsr = e.OldTextValue;
         string newUsr = e.NewTextValue;  //Events for assigning 
         usrnm = username.Text;
