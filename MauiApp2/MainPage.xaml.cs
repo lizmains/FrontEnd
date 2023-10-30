@@ -22,6 +22,7 @@ public partial class MainPage : ContentPage
         {
             BluetoothState blue = ble.State;
             BlueStat.Text = $"Bluetooth: {blue}";
+            
         };
     }
     Boolean bt;
