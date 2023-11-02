@@ -81,6 +81,8 @@ public partial class LoginPage : ContentPage
     {
         if (usrnm != null && pass != null)//placeholder until user db set up
         {
+            Console.WriteLine("Inserted Username===" + usrnm);
+            Console.WriteLine("Inserted Password===" + pass);
             MakeFile("test.txt");
             WriteFile("test.txt", usrnm);
             BluetoothState state = ble.State;
@@ -88,11 +90,17 @@ public partial class LoginPage : ContentPage
             //ApiLogin();
             await api.Login(usrnm, pass); //commented out until db server active
             //Console.WriteLine("logged in maybe");
+            Console.WriteLine("API CONNECTION==");
             Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
             await Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
         else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
 
+    }
+    
+    async void OnCreateAccBtnClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new CreateAccountPage());
     }
     
 }
