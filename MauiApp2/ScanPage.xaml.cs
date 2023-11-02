@@ -34,6 +34,7 @@ public partial class ScanPage : ContentPage
     private ObservableCollection<IDevice> devDisplay;
     private int dataRange;
     private Ball tempNew;
+    private IService mmsBat;
     
     public ScanPage(Ball newBall)
     {
@@ -191,6 +192,18 @@ public partial class ScanPage : ContentPage
             } else Console.WriteLine("Can't Do it Boss");
             
         } else DisplayAlert("Alert", "Connect to a device", "OK");
+    }
+
+    async void getMMSInfo(object sender, EventArgs e) //service 0 id 0000180f-0000-1000-8000-00805f9b34fb
+    {//testing getting data from specific MMS module
+        if (device.Id == new Guid("ec5ddd38-6362-c5e0-6cd0-ae865b8d483c"))
+        {
+            mmsBat = await device.GetServiceAsync(new Guid("0000180f-0000-1000-8000-00805f9b34fb"));
+            charstics = await mmsBat.GetCharacteristicsAsync();
+            var bytes = await charstics[0].ReadAsync();
+            Console.WriteLine("MMS battery: " + bytes.data[0] + "%");
+            DevInfo.Text += $"MMS Battery: {bytes.data[0]}%";
+        } else DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
     
     async void OnDisconnect(object sender, EventArgs e)

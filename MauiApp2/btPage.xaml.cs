@@ -18,6 +18,7 @@ using Shiny;
 //using Device = Plugin.BLE.iOS.Device;
 
 // using Shiny.BluetoothLE;
+//MMS-1 UUID ec5ddd38-6362-c5e0-6cd0-ae865b8d483c
 
 namespace MauiApp2;
 public partial class btPage : ContentPage
@@ -145,10 +146,11 @@ public partial class btPage : ContentPage
     {
         selectBall = DotsList.SelectedItem;
         theBall = (Ball) selectBall;
+        Guid id = new Guid("c41b4e97-d17d-11ea-87dd-5c3a45d9cc82");
         try
         {
             Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
-            device = await adapter.ConnectToKnownDeviceAsync(theBall.dev.Id);
+            device = await adapter.ConnectToKnownDeviceAsync(id); //theBall.dev.Id);
             //await adapter.ConnectToDeviceAsync(deviceList[0]);
         }
         catch (DeviceConnectionException erm)

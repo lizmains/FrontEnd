@@ -83,6 +83,12 @@
                 SemanticProperties.Hint="Displays device info in console"
                 Clicked="getServices"
                 HorizontalOptions="Center" />
+            <Button 
+                x:Name="MMSBtn"
+                Text="Get MMS Info"
+                SemanticProperties.Hint="Displays MMS device info in console"
+                Clicked="getMMSInfo"
+                HorizontalOptions="Center" />
             <Label
                 x:Name="DevInfo"
                 Text="{Binding names}"
