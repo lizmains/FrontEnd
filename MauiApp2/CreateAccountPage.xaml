@@ -3,54 +3,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.CreateAccountPage">
-    <ContentPage.Content>
-        <Grid
-            RowSpacing="15"
-            >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="210"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50" ></RowDefinition>
-                
-                
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="200" />
-                
-            </Grid.ColumnDefinitions>
-            <Image Grid.Column="1" Grid.Row="0"
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <Image
                 Source="logo.png"
                 SemanticProperties.Description="the logo for identity purposes idk"
                 HeightRequest="200"
                 HorizontalOptions="Center" />
+
+            <Label
+                Text="Create Your Account"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Entry x:Name="username"
+                   Placeholder="Insert Username"
+                   TextChanged="OnUsrNameChanged"
+            />
+            <Entry x:Name="password"
+                   IsPassword="true"
+                   Placeholder="Insert Password"
+                   TextChanged="OnUsrPassChanged"
+            />
             
-            <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                <Entry 
-                       x:Name="username"
-                       Placeholder="Create Username"
-                       HorizontalOptions="Center"
-                   
+            <Button
+                x:Name="SubmitBtn"
+                Text="Submit"
+                SemanticProperties.Hint="Submit Changes to be Processed"
+                Clicked="OnSubmitClicked"
+                HorizontalOptions="Center"
+            
                 />
-                
-                
-            </VerticalStackLayout>
-            <Entry 
-                x:Name="password"
-                Placeholder="Create Password"
-                HorizontalOptions="Center" Grid.Row="2" Grid.Column="1">
-            </Entry> 
-           
+            <Button 
+                x:Name="LoginBtn"
+                Text="Go Back"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="OnBackBtn"
+                HorizontalOptions="Center" />
             
             
-            
-            <Button Grid.Row="2" Grid.Column="0"
-                    Text="Already have an Account"
-                    ></Button>
-            <Button Grid.Row="2" Grid.Column="2"
-                    Text="Create Account"
-                    ></Button>
-        </Grid>
-    </ContentPage.Content>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

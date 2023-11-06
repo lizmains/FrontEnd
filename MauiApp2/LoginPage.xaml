@@ -39,6 +39,13 @@
                 SemanticProperties.Hint="Navigate to main page when you click"
                 Clicked="OnLoginBtnClicked"
                 HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="CreateAccBtn"
+                Text="Don't have an Account? Click Here!"
+                SemanticProperties.Hint="Navigate to Create Account Page"
+                Clicked="OnCreateAccBtnClicked"
+                HorizontalOptions="Center" />
         </VerticalStackLayout>
     </ScrollView>
 
