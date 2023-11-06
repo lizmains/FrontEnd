@@ -12,15 +12,20 @@ namespace MauiApp2;
 
 public partial class LoginPage : ContentPage
 {
-    public string usrnm;
-    public FeaturedAPI api;
+    private string usrnm;
+    private FeaturedAPI api;
+    private string pass;
     public LoginPage()
     {
         InitializeComponent();
         api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
-        
     }
-    string pass;
+
+    public LoginPage(FeaturedAPI apiIn)
+    {
+        InitializeComponent();
+        api = apiIn;
+    }
     IBluetoothLE ble = CrossBluetoothLE.Current;
 
     private void OnUsrChanged(object sender, TextChangedEventArgs e)
@@ -100,7 +105,7 @@ public partial class LoginPage : ContentPage
     
     async void OnCreateAccBtnClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new CreateAccountPage());
+        await Navigation.PushAsync(new CreateAccountPage(api));
     }
     
 }
