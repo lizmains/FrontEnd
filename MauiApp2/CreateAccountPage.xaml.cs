@@ -12,18 +12,17 @@ public partial class CreateAccountPage : ContentPage
 {
     private string createUsr;
     private string createPass;
-
     private FeaturedAPI api;
     //API will be used for authentication with created username and password
-    public CreateAccountPage()
+    public CreateAccountPage(FeaturedAPI apiIn)
     {
         InitializeComponent();
-        api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
+        api = apiIn;
     }
 
     async void OnBackBtn(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new LoginPage());
+        await Navigation.PushAsync(new LoginPage(api));
     }
 
     private void OnUsrNameChanged(object sender, TextChangedEventArgs e)
@@ -45,7 +44,7 @@ public partial class CreateAccountPage : ContentPage
         if (createUsr != null && createPass != null)
         {
             //Handle API Creation of an account here
-            UserIdentification UserID = new UserIdentification("createUsr", "createPass");
+            UserIdentification UserID = new UserIdentification(createUsr, createPass);
             // We want to execute a POST to User/Authorize
             // We will provide a UserIdentification (for now just username and password)
             // We expect back a DualToken POCO
@@ -67,7 +66,7 @@ public partial class CreateAccountPage : ContentPage
             Console.WriteLine("New Username===" + createUsr);
             Console.WriteLine("New Password===" + createPass);
             
-            await Navigation.PushAsync(new LoginPage());
+            await Navigation.PushAsync(new LoginPage(api));
         }
         else
         {
