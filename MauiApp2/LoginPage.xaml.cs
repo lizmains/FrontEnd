@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Client;
-using Common.POCOs;
 using MauiApp2.ViewModel;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
@@ -13,19 +12,24 @@ namespace MauiApp2;
 
 public partial class LoginPage : ContentPage
 {
-    public string usrnm;
-    public FeaturedAPI api;
+    private string usrnm;
+    private FeaturedAPI api;
+    private string pass;
     public LoginPage()
     {
         InitializeComponent();
         api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
-        
     }
-    string pass;
+
+    public LoginPage(FeaturedAPI apiIn)
+    {
+        InitializeComponent();
+        api = apiIn;
+    }
     IBluetoothLE ble = CrossBluetoothLE.Current;
 
     private void OnUsrChanged(object sender, TextChangedEventArgs e)
-    {
+    {   
         string oldUsr = e.OldTextValue;
         string newUsr = e.NewTextValue;  //Events for assigning 
         usrnm = username.Text;
@@ -37,12 +41,12 @@ public partial class LoginPage : ContentPage
         pass = password.Text;
     }
 
-    async void OnUsrEnter(object sender, EventArgs e)
+    void OnUsrEnter(object sender, EventArgs e)
     {
         usrnm = ((Entry)sender).Text;
         OnLoginBtnClicked(sender, e);
     }
-    async void OnPassEnter(object sender, EventArgs e)
+    void OnPassEnter(object sender, EventArgs e)
     {
         pass = ((Entry)sender).Text;
         OnLoginBtnClicked(sender, e);
@@ -82,18 +86,26 @@ public partial class LoginPage : ContentPage
     {
         if (usrnm != null && pass != null)//placeholder until user db set up
         {
+            Console.WriteLine("Inserted Username===" + usrnm);
+            Console.WriteLine("Inserted Password===" + pass);
             MakeFile("test.txt");
             WriteFile("test.txt", usrnm);
             BluetoothState state = ble.State;
             MainViewModel mvm = new MainViewModel(usrnm, pass);
             //ApiLogin();
-            Console.WriteLine(await api.Login(usrnm, pass)); //commented out until db server active
+            await api.Login(usrnm, pass); //commented out until db server active
             //Console.WriteLine("logged in maybe");
-            Console.WriteLine((await api.Get<DateTimePoco>("Test/TestTime")).Result.DateTime);
+            Console.WriteLine("API CONNECTION==");
+            Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
             await Navigation.PushAsync(new MainPage(usrnm, mvm));
         }
         else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
 
+    }
+    
+    async void OnCreateAccBtnClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new CreateAccountPage(api));
     }
     
 }

@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp2.LoginPage"
-             Title="LoginPage">
-
+             x:Class="MauiApp2.CreateAccountPage">
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
@@ -17,36 +16,37 @@
                 HorizontalOptions="Center" />
 
             <Label
-                Text="RevMetrix"
+                Text="Create Your Account"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
 
             <Entry x:Name="username"
-                   Placeholder="Enter Username"
-                   TextChanged="OnUsrChanged"
-                   Completed="OnUsrEnter"
+                   Placeholder="Insert Username"
+                   TextChanged="OnUsrNameChanged"
             />
             <Entry x:Name="password"
                    IsPassword="true"
-                   Placeholder="Enter Password"
-                   TextChanged="OnPassChanged"
-                   Completed="OnPassEnter"
+                   Placeholder="Insert Password"
+                   TextChanged="OnUsrPassChanged"
             />
-            <Button 
-                x:Name="LoginBtn"
-                Text="Sign In"
-                SemanticProperties.Hint="Navigate to main page when you click"
-                Clicked="OnLoginBtnClicked"
-                HorizontalOptions="Center" />
             
             <Button
-                x:Name="CreateAccBtn"
-                Text="Don't have an Account? Click Here!"
-                SemanticProperties.Hint="Navigate to Create Account Page"
-                Clicked="OnCreateAccBtnClicked"
+                x:Name="SubmitBtn"
+                Text="Submit"
+                SemanticProperties.Hint="Submit Changes to be Processed"
+                Clicked="OnSubmitClicked"
+                HorizontalOptions="Center"
+            
+                />
+            <Button 
+                x:Name="LoginBtn"
+                Text="Go Back"
+                SemanticProperties.Hint="Navigate to main page when you click"
+                Clicked="OnBackBtn"
                 HorizontalOptions="Center" />
+            
+            
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>
