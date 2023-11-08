@@ -5,6 +5,8 @@
              x:Class="MauiApp2.VideoPage">
     <ContentPage.Content>
         <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
             VerticalOptions="Center">
             
             <Label

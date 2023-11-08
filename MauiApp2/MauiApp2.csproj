@@ -60,6 +60,8 @@
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
+		<PackageReference Include="Xam.Plugin.Media" Version="6.0.2" />
+		<PackageReference Include="Xamarin.MediaGallery" Version="2.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
