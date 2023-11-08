@@ -51,6 +51,8 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="MetaWear.CSharp" Version="1.2.0" />
+		<PackageReference Include="MetaWear.CSharp.NetStandard" Version="1.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Plugin.BLE" Version="3.0.0-rc.1" />
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
@@ -60,6 +62,7 @@
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
+		<PackageReference Include="Warble.Net" Version="1.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -76,6 +79,8 @@
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
+		<Compile Remove="ViewModel\MyBleGatt.cs" />
+		<Compile Remove="ViewModel\MyLibIO.cs" />
         
 	</ItemGroup>
 
@@ -101,6 +106,8 @@
 	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Common.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
+
+
 
 
 

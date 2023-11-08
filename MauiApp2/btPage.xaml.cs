@@ -19,6 +19,7 @@ using Shiny;
 
 // using Shiny.BluetoothLE;
 //MMS-1 UUID ec5ddd38-6362-c5e0-6cd0-ae865b8d483c
+//Luke's laptop UUID C41B4E97-D17D-11EA-87DD-5C3A45D9CC82
 
 namespace MauiApp2;
 public partial class btPage : ContentPage
@@ -146,11 +147,11 @@ public partial class btPage : ContentPage
     {
         selectBall = DotsList.SelectedItem;
         theBall = (Ball) selectBall;
-        Guid id = new Guid("c41b4e97-d17d-11ea-87dd-5c3a45d9cc82");
+        Guid id = new Guid("c2279169-ab35-323-4748-3c220726100");//luke's uuid
         try
         {
             Console.WriteLine("Trying to Connect"); //tries connecting to the device with ID devId
-            device = await adapter.ConnectToKnownDeviceAsync(id); //theBall.dev.Id);
+            device = await adapter.ConnectToKnownDeviceAsync(theBall.dev.Id);//id);//changed to Luke's UUID 
             //await adapter.ConnectToDeviceAsync(deviceList[0]);
         }
         catch (DeviceConnectionException erm)

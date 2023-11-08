@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MauiApp2.ViewModel;
+using MauiApp2.MetaWearInterfaces;
 using Microsoft.Extensions.Logging;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
@@ -13,6 +14,15 @@ using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
 using System.Windows.Input;
+using MbientLab.MetaWear;
+using MbientLab.MetaWear.Core;
+using MbientLab.MetaWear.Impl;
+using MbientLab.MetaWear.Impl.Platform;
+using MbientLab.MetaWear.Peripheral;
+using MbientLab.MetaWear.Peripheral.Led;
+using netstandard = MbientLab.MetaWear.NetStandard;
+
+//using Color = System.Drawing.Color;
 
 namespace MauiApp2;
 
@@ -35,6 +45,10 @@ public partial class ScanPage : ContentPage
     private int dataRange;
     private Ball tempNew;
     private IService mmsBat;
+    private IService mmsServ2;
+    private IBluetoothLeGatt gatt;
+    private ILibraryIO io;
+    private IMetaWearBoard metawear;
     
     public ScanPage(Ball newBall)
     {
@@ -134,9 +148,9 @@ public partial class ScanPage : ContentPage
                     if (device != null) //if a device is connected, write to console, get device info
                     {
                         Console.WriteLine("Connected to Device");
+                        ConDev.Text = "Connected: " + device.Name;
                         services = await device.GetServicesAsync();
                         //charstics = await services[0].GetCharacteristicsAsync();
-                        ConDev.Text = "Connected: " + device.Name;
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
                         tempNew.dev = device;
                     } else Console.WriteLine("Failed to Connect");
@@ -150,6 +164,40 @@ public partial class ScanPage : ContentPage
             DisplayAlert("Alert", "Unknown Device", "OK");
         }
     }
+    
+    /// <summary>
+    /// Bond with connected device
+    /// This is essentially pairing,but with a saved secure key
+    /// This is separate for testing, eventually it will be a
+    /// part of the connection feature
+    /// Meaning every connection will require pairing
+    /// </summary>
+    async void OnBondEnter(object sender, EventArgs e)
+    {
+        if (device != null)
+        {
+            try
+            {
+                await adapter.BondAsync(device);
+            }
+            catch (DeviceConnectionException erm)
+            {
+                DisplayAlert("Alert", "Unable to Bond", "OK");
+            }
+            finally
+            {
+                if (device.BondState == DeviceBondState.Bonded)
+                {
+                    Console.WriteLine("Bonded");
+                    BondedState.Text = "Paired";//not working
+                } 
+                else if (device.BondState == DeviceBondState.NotSupported)
+                {
+                    Console.WriteLine("Bonding Not Supported");
+                }else Console.WriteLine("Bond Failed");
+            }
+        }
+    }
 
 
     async void getServices(object sender, EventArgs e)
@@ -159,7 +207,7 @@ public partial class ScanPage : ContentPage
             for (int j = 0; j < services.Count(); j++)
             {
                 Console.WriteLine("------------------------------------");
-                Console.WriteLine("Service "+j+": " + services[j].Name);
+                Console.WriteLine("Service "+j+": " + services[j].Name + " - ID: " + services[j].Id);
                 DevInfo.Text += $"Service: {services[j].Name}\n";
                 charstics = await services[j].GetCharacteristicsAsync();
                 for (int i = 0; i < charstics.Count(); i++)
@@ -189,6 +237,7 @@ public partial class ScanPage : ContentPage
                //var stringBytes = batteryChars[0].StringValue;// same as bytes.data;
                Console.WriteLine("Battery: " + bytes.data[0] + "%");
                DevInfo.Text += $"Battery: {bytes.data[0]}%";
+               Console.WriteLine("RSSI: "+ device.Rssi);
             } else Console.WriteLine("Can't Do it Boss");
             
         } else DisplayAlert("Alert", "Connect to a device", "OK");
@@ -203,6 +252,20 @@ public partial class ScanPage : ContentPage
             var bytes = await charstics[0].ReadAsync();
             Console.WriteLine("MMS battery: " + bytes.data[0] + "%");
             DevInfo.Text += $"MMS Battery: {bytes.data[0]}%";
+            mmsServ2 = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
+            charstics = await mmsServ2.GetCharacteristicsAsync();
+            var mmsBytes = await charstics[0].ReadAsync();
+            Console.WriteLine("MMS Bytes from Service 2: " + mmsBytes.data[0]);
+            
+            for (int i = 0; i < mmsBytes.data.Length; i++)
+            {
+                Console.WriteLine("Byte " +i+ ": " + mmsBytes.data[i]);
+            }
+            Console.WriteLine(mmsBytes.resultCode);
+            Console.WriteLine("RSSI: "+ device.Rssi);
+            //ILed led = (ILed) null;
+            //led.Play();
+
         } else DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
     
@@ -211,7 +274,8 @@ public partial class ScanPage : ContentPage
         if (device != null)
         {
             await adapter.DisconnectDeviceAsync(device); 
-            Console.WriteLine("Disconnected from " + device.Name); 
+            Console.WriteLine("Disconnected from " + device.Name);
+            device = null;
         } else Console.WriteLine("No device connected");
         
     }
@@ -241,6 +305,53 @@ public partial class ScanPage : ContentPage
             } else Console.WriteLine("Failed to Connect");
         }
     }
+    
+    //----------THE METAWEAR ZONE-----------
+
+    async void MetaMotionStuff(object sender, EventArgs e)
+    {
+        try
+        {
+            metawear = netstandard.Application.GetMetaWearBoard("C4:0E:7F:6E:59:3A"); //hard coded for an mms
+            await metawear.InitializeAsync();
+            Console.WriteLine("Board Initialized;");
+        }
+        catch(Exception erm)
+        {
+            Console.WriteLine("Error: " + erm.Message);
+        }
+    }
+    /*class Led {
+        static async Task RunAsync(string[] args) {
+            var metawear = await ScanConnect.Connect(args[0]);
+
+            var led = metawear.GetModule<ILed>();
+            //led.EditPattern(Color.Green, Pattern.Solid);
+            led.Play();
+
+            await Task.Delay(5000);
+            led.Stop(true);
+
+            // Have the board terminate the BLE connection
+            // Ensures all commands are received
+            await metawear.GetModule<IDebug>().DisconnectAsync();
+        }
+    }
+    class ScanConnect {
+        static string ScanForMetaWear() {
+            throw new NotImplementedException();
+        }
+
+        internal static async Task<IMetaWearBoard> Connect(string mac, int retries = 2) {
+            throw new NotImplementedException();
+        }
+
+        static async Task RunAsync(string[] args) {
+            var metawear = await Connect(ScanForMetaWear());
+            Console.WriteLine($"Device information: {await metawear.ReadDeviceInformationAsync()}");
+            await metawear.DisconnectAsync();
+        }
+    }*/
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
