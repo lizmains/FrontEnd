@@ -29,4 +29,10 @@ public class UserRepository
         Init();
         return conn.Table<User>().ToList();
     }
+    public void Delete(int id)
+    {
+        conn = new SQLiteConnection(_dbPath);
+        conn.Delete(new User {UserId=id});
+        
+    }
 }
