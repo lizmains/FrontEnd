@@ -21,6 +21,7 @@ public partial class EditBall : ContentPage
         InitializeComponent();
         tempBall = toEdit;
         BallName.Text = tempBall.name + "\n";
+        cWt = -1;
     }
     void OnNameChanged(object sender, TextChangedEventArgs e)
     {
@@ -37,7 +38,7 @@ public partial class EditBall : ContentPage
     {
         string oldWt = e.OldTextValue;
         string newWT = e.NewTextValue;  //Events for assigning 
-        cWt = Convert.ToInt32(ballWeight.Text); //15;//ballWeight.Text; need to figure out how to get an int
+        cWt = Convert.ToInt32(ballWeight.Text);
     }
     void OnWtEnter(object sender, EventArgs e)
     {
@@ -94,7 +95,7 @@ public partial class EditBall : ContentPage
         {
            tempBall.name = cName; 
         }
-        if (cWt != null)
+        if (cWt != -1)
         {
             tempBall.weight = cWt;
         }

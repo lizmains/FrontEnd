@@ -43,6 +43,13 @@
                    FontSize="18"
                    HorizontalOptions="End"
             />
+            <Label x:Name="BondedState"
+                   Text="{Binding bond}"
+                   SemanticProperties.HeadingLevel="Level2"
+                   SemanticProperties.Description="Bluetooth bond state"
+                   FontSize="18"
+                   HorizontalOptions="End"
+            />
         
             <Button 
                 x:Name="ScanBtn"
@@ -76,12 +83,36 @@
                     SemanticProperties.Hint="Connects to typed device"
                     Clicked="OnDevEnter"
                     HorizontalOptions="Center" />
+            <Button 
+                x:Name="BondBtn"
+                Text="Pair"
+                SemanticProperties.Hint="Pairs to connected device"
+                Clicked="OnBondEnter"
+                HorizontalOptions="Center" />
             
             <Button 
                 x:Name="ServBtn"
                 Text="Get Device Info"
                 SemanticProperties.Hint="Displays device info in console"
                 Clicked="getServices"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="MMSBtn"
+                Text="Get MMS Info"
+                SemanticProperties.Hint="Displays MMS device info in console"
+                Clicked="getMMSInfo"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="MMSInit"
+                Text="Connect To MMS"
+                SemanticProperties.Hint="Connects to MMS SDK way"
+                Clicked="MetaMotionStuff"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="WriteSim"
+                Text="Write to Sim"
+                SemanticProperties.Hint="Writes to sim"
+                Clicked="WriteToSim"
                 HorizontalOptions="Center" />
             <Label
                 x:Name="DevInfo"

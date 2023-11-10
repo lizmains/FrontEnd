@@ -12,15 +12,65 @@
                 Clicked="OnPrevBtnClicked"
                 HorizontalOptions="Center" 
             VerticalOptions="Center"/>-->
+        <Label
+            x:Name="ConDev"
+            Text="{Binding devName}"
+            HorizontalOptions="End"></Label>
 
-        <Label x:Name="WtDisplay"
+        <!--<Label x:Name="DevEntry"
                Text="{Binding ballwt}"
                SemanticProperties.HeadingLevel="Level2"
                SemanticProperties.Description="Entered Ball Weight"
                FontSize="18"
                HorizontalOptions="Center"
-        />
+        />-->
+        
+        <Button 
+            x:Name="ScanBtn"
+            Text="Scan"
+            SemanticProperties.Hint="Navigate to main page when you click"
+            Clicked="ScanClicked"
+            HorizontalOptions="Center" />
 
+        <!--<Entry x:Name="weight"
+               Placeholder="Enter Ball Weight"
+               TextChanged="OnDevChanged"
+               Completed="OnDevEnter"
+        />--> <!-- Keyboard="Numeric" Displays numeric keyboard on mobile app-->
+        
+        <Button 
+            x:Name="ConnectBtn"
+            Text="Connect"
+            SemanticProperties.Hint="Connect To Sim Laptop"
+            Clicked="OnDevEnter"
+            HorizontalOptions="Center" />
+        <Button 
+            x:Name="ServBtn"
+            Text="Read From Sim"
+            SemanticProperties.Hint="Displays device info in console"
+            Clicked="getServices"
+            HorizontalOptions="Center" />
+        <Label
+            x:Name="ReadInfo"
+            Text="{Binding info}"
+            HorizontalOptions="Center"></Label>
+        <Entry x:Name="WriteData"
+               Placeholder="Write text to sim"
+               TextChanged="OnWriteChanged"
+               Completed="OnWriteEnter"
+        />
+        <Button 
+            x:Name="WriteSim"
+            Text="Write to Sim"
+            SemanticProperties.Hint="Writes to sim"
+            Clicked="WriteToSim"
+            HorizontalOptions="Center" />
+        
+        <Label
+            x:Name="DevInfo"
+            Text="{Binding names}"
+            HorizontalOptions="Center"></Label>
+        
         <Button 
             x:Name="NextBtn"
             Text="Get Stats"
@@ -33,12 +83,5 @@
             SemanticProperties.Hint="Navigate to main page when you click"
             Clicked="OnHomeBtnClicked"
             HorizontalOptions="Center" />
-
-        <Entry x:Name="weight"
-               Placeholder="Enter Ball Weight"
-               TextChanged="OnWtChanged"
-               Completed="OnWtEnter"
-               Keyboard="Numeric"
-        /> <!--^Displays numeric keyboard on mobile app-->
     </VerticalStackLayout>
 </ContentPage>

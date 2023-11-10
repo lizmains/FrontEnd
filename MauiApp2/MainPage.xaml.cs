@@ -27,7 +27,7 @@ public partial class MainPage : ContentPage
         };
     }
     Boolean bt;
-    public MainPage(String usernm, MainViewModel mvm)
+    public MainPage(string usernm, MainViewModel mvm)
     {
         InitializeComponent();
         IBluetoothLE ble = CrossBluetoothLE.Current;
@@ -80,12 +80,12 @@ public partial class MainPage : ContentPage
         //UsrDisplay.Text = $"Hello {user}!";
     }
     
-    private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
+    async private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
     {
         bTBtn.Text = $"Pairing...";
         //steps for actual pairing will go here
         // Navigation.PushAsync(new btPage());
-        Shell.Current.GoToAsync(nameof(btPage));
+        await Shell.Current.GoToAsync(nameof(btPage));
         bt = true;
 
         SemanticScreenReader.Announce(bTBtn.Text);
@@ -113,14 +113,14 @@ public partial class MainPage : ContentPage
         Navigation.PushAsync(new FilePage());
     }
 
-    private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
+    async private void OnVidBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         // Navigation.PushAsync(new VideoPage());
-        Shell.Current.GoToAsync(nameof(VideoPage));
+        await Shell.Current.GoToAsync(nameof(VideoPage));
     }
     
-    private void OnGameBtnClicked(object sender, EventArgs e) //navigate to simulator
+    async private void OnGameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
-        Navigation.PushAsync(new GamePage());
+        await Navigation.PushAsync(new GamePage());
     }
 }
