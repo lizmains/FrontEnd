@@ -100,8 +100,8 @@ public partial class LoginPage : ContentPage
         {
             Console.WriteLine("Inserted Username===" + usrnm);
             Console.WriteLine("Inserted Password===" + pass);
-            MakeFile("test.txt");
-            WriteFile("test.txt", usrnm);
+            //MakeFile("test.txt");
+            //WriteFile("test.txt", usrnm);
             BluetoothState state = ble.State;
             MainViewModel mvm = new MainViewModel(usrnm, pass);
             //ApiLogin();
@@ -113,14 +113,7 @@ public partial class LoginPage : ContentPage
             if (authentication == HttpStatusCode.OK)
             {
                 Console.WriteLine(authentication);
-                if (usrnm == checkUsrnm && pass == checkPass)
-                {
-                    await Navigation.PushAsync(new MainPage(usrnm, mvm));
-                }
-                else
-                {
-                    await DisplayAlert("Alert", "Incorrect Username or Password", "OK");
-                }
+                await Navigation.PushAsync(new MainPage(usrnm, mvm));
             }
             else
             {
