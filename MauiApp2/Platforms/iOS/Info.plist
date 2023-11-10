@@ -37,5 +37,9 @@
 	<string></string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Need access to photos and videos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need access to photos and videos</string>
 </dict>
 </plist>

@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 // using Android.Hardware.Camera2;
 // using Android.Media;
 using Stream = System.IO.Stream;
+using CommunityToolkit.Maui.Views;
+using NativeMedia;
+
+// using NativeMedia;
 
 namespace MauiApp2;
 
@@ -62,67 +66,46 @@ public partial class VideoPage : ContentPage
     // found this code at: https://learn.microsoft.com/en-us/dotnet/maui/platform-integration/device-media/picker?tabs=macios#take-a-photo
     public async void TakeVideo()
     {
-        if (MediaPicker.Default.IsCaptureSupported)
+        //IN THE WORKS
+        var video = await MediaPicker.CapturePhotoAsync();
+        // var video = await MediaGallery.CapturePhotoAsync();
+        await MediaGallery.SaveAsync(MediaFileType.Image, await video.OpenReadAsync(), "myMedia.png");
+        if (video == null)
         {
-            FileResult video = await MediaPicker.Default.CaptureVideoAsync();
-
-            if (video != null)
-            {
-                // save the file into local storage
-                // string localFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), video.FileName); //not sure if this is the right directory
-                string localFilePath = Path.Combine(FileSystem.CacheDirectory, video.FileName); //not sure if this is the right directory
-
-                using Stream sourceStream = await video.OpenReadAsync();
-                using FileStream localFileStream = File.OpenWrite(localFilePath);
-
-                await sourceStream.CopyToAsync(localFileStream);
-                await Shell.Current.DisplayAlert("OOPS", localFileStream.Name, "Ok");
-            }
-        }
-    }
-    
-    public async void PickVideo()
-    {
-        // if (MediaPicker.Default.IsCaptureSupported)
-        // {
-        //     FileResult video = await MediaPicker.Default.PickVideoAsync(); //opens camera roll, nothing happens after select video as of right now
-        // }
-
-        var result = await FilePicker.PickAsync(new PickOptions
-        {
-            PickerTitle = "Pick video",
-            FileTypes = FilePickerFileType.Images
-        });
-
-        if (result == null)
-        {
-            return;
+            await DisplayAlert("Null Video", "Video could not be saved", "OK");
         }
 
-        var stream = await result.OpenReadAsync();
-        myVideo.Source = ImageSource.FromStream(() => stream); //I think this has something to do with why it wont come up
     }
     
     public async void PickImage()
     {
-        // if (MediaPicker.Default.IsCaptureSupported)
-        // {
-        //     FileResult video = await MediaPicker.Default.PickVideoAsync(); //opens camera roll, nothing happens after select video as of right now
-        // }
-
-        var result = await FilePicker.PickAsync(new PickOptions
+        
+        // Not using MediaGallery, but the built-in MediaPicker
+        var results = await MediaPicker.PickVideoAsync();
+        // var results = await MediaGallery.PickAsync(1, MediaFileType.Image)
+        
+        //For some reason none of this is being hit at all...
+        await DisplayAlert("You are here 1", "here 1", "OK");
+        
+        if (results == null)
         {
-            PickerTitle = "Pick video",
-            FileTypes = FilePickerFileType.Images
-        });
-
-        if (result == null)
-        {
+            await DisplayAlert("Null Photos", "The photos you have selected are null", "OK");
             return;
         }
+        
+        var fileName = Path.GetFileNameWithoutExtension(results.FullPath);
+        var extension = Path.GetExtension(results.FullPath);
+        var contentType = results.ContentType;
+        var readIt = await results.OpenReadAsync();
+        
+        await DisplayAlert(fileName, $"Extension: {extension}, Full Path: {results.FullPath}, File Name: {results.FileName}", "OK");
+        
+        // myVideo.Source = ImageSource.FromStream(() => readIt);
 
-        var stream = await result.OpenReadAsync();
-        myVideo.Source = ImageSource.FromStream(() => stream);
+        // mediaElement.Source = MediaSource.FromFile(results.FileName);
+        mediaElement.Source = FileMediaSource.FromFile(results.FullPath);
+        
+        await DisplayAlert("You are here", "Here", "OK");
     }
     //public System.Threading.Tasks.Task<Microsoft.Maui.Storage.FileResult> PickVideoAsync (Microsoft.Maui.Media.MediaPickerOptions? options = default);
     

@@ -2,6 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MauiApp2.VideoPage">
     <ContentPage.Content>
         <VerticalStackLayout
@@ -14,10 +15,12 @@
                 FontSize="18"
                 HorizontalOptions="Center" />
             
-            <Image
-                x:Name="myVideo"
-                Source="logo.png"
-                HorizontalOptions="Center"/>
+            <toolkit:MediaElement
+                x:Name="mediaElement"
+                WidthRequest="400" 
+                HeightRequest="300"
+                ShouldAutoPlay="True"
+                Source="embed://squirrel.mp4"/>
             
             <Button
                 x:Name="RecBtn"
