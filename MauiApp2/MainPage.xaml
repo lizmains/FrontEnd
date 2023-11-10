@@ -48,6 +48,14 @@
                 FontSize="18"
                 HorizontalOptions="Center" />
             
+            <Label x:Name="UsrTime"
+                   Text=""
+                   SemanticProperties.HeadingLevel="Level3"
+                   SemanticProperties.Description="Dynamically Display Time of User Login"
+                   FontSize="18"
+                   HorizontalOptions="Center"
+                   />
+            
             <Button 
                 x:Name="NextBtn"
                 Text="Get Stats"
