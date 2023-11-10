@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MauiApp2.ViewModel;
-//using MauiApp2.MetaWearInterfaces;
+using MauiApp2.MetaWearInterfaces;
 using Microsoft.Extensions.Logging;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
