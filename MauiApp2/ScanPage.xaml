@@ -108,6 +108,12 @@
                 SemanticProperties.Hint="Connects to MMS SDK way"
                 Clicked="MetaMotionStuff"
                 HorizontalOptions="Center" />
+            <Button 
+                x:Name="WriteSim"
+                Text="Write to Sim"
+                SemanticProperties.Hint="Writes to sim"
+                Clicked="WriteToSim"
+                HorizontalOptions="Center" />
             <Label
                 x:Name="DevInfo"
                 Text="{Binding names}"

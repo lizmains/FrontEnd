@@ -20,6 +20,7 @@ using MbientLab.MetaWear.Impl;
 using MbientLab.MetaWear.Impl.Platform;
 using MbientLab.MetaWear.Peripheral;
 using MbientLab.MetaWear.Peripheral.Led;
+using MbientLab.Warble;
 using netstandard = MbientLab.MetaWear.NetStandard;
 
 //using Color = System.Drawing.Color;
@@ -49,6 +50,10 @@ public partial class ScanPage : ContentPage
     private IBluetoothLeGatt gatt;
     private ILibraryIO io;
     private IMetaWearBoard metawear;
+    
+    //sim vars
+    private IService simServ;
+    private ICharacteristic simWrite;
     
     public ScanPage(Ball newBall)
     {
@@ -212,7 +217,7 @@ public partial class ScanPage : ContentPage
                 charstics = await services[j].GetCharacteristicsAsync();
                 for (int i = 0; i < charstics.Count(); i++)
                 {
-                    Console.WriteLine(".....Characteristic "+j+"-" + i + ": " + charstics[i].Name);
+                    Console.WriteLine(".....Characteristic "+j+"-" + i + ": " + charstics[i].Name + " - ID: " + charstics[i].Id);
                     if (charstics[i].CanRead)
                     {
                         var charBytes = await charstics[i].ReadAsync();
@@ -241,6 +246,23 @@ public partial class ScanPage : ContentPage
             } else Console.WriteLine("Can't Do it Boss");
             
         } else DisplayAlert("Alert", "Connect to a device", "OK");
+    }
+
+    async void WriteToSim(object sender, EventArgs e)
+    {
+        try
+        {
+            simServ = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
+            simWrite = await simServ.GetCharacteristicAsync(new Guid("72563044-db33-4692-a45d-c5212eebabfa"));
+            string toSend = "Data from Michael!";
+            byte[] writeBytes = Encoding.ASCII.GetBytes(toSend);//new byte[2] {5, 5};
+            await simWrite.WriteAsync(writeBytes);
+            Console.WriteLine("Writing to Sim");
+        }
+        catch (DeviceConnectionException erm)
+        {
+            Console.WriteLine("Ya fucked up");
+        }
     }
 
     async void getMMSInfo(object sender, EventArgs e) //service 0 id 0000180f-0000-1000-8000-00805f9b34fb
@@ -320,38 +342,46 @@ public partial class ScanPage : ContentPage
         {
             Console.WriteLine("Error: " + erm.Message);
         }
-    }
-    /*class Led {
-        static async Task RunAsync(string[] args) {
-            var metawear = await ScanConnect.Connect(args[0]);
+        try
+        {
+            Scanner.OnResultReceived = result =>
+            {
+                Console.WriteLine("mac: " + result.Mac);
+                Console.WriteLine("name: " + result.Name);
+                Console.WriteLine(string.Format("rssi: {0}dBm", result.Rssi));
 
-            var led = metawear.GetModule<ILed>();
-            //led.EditPattern(Color.Green, Pattern.Solid);
-            led.Play();
+                Console.WriteLine("metawear service? " + result.HasServiceUuid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
 
+                Console.Write("mbientlab manufacturer data? ");
+                var data = result.GetManufacturerData(0x626d);
+                if (data != null)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine(string.Format("    value: [0x{0}]",
+                        BitConverter.ToString(data).ToLower().Replace("-", ", 0x")));
+                }
+                else
+                {
+                    Console.WriteLine(" false");
+                }
+
+                Console.WriteLine("======");
+            };
+            Console.WriteLine("-- active scan --");
+            Scanner.Start();
             await Task.Delay(5000);
-            led.Stop(true);
+            Scanner.Stop();
 
-            // Have the board terminate the BLE connection
-            // Ensures all commands are received
-            await metawear.GetModule<IDebug>().DisconnectAsync();
+            Console.WriteLine("-- passive scan --");
+            Scanner.Start(scanType: "passive");
+            await Task.Delay(5000);
+            Scanner.Stop();
+        }
+        catch (Exception ehm)
+        {
+            Console.WriteLine("other Error: "+ehm.Message);
         }
     }
-    class ScanConnect {
-        static string ScanForMetaWear() {
-            throw new NotImplementedException();
-        }
-
-        internal static async Task<IMetaWearBoard> Connect(string mac, int retries = 2) {
-            throw new NotImplementedException();
-        }
-
-        static async Task RunAsync(string[] args) {
-            var metawear = await Connect(ScanForMetaWear());
-            Console.WriteLine($"Device information: {await metawear.ReadDeviceInformationAsync()}");
-            await metawear.DisconnectAsync();
-        }
-    }*/
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
