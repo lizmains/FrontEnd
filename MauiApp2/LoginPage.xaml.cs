@@ -20,7 +20,7 @@ public partial class LoginPage : ContentPage
     {
         InitializeComponent();
         //api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
-        api = new FeaturedAPI("https://api.revmetrix.io/");
+        api = new FeaturedAPI("https://api.revmetrix.io/api/");
     }
 
     public LoginPage(FeaturedAPI apiIn)

@@ -74,6 +74,7 @@ public partial class MainPage : ContentPage
             Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
             // App.UserRepository.Delete(App.UserRepository.GetAllUsers()[i].UserId);
         }
+        
         UsrDisplay.Text = $"Hello {user}!";
     }
     

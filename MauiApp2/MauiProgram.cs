@@ -2,6 +2,7 @@
 using MauiApp2.ViewModel;
 using Microsoft.Extensions.Logging;
 using Shiny;
+using CommunityToolkit.Maui;
 
 namespace MauiApp2
 {
@@ -10,20 +11,15 @@ namespace MauiApp2
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-            
+            builder.UseMauiApp<App>().ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            }).UseMauiCommunityToolkitMediaElement().UseMauiCommunityToolkit();
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "revmetrix.db");
-            builder.Services.AddSingleton(s =>
-                ActivatorUtilities.CreateInstance<UserRepository>(s, dbPath));
-
+            builder.Services.AddSingleton(s => ActivatorUtilities.CreateInstance<UserRepository>(s, dbPath));
 #if DEBUG
-		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainViewModel>();
