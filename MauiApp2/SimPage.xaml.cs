@@ -29,6 +29,7 @@ public partial class SimPage : ContentPage
     private IReadOnlyList<ICharacteristic> charstics;
     private IReadOnlyList<IDescriptor> descs;
     private string displayRead;
+    private string writeText;
     
     
     //sim vars
@@ -153,21 +154,39 @@ public partial class SimPage : ContentPage
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
     
+    private void OnWriteChanged(object sender, TextChangedEventArgs e)
+    {
+        string oldText = e.OldTextValue;
+        string newText = e.NewTextValue;
+        writeText = WriteData.Text;
+    }
+
+    void OnWriteEnter(object sender, EventArgs e)
+    {
+        writeText = ((Entry)sender).Text;
+        WriteToSim(sender, e);
+    }
+    
     async void WriteToSim(object sender, EventArgs e)
     {
-        try
+        if (device != null)
         {
-            simServ = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
-            simWrite = await simServ.GetCharacteristicAsync(new Guid("72563044-db33-4692-a45d-c5212eebabfa"));
-            string toSend = "Data from Michael!";
-            byte[] writeBytes = Encoding.ASCII.GetBytes(toSend);//new byte[2] {5, 5};
-            await simWrite.WriteAsync(writeBytes);
-            Console.WriteLine("Writing to Sim");
+           try
+           {
+               simServ = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
+               simWrite = await simServ.GetCharacteristicAsync(new Guid("72563044-db33-4692-a45d-c5212eebabfa"));
+               //string toSend = "Data from Michael!";
+               byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);//new byte[2] {5, 5};
+               await simWrite.WriteAsync(writeBytes);
+               Console.WriteLine("Writing to Sim");
+           }
+           catch (DeviceConnectionException erm)
+           {
+               Console.WriteLine("Write Failed");
+           } 
         }
-        catch (DeviceConnectionException erm)
-        {
-            Console.WriteLine("Ya fucked up");
-        }
+        else await DisplayAlert("Alert", "Connect to a device", "OK");
+        
     }
 
     private void OnNextBtnClicked(object sender, EventArgs e) //Button to view smartdot stats

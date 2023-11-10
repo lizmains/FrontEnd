@@ -54,6 +54,11 @@
             x:Name="ReadInfo"
             Text="{Binding info}"
             HorizontalOptions="Center"></Label>
+        <Entry x:Name="WriteData"
+               Placeholder="Write text to sim"
+               TextChanged="OnWriteChanged"
+               Completed="OnWriteEnter"
+        />
         <Button 
             x:Name="WriteSim"
             Text="Write to Sim"
