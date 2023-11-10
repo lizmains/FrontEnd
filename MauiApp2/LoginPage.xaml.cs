@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 using Client;
 using MauiApp2.ViewModel;
@@ -96,11 +97,20 @@ public partial class LoginPage : ContentPage
             await api.Login(usrnm, pass); //commented out until db server active
             //Console.WriteLine("logged in maybe");
             Console.WriteLine("API CONNECTION==");
-            Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
-            await Navigation.PushAsync(new MainPage(usrnm, mvm));
+            //Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
+            HttpStatusCode authentication = (await api.Get("Test/TestAuthorize")).StatusCode;
+            if (authentication == HttpStatusCode.OK)
+            {
+                Console.WriteLine(authentication);
+                await Navigation.PushAsync(new MainPage(usrnm, mvm));
+            }
+            else
+            {
+                Console.WriteLine(authentication);
+                await DisplayAlert("Alert", "Incorrect Username or Password", "OK");
+            }
         }
         else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
-
     }
     
     async void OnCreateAccBtnClicked(object sender, EventArgs e)

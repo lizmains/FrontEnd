@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using MauiApp2.ViewModel;
 using Microsoft.Extensions.Logging;
@@ -60,15 +61,24 @@ public partial class btPage : ContentPage
         RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
         
+        //Getting the json string from Local Db
+        string bowlingBallStringList = App.UserRepository.GetAllUsers()[0].BallList;
+        
+        //Deserializing the balls into their ball list
+        List<Ball> ballList = JsonSerializer.Deserialize<List<Ball>>(bowlingBallStringList);
+        foreach (var ball in ballList)
+        {
+            savedDots.Add(ball);
+        }
         Ball ball1 = new Ball(null); //test balls for display purposes
         ball1.name="ball one";
         Ball ball2 = new Ball(null);
         ball2.name="ball two";
         Ball ball3 = new Ball(null);
         ball3.name="ball three";
-        savedDots.Add(ball1);
-        savedDots.Add(ball2);
-        savedDots.Add(ball3);
+        // savedDots.Add(ball1);
+        // savedDots.Add(ball2);
+        // savedDots.Add(ball3);
     }
 
     private void LoadData() //updates collectionView to reflect savedDots list

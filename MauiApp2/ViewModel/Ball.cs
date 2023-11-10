@@ -36,6 +36,16 @@ public class Ball
         comments = "No Comments";
     }
 
+    public Ball() //I needed to put this in here for the json deserializing to work 
+    {
+        dev = null;
+        name = "Unnamed Ball";
+        weight = 1;
+        color = "Unknown";
+        core = "Symmetric";
+        cover = "Polyester";
+        comments = "No Comments";
+    }
     /*public void setName(string newName)
     {
         name = newName;
