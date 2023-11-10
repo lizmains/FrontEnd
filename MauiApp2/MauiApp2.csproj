@@ -49,8 +49,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="MediaElement.js" Version="2.23.4" />
+		<PackageReference Include="MediaElementPro" Version="1.0.1" />
+		<PackageReference Include="MetaWear.CSharp" Version="1.2.0" />
+		<PackageReference Include="MetaWear.CSharp.NetStandard" Version="1.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Plugin.BLE" Version="3.0.0-rc.1" />
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
@@ -60,49 +66,53 @@
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
-		<PackageReference Include="Xam.Plugin.Media" Version="6.0.2" />
+		<PackageReference Include="Warble.Net" Version="1.1.1" />
 		<PackageReference Include="Xamarin.MediaGallery" Version="2.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="FilePage.xaml">
-	    <SubType>Designer</SubType>
-	  </MauiXaml>
+		<MauiXaml Update="FilePage.xaml">
+			<SubType>Designer</SubType>
+		</MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="FilePage.xaml.cs">
-	    <DependentUpon>FilePage.xaml</DependentUpon>
-	    <SubType>Code</SubType>
-	  </Compile>
+		<Compile Update="FilePage.xaml.cs">
+			<DependentUpon>FilePage.xaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
-        
+		<Compile Remove="ViewModel\MyBleGatt.cs" />
+		<Compile Remove="ViewModel\MyLibIO.cs" />
+
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="FilePage.xaml">
-	    <SubType>Designer</SubType>
-	  </MauiXaml>
+		<MauiXaml Update="FilePage.xaml">
+			<SubType>Designer</SubType>
+		</MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="FilePage.xaml.cs">
-	    <DependentUpon>FilePage.xaml</DependentUpon>
-	    <SubType>Code</SubType>
-	  </Compile>
+		<Compile Update="FilePage.xaml.cs">
+			<DependentUpon>FilePage.xaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
 	</ItemGroup>
 
 
 	<ItemGroup>
-	  <Reference Include="Client">
-	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Client.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Common">
-	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Common.dll</HintPath>
-	  </Reference>
+		<Reference Include="Client">
+			<HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Client.dll</HintPath>
+		</Reference>
+		<Reference Include="Common">
+			<HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Common.dll</HintPath>
+		</Reference>
 	</ItemGroup>
+
+
 
 
 
