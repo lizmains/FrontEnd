@@ -16,6 +16,9 @@ public partial class LoginPage : ContentPage
     private string usrnm;
     private FeaturedAPI api;
     private string pass;
+
+    private string checkUsrnm;
+    private string checkPass;
     public LoginPage()
     {
         InitializeComponent();
@@ -25,8 +28,15 @@ public partial class LoginPage : ContentPage
 
     public LoginPage(FeaturedAPI apiIn)
     {
+        api = apiIn;
+    }
+    
+    public LoginPage(FeaturedAPI apiIn, string rUser, string rPass)
+    {
         InitializeComponent();
         api = apiIn;
+        checkUsrnm = rUser;
+        checkPass = rPass;
     }
     IBluetoothLE ble = CrossBluetoothLE.Current;
 
@@ -103,7 +113,14 @@ public partial class LoginPage : ContentPage
             if (authentication == HttpStatusCode.OK)
             {
                 Console.WriteLine(authentication);
-                await Navigation.PushAsync(new MainPage(usrnm, mvm));
+                if (usrnm == checkUsrnm && pass == checkPass)
+                {
+                    await Navigation.PushAsync(new MainPage(usrnm, mvm));
+                }
+                else
+                {
+                    await DisplayAlert("Alert", "Incorrect Username or Password", "OK");
+                }
             }
             else
             {
