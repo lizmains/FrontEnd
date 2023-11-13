@@ -66,7 +66,7 @@ public partial class CreateAccountPage : ContentPage
             Console.WriteLine("New Username===" + createUsr);
             Console.WriteLine("New Password===" + createPass);
             
-            await Navigation.PushAsync(new LoginPage(api, createUsr, createPass));
+            await Navigation.PushAsync(new LoginPage());
         }
         else
         {
