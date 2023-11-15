@@ -17,14 +17,20 @@ public partial class EditBall : ContentPage
     private string cCov;
     private string cCom;
     public EditBall(Ball toEdit)
-    {
+    {   
         InitializeComponent();
         tempBall = toEdit;
         BallName.Text = tempBall.name + "\n";
+        ballName.Text = tempBall.name;
+        ballColor.Text = tempBall.color;
+        ballCover.Text = tempBall.cover;
+        ballWeight.Text = tempBall.weight.ToString();
+        ballComm.Text = tempBall.comments;
+        ballCore.Text = tempBall.core;
         cWt = -1;
     }
     void OnNameChanged(object sender, TextChangedEventArgs e)
-    {
+    {   
         string oldName = e.OldTextValue;
         string newName = e.NewTextValue;  //Events for assigning 
         cName = ballName.Text;
