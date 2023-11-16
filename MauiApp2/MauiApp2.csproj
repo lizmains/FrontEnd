@@ -59,6 +59,7 @@
 		<PackageReference Include="MetaWear.CSharp.NetStandard" Version="1.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Plugin.BLE" Version="3.0.0-rc.1" />
+		<PackageReference Include="RevMetrix.Client.Api" Version="1.0.12" />
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
@@ -100,14 +101,14 @@
 	</ItemGroup>
 
 
-	<ItemGroup>
-	  <Reference Include="Client">
-	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Client.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Common">
-	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Common.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
+<!--	<ItemGroup>-->
+<!--	  <Reference Include="Client">-->
+<!--	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Client.dll</HintPath>-->
+<!--	  </Reference>-->
+<!--	  <Reference Include="Common">-->
+<!--	    <HintPath>..\..\Cloud-Infrastructure\Client\bin\Debug\net7.0\Common.dll</HintPath>-->
+<!--	  </Reference>-->
+<!--	</ItemGroup>-->
 
 
 
