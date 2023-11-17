@@ -35,4 +35,11 @@ public class UserRepository
         conn.Delete(new User {UserId=id});
         
     }
+
+    public void EditBallList(User user, string ballList)
+    {   
+        user.BallList = ballList;
+        conn = new SQLiteConnection(_dbPath);
+        conn.Update(user);
+    }
 }

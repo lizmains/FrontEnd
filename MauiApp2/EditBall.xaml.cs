@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using MauiApp2.ViewModel;
 
@@ -27,6 +28,7 @@ public partial class EditBall : ContentPage
         ballWeight.Text = tempBall.weight.ToString();
         ballComm.Text = tempBall.comments;
         ballCore.Text = tempBall.core;
+        ballSerialID.Text = tempBall.serial.ToString();
         cWt = -1;
     }
     void OnNameChanged(object sender, TextChangedEventArgs e)
@@ -121,6 +123,27 @@ public partial class EditBall : ContentPage
         {
            tempBall.comments = cCom; 
         }
+        
+        //This is the same code that is in btPage, I call the 
+        string bowlingBallStringList = App.UserRepository.GetAllUsers()[0].BallList;
+        List<Ball> ballList = JsonSerializer.Deserialize<List<Ball>>(bowlingBallStringList);
+        Ball ballToEdit;
+        for (int i = 0; i < ballList.Count; i++)
+        {
+            if (ballList[i].serial.ToString() == tempBall.serial.ToString())
+            {
+                // Console.WriteLine("Name: " + ballList[i].name);
+                ballList[i] = tempBall;
+                
+                
+            }
+        }
+        string bowlingBallListString = JsonSerializer.Serialize(ballList);
+        Console.WriteLine("string : " + bowlingBallListString);
+        // App.UserRepository.GetAllUsers()[0].BallList = bowlingBallListString;
+        App.UserRepository.EditBallList(App.UserRepository.GetAllUsers()[0],bowlingBallListString);
+        
+        Console.WriteLine("After saving editing changes: " + App.UserRepository.GetAllUsers()[0].BallList);
         await Navigation.PopModalAsync();
     }
     
