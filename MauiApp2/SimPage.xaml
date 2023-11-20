@@ -16,6 +16,12 @@
             x:Name="ConDev"
             Text="{Binding devName}"
             HorizontalOptions="End"></Label>
+        <Button 
+            x:Name="DiscBtn"
+            Text="Disconnect"
+            SemanticProperties.Hint="Disconnect from connected device"
+            Clicked="OnDisconnect"
+            HorizontalOptions="End" />
 
         <!--<Label x:Name="DevEntry"
                Text="{Binding ballwt}"

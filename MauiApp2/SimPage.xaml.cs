@@ -136,7 +136,7 @@ public partial class SimPage : ContentPage
                         if (i == 1 && j == 1)
                         {
                             displayRead = charstics[i].StringValue;
-                            ReadInfo.Text = "Read data: " + displayRead;
+                            ReadInfo.Text += "Read data: " + displayRead;
                         }
                     }
                     DevInfo.Text += $"      Characteristic: {charstics[i].Name}\n";
@@ -150,7 +150,8 @@ public partial class SimPage : ContentPage
                 }
             }
             Console.WriteLine("------------------------------------");
-            
+            Console.WriteLine("\n");
+
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
     
@@ -178,7 +179,7 @@ public partial class SimPage : ContentPage
                //string toSend = "Data from Michael!";
                byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);//new byte[2] {5, 5};
                await simWrite.WriteAsync(writeBytes);
-               Console.WriteLine("Writing to Sim");
+               Console.WriteLine("Writing to Sim...");
            }
            catch (DeviceConnectionException erm)
            {
@@ -186,6 +187,18 @@ public partial class SimPage : ContentPage
            } 
         }
         else await DisplayAlert("Alert", "Connect to a device", "OK");
+        
+    }
+    
+    async void OnDisconnect(object sender, EventArgs e)
+    {
+        if (device != null)
+        {
+            await adapter.DisconnectDeviceAsync(device); 
+            Console.WriteLine("Disconnected from " + device.Name);
+            Console.WriteLine("\n");
+            device = null;
+        } else Console.WriteLine("No device connected");
         
     }
 

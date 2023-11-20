@@ -59,6 +59,7 @@ public partial class MainPage : ContentPage
         };
         
         var bowlingBallList = new List<Ball> { ball1, ball2 };
+        
         string bowlingBallListString = JsonSerializer.Serialize(bowlingBallList);
         
         App.UserRepository.Add(new User
@@ -71,8 +72,9 @@ public partial class MainPage : ContentPage
         
         for (int i = /*0*/App.UserRepository.GetAllUsers().Count-1; i < App.UserRepository.GetAllUsers().Count; i++)
         {
-            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
-            // App.UserRepository.Delete(App.UserRepository.GetAllUsers()[i].UserId);
+            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin+
+                              "- " + App.UserRepository.GetAllUsers()[i].BallList);
+            //App.UserRepository.Delete(App.UserRepository.GetAllUsers()[i].UserId);
             UsrDisplay.Text = $"Hello {App.UserRepository.GetAllUsers()[i].UserName}!";
             UsrTime.Text = $"Time of Login: {App.UserRepository.GetAllUsers()[i].LastLogin}";
         }

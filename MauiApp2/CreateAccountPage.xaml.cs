@@ -44,7 +44,8 @@ public partial class CreateAccountPage : ContentPage
         if (createUsr != null && createPass != null)
         {
             //Handle API Creation of an account here
-            UserIdentification UserID = new UserIdentification(createUsr, createPass);
+            UserIdentification UserID = new UserIdentification(createUsr, createUsr,
+  createUsr, createPass, createUsr, createUsr);
             // We want to execute a POST to User/Authorize
             // We will provide a UserIdentification (for now just username and password)
             // We expect back a DualToken POCO

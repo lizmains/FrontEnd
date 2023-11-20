@@ -21,6 +21,7 @@ using MbientLab.MetaWear.Impl.Platform;
 using MbientLab.MetaWear.Peripheral;
 using MbientLab.MetaWear.Peripheral.Led;
 using MbientLab.Warble;
+using IAccelerometer = MbientLab.MetaWear.Sensor.IAccelerometer;
 using netstandard = MbientLab.MetaWear.NetStandard;
 
 //using Color = System.Drawing.Color;
@@ -141,6 +142,7 @@ public partial class ScanPage : ContentPage
             {
                 try
                 {
+                    //stop scan
                    await adapter.ConnectToDeviceAsync(deviceList[i]);
                    device = deviceList[i];
                 }
@@ -261,7 +263,7 @@ public partial class ScanPage : ContentPage
         }
         catch (DeviceConnectionException erm)
         {
-            Console.WriteLine("Ya fucked up");
+            Console.WriteLine("Write failed");
         }
     }
 
@@ -276,19 +278,23 @@ public partial class ScanPage : ContentPage
             DevInfo.Text += $"MMS Battery: {bytes.data[0]}%";
             mmsServ2 = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
             charstics = await mmsServ2.GetCharacteristicsAsync();
-            var mmsBytes = await charstics[0].ReadAsync();
-            Console.WriteLine("MMS Bytes from Service 2: " + mmsBytes.data[0]);
-            
-            for (int i = 0; i < mmsBytes.data.Length; i++)
+            for (int j = 0; j < charstics.Count; j++)
             {
-                Console.WriteLine("Byte " +i+ ": " + mmsBytes.data[i]);
+                var mmsBytes = await charstics[j].ReadAsync();
+                Console.WriteLine("MMS Bytes from Service 2: " + mmsBytes.data[0]);
+                
+                for (int i = 0; i < mmsBytes.data.Length; i++)
+                {
+                    Console.WriteLine("Byte " +i+ ": " + mmsBytes.data[i]);
+                }
             }
-            Console.WriteLine(mmsBytes.resultCode);
+            
+            //Console.WriteLine(mmsBytes.resultCode);
             Console.WriteLine("RSSI: "+ device.Rssi);
             //ILed led = (ILed) null;
             //led.Play();
 
-        } else DisplayAlert("Alert", "Connect to the MMS", "OK");
+        } else await DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
     
     async void OnDisconnect(object sender, EventArgs e)
@@ -330,6 +336,74 @@ public partial class ScanPage : ContentPage
     
     //----------THE METAWEAR ZONE-----------
 
+    async void WriteMMS(object sender, EventArgs e)
+    {
+        //3 for accelerometer, 3 for accelerometer data config, stuff from example, acc_range
+        //byte[] data = { 3, 3, (8 << 4)+ (2<<1)+1, 3<<5};               //mms read/write service
+        IService writeServ = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
+        ICharacteristic writeChar =//mms write characteristic, presumably
+            await writeServ.GetCharacteristicAsync(new Guid("326a9001-85cb-9195-d9dd-464cfbbae75a"));
+        //byte[] data = { 25, 2, 1, (3 << 4)+1}; //write the mode --> fusion
+        //byte[] data = { 3, 2, 1, (3 << 4) }; //just accel uc
+        byte[] data = { 3, 4, 1 }; //just accel --> simple way BMi160 accel to be specific
+        await writeChar.WriteAsync(data);
+        
+        //data = new byte[]{ 3, 3, (8 << 4)+(2<<1), 3<<5}; // configure accel write uc
+        data = new byte[] { 3, 1, 1 }; //simple accel 
+        await writeChar.WriteAsync(data);//send command
+        
+        /*data = new byte[]{ 19, 3, (8 << 4)+ (2<<2)+1, 14}; //configure gyro write
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[]{ 21, 4, 4, 14}; //configure magneto write - data repetitions
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[]{ 21, 3, 6}; //further configure magneto write - data rate
+        await writeChar.WriteAsync(data);*/
+        //start the stuff
+        data = new byte[]{ 3, 2, 1, 0}; //accel enable write
+        await writeChar.WriteAsync(data);
+        
+        /*data = new byte[]{ 19, 2, 1, 0}; //gyro enable write
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[]{ 21, 2, 1, 0}; //magneto enable write
+        await writeChar.WriteAsync(data);*/
+        
+        /*data = new byte[]{ 3, 1, 1}; //start accel write uc
+        await writeChar.WriteAsync(data);*/ 
+        
+        /*data = new byte[]{ 19, 1, 1}; //start gyro write
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[]{ 21, 1, 1}; //start magneto write
+        await writeChar.WriteAsync(data);*/
+        
+        //enable fusion
+        //byte mask = 1 << 8;
+        /*data = new byte[] {25, 3, 1<<4, 0 }; //configure fusion for euler angles
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] {25, 1, 1 }; //enable
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] {25, 8, 1 }; //start
+        await writeChar.WriteAsync(data);*/
+
+        await Task.Delay(15000); //wait 15 seconds
+
+        data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 3, 4, 0}; //disable accel simple
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 3, 1, 0 }; //disable accel simple
+        await writeChar.WriteAsync(data);
+        
+        Console.WriteLine("Accelerometer Recording Complete");
+    }
+    
     async void MetaMotionStuff(object sender, EventArgs e)
     {
         try
@@ -342,45 +416,7 @@ public partial class ScanPage : ContentPage
         {
             Console.WriteLine("Error: " + erm.Message);
         }
-        try
-        {
-            Scanner.OnResultReceived = result =>
-            {
-                Console.WriteLine("mac: " + result.Mac);
-                Console.WriteLine("name: " + result.Name);
-                Console.WriteLine(string.Format("rssi: {0}dBm", result.Rssi));
-
-                Console.WriteLine("metawear service? " + result.HasServiceUuid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
-
-                Console.Write("mbientlab manufacturer data? ");
-                var data = result.GetManufacturerData(0x626d);
-                if (data != null)
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine(string.Format("    value: [0x{0}]",
-                        BitConverter.ToString(data).ToLower().Replace("-", ", 0x")));
-                }
-                else
-                {
-                    Console.WriteLine(" false");
-                }
-
-                Console.WriteLine("======");
-            };
-            Console.WriteLine("-- active scan --");
-            Scanner.Start();
-            await Task.Delay(5000);
-            Scanner.Stop();
-
-            Console.WriteLine("-- passive scan --");
-            Scanner.Start(scanType: "passive");
-            await Task.Delay(5000);
-            Scanner.Stop();
-        }
-        catch (Exception ehm)
-        {
-            Console.WriteLine("other Error: "+ehm.Message);
-        }
+        
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)

@@ -120,6 +120,7 @@ public partial class LoginPage : ContentPage
                 Console.WriteLine(authentication);
                 await DisplayAlert("Alert", "Incorrect Username or Password", "OK");
             }
+            //await Navigation.PushAsync(new MainPage(usrnm, mvm));//take out once api is fixed
         }
         else await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
     }
