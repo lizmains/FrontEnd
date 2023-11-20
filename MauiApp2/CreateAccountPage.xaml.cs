@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Client;
 using Common.POCOs;
+using MauiApp2.ViewModel;
 
 namespace MauiApp2;
 
@@ -65,7 +67,25 @@ public partial class CreateAccountPage : ContentPage
             }
             Console.WriteLine("New Username===" + createUsr);
             Console.WriteLine("New Password===" + createPass);
-            
+            Ball ball1 = new Ball(null)
+            {
+                color = "green", comments = "n/a",core = "",cover = "", name = "ball1-1",weight = 10,serial = Guid.NewGuid()
+            };
+        
+            Ball ball2 = new Ball(null)
+            {
+                color = "red", comments = "", core = "", cover = "", name = "ball 2-1", weight = 123, serial = Guid.NewGuid()
+            };
+        
+            var bowlingBallList = new List<Ball> { ball1, ball2 };
+            string bowlingBallListString = JsonSerializer.Serialize(bowlingBallList);
+            App.UserRepository.Add(new User
+            {
+                LastLogin = DateTime.Now,
+                Password = createPass,
+                UserName = createUsr,
+                BallList = bowlingBallListString
+                });
             await Navigation.PushAsync(new LoginPage());
         }
         else
