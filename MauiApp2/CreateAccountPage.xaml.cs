@@ -67,6 +67,8 @@ public partial class CreateAccountPage : ContentPage
             }
             Console.WriteLine("New Username===" + createUsr);
             Console.WriteLine("New Password===" + createPass);
+            
+            
             Ball ball1 = new Ball(null)
             {
                 color = "green", comments = "n/a",core = "",cover = "", name = "ball1-1",weight = 10,serial = Guid.NewGuid()
