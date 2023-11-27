@@ -20,15 +20,35 @@
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
+            
+            <Entry x:Name="Firstname"
+                   Placeholder="Insert First Name"
+                   TextChanged="OnUsrFirstChanged"
+            />
+            
+            <Entry x:Name="Lastname"
+                   Placeholder="Insert Last Name"
+                   TextChanged="OnUsrLastChanged"
+            />
 
-            <Entry x:Name="username"
+            <Entry x:Name="Username"
                    Placeholder="Insert Username"
                    TextChanged="OnUsrNameChanged"
             />
-            <Entry x:Name="password"
+            <Entry x:Name="Password"
                    IsPassword="true"
                    Placeholder="Insert Password"
                    TextChanged="OnUsrPassChanged"
+            />
+            
+            <Entry x:Name="Email"
+                   Placeholder="Insert Email"
+                   TextChanged="OnUsrEmailChanged"
+            />
+            
+            <Entry x:Name="PhoneNumber"
+                   Placeholder="Insert Phone Number"
+                   TextChanged="OnUsrPhoneChanged"
             />
             
             <Button

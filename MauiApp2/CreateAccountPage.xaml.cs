@@ -14,12 +14,22 @@ public partial class CreateAccountPage : ContentPage
 {
     private string createUsr;
     private string createPass;
+    private string firstName;
+    private string lastName;
+    private string emailU;
+    private string phoneNum;
     private FeaturedAPI api;
     //API will be used for authentication with created username and password
     public CreateAccountPage(FeaturedAPI apiIn)
     {
         InitializeComponent();
         api = apiIn;
+    }
+
+    public CreateAccountPage()
+    {
+        InitializeComponent();
+        api = new FeaturedAPI("https://api.revmetrix.io/api/");
     }
 
     async void OnBackBtn(object sender, EventArgs e)
@@ -41,13 +51,40 @@ public partial class CreateAccountPage : ContentPage
         createPass = newPass;
     }
 
+    private void OnUsrFirstChanged(object sender, TextChangedEventArgs e)
+    {
+        string oldFirst = e.OldTextValue;
+        string newFirst = e.NewTextValue;
+        firstName = newFirst;
+    }
+
+    private void OnUsrLastChanged(object sender, TextChangedEventArgs e)
+    {
+        string oldLast = e.OldTextValue;
+        string newLast = e.NewTextValue;
+        lastName = newLast;
+    }
+
+    private void OnUsrEmailChanged(object sender, TextChangedEventArgs e)
+    {
+        string oldEmail = e.OldTextValue;
+        string newEmail = e.NewTextValue;
+        emailU = newEmail;
+    }
+
+    private void OnUsrPhoneChanged(object sender, TextChangedEventArgs e)
+    {
+        string oldPhone = e.OldTextValue;
+        string newPhone = e.NewTextValue;
+        phoneNum = newPhone;
+    }
+
     async void OnSubmitClicked(object sender, EventArgs e)
     {
-        if (createUsr != null && createPass != null)
+        if (createUsr != null && createPass != null && firstName != null && lastName != null && emailU != null && phoneNum != null)
         {
             //Handle API Creation of an account here
-            UserIdentification UserID = new UserIdentification(createUsr, createUsr,
-  createUsr, createPass, createUsr, createUsr);
+            UserIdentification UserID = new UserIdentification(firstName, lastName, createUsr, createPass, emailU, phoneNum);
             // We want to execute a POST to User/Authorize
             // We will provide a UserIdentification (for now just username and password)
             // We expect back a DualToken POCO
@@ -93,7 +130,7 @@ public partial class CreateAccountPage : ContentPage
         }
         else
         {
-            await DisplayAlert("Alert", "Please Enter Username and Password", "OK");
+            await DisplayAlert("Alert", "Please Answer all Fields", "OK");
         }
     }
 }
