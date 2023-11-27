@@ -31,13 +31,6 @@ public partial class LoginPage : ContentPage
         api = apiIn;
     }
     
-    public LoginPage(FeaturedAPI apiIn, string rUser, string rPass)
-    {
-        InitializeComponent();
-        api = apiIn;
-        checkUsrnm = rUser;
-        checkPass = rPass;
-    }
     IBluetoothLE ble = CrossBluetoothLE.Current;
 
     private void OnUsrChanged(object sender, TextChangedEventArgs e)
