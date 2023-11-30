@@ -113,6 +113,10 @@
                 x:Name="DevInfo"
                 Text="{Binding names}"
                 HorizontalOptions="Center"></Label>
+            <Label
+                x:Name="SensorInfo"
+                Text="{Binding names}"
+                HorizontalOptions="Center"></Label>
 
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -162,13 +166,13 @@
 
             <Button 
                 x:Name="MMSBtn"
-                Text="Get MMS Info"
+                Text="Read MMS Data"
                 SemanticProperties.Hint="Displays MMS device info in console"
                 Clicked="getMMSInfo"
                 HorizontalOptions="Center" />
             <Button 
                 x:Name="WriteMetaWear"
-                Text="Write to MMS"
+                Text="Start Accelerometer"
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="WriteMMS"
                 HorizontalOptions="Center" />

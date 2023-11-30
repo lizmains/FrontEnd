@@ -14,6 +14,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
 using System.Windows.Input;
+using CommunityToolkit.Maui.Converters;
 using MbientLab.MetaWear;
 using MbientLab.MetaWear.Core;
 using MbientLab.MetaWear.Impl;
@@ -23,6 +24,8 @@ using MbientLab.MetaWear.Peripheral.Led;
 using MbientLab.Warble;
 using IAccelerometer = MbientLab.MetaWear.Sensor.IAccelerometer;
 using netstandard = MbientLab.MetaWear.NetStandard;
+using MbientLab.MetaWear.Peripheral.Led;
+using Color = MbientLab.MetaWear.Peripheral.Led.Color;
 
 //using Color = System.Drawing.Color;
 
@@ -51,6 +54,8 @@ public partial class ScanPage : ContentPage
     private IBluetoothLeGatt gatt;
     private ILibraryIO io;
     private IMetaWearBoard metawear;
+    private ICharacteristic readChar;
+    private (byte[] data, int resultCode) sensorData;
     
     //sim vars
     private IService simServ;
@@ -269,13 +274,13 @@ public partial class ScanPage : ContentPage
 
     async void getMMSInfo(object sender, EventArgs e) //service 0 id 0000180f-0000-1000-8000-00805f9b34fb
     {//testing getting data from specific MMS module
-        if (device.Id == new Guid("ec5ddd38-6362-c5e0-6cd0-ae865b8d483c"))
+        if (true/*device.Id == new Guid("ec5ddd38-6362-c5e0-6cd0-ae865b8d483c")*/)
         {
             mmsBat = await device.GetServiceAsync(new Guid("0000180f-0000-1000-8000-00805f9b34fb"));
             charstics = await mmsBat.GetCharacteristicsAsync();
             var bytes = await charstics[0].ReadAsync();
             Console.WriteLine("MMS battery: " + bytes.data[0] + "%");
-            DevInfo.Text += $"MMS Battery: {bytes.data[0]}%";
+            DevInfo.Text = $"MMS Battery: {bytes.data[0]}%";
             mmsServ2 = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
             charstics = await mmsServ2.GetCharacteristicsAsync();
             for (int j = 0; j < charstics.Count; j++)
@@ -288,11 +293,22 @@ public partial class ScanPage : ContentPage
                     Console.WriteLine("Byte " +i+ ": " + mmsBytes.data[i]);
                 }
             }
+
+            readChar = await mmsServ2.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
+            sensorData = await readChar.ReadAsync();
             
+            float x = BitConverter.ToInt16(sensorData.data, 2);
+            float y = BitConverter.ToInt16(sensorData.data, 4);
+            float z = BitConverter.ToInt16(sensorData.data, 6);
+            x = (x/32768.0f)*2.0f;
+            y = (y/32768.0f)*2.0f;
+            z = (z/32768.0f)*2.0f;
+            
+            Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+            SensorInfo.Text += "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n";
+
             //Console.WriteLine(mmsBytes.resultCode);
-            Console.WriteLine("RSSI: "+ device.Rssi);
-            //ILed led = (ILed) null;
-            //led.Play();
+            //Console.WriteLine("RSSI: "+ device.Rssi);
 
         } else await DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
@@ -338,11 +354,31 @@ public partial class ScanPage : ContentPage
 
     async void WriteMMS(object sender, EventArgs e)
     {
+        SensorInfo.Text = ""; //clear display sensor data in app
+        
         //3 for accelerometer, 3 for accelerometer data config, stuff from example, acc_range
         //byte[] data = { 3, 3, (8 << 4)+ (2<<1)+1, 3<<5};               //mms read/write service
         IService writeServ = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
         ICharacteristic writeChar =//mms write characteristic, presumably
             await writeServ.GetCharacteristicAsync(new Guid("326a9001-85cb-9195-d9dd-464cfbbae75a"));
+
+        Color col = Color.Blue;
+        byte[] led = //set led pattern
+        {
+            2, 3, (byte) col, 2, 1, 1,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            0, 0, 0xff
+        };
+        await writeChar.WriteAsync(led);
+
+        led = new byte[] { 2, 1, 1 }; //play led
+        await writeChar.WriteAsync(led);
+        
+        Console.WriteLine("Starting Accelerometer");
+        
         //byte[] data = { 25, 2, 1, (3 << 4)+1}; //write the mode --> fusion
         //byte[] data = { 3, 2, 1, (3 << 4) }; //just accel uc
         byte[] data = { 3, 4, 1 }; //just accel --> simple way BMi160 accel to be specific
@@ -400,6 +436,9 @@ public partial class ScanPage : ContentPage
         
         data = new byte[] { 3, 1, 0 }; //disable accel simple
         await writeChar.WriteAsync(data);
+
+        led = new byte[] { 2, 2, 0 }; //stop led
+        await writeChar.WriteAsync(led);
         
         Console.WriteLine("Accelerometer Recording Complete");
     }
