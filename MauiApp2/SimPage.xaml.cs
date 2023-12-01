@@ -30,6 +30,7 @@ public partial class SimPage : ContentPage
     private IReadOnlyList<IDescriptor> descs;
     private string displayRead;
     private string writeText;
+    private bool flag;
     
     
     //sim vars
@@ -44,8 +45,8 @@ public partial class SimPage : ContentPage
         //adapter = CrossBluetoothLE.Current.Adapter; //this being here is causing btpage not to open?????
         deviceList = new List<IDevice>();
         deviceList.Clear();
+        flag = true;
     }
-    string ballwt = "N/A";
     private void OnPrevBtnClicked(object sender, EventArgs e)
     {
         Navigation.PopAsync();
@@ -61,7 +62,7 @@ public partial class SimPage : ContentPage
     async void OnDevEnter(object sender, EventArgs e)
     {
         Console.WriteLine("Searching List...");
-        deviceName = "ESAM";//"LUKESCOOLLAPTOP";//hardcoded for lukes machine running sim
+        deviceName = /*"ESAM";*/"LUKESCOOLLAPTOP";//hardcoded for lukes machine running sim
         for (int i = 0; i < deviceList.Count(); i++)
         {
             if (deviceList[i].Name == deviceName)
@@ -200,8 +201,7 @@ public partial class SimPage : ContentPage
                
                simServ = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
                simWrite = await simServ.GetCharacteristicAsync(new Guid("bc1926ea-6ffa-4d04-928b-76cccd068cea"/*"72563044-db33-4692-a45d-c5212eebabfa"*/));
-               //string toSend = "Data from Michael!";
-               byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);//new byte[2] {5, 5};
+               byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);
                await simWrite.WriteAsync(writeBytes);
                Console.WriteLine("Writing to Sim...");
            }
@@ -211,6 +211,27 @@ public partial class SimPage : ContentPage
            } 
         }
         else await DisplayAlert("Alert", "Connect to a device", "OK");
+        
+    }
+
+    async void listen(object sender, EventArgs e)
+    {
+        IService theService = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
+        ICharacteristic notify = await theService.GetCharacteristicAsync(new Guid("BC1926EA-6FFA-4D04-928B-76CCCD068CEA"));
+
+        if (flag)
+        {
+            Console.WriteLine("Listening...");
+            await notify.StartUpdatesAsync();
+            flag = false;
+        }
+
+        if (flag == false)
+        {
+            await notify.StopUpdatesAsync();
+            Console.WriteLine("Stopped Listening");
+            flag = true;
+        }
         
     }
     

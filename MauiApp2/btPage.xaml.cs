@@ -65,7 +65,7 @@ public partial class btPage : ContentPage
         string bowlingBallStringList = App.UserRepository.GetAllUsers()[0].BallList;
         
         //Deserializing the balls into their ball list
-        List<Ball> ballList = new List<Ball>();// JsonSerializer.Deserialize<List<Ball>>(bowlingBallStringList);
+        List<Ball> ballList = /*new List<Ball>();*/ JsonSerializer.Deserialize<List<Ball>>(bowlingBallStringList);
         foreach (var ball in ballList)
         {
             savedDots.Add(ball);

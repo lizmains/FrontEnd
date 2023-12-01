@@ -71,6 +71,12 @@
             SemanticProperties.Hint="Writes to sim"
             Clicked="WriteToSim"
             HorizontalOptions="Center" />
+        <Button 
+            x:Name="NotifySim"
+            Text="Listen to Sim"
+            SemanticProperties.Hint="Starts/stops listening to sim"
+            Clicked="listen"
+            HorizontalOptions="Center" />
         
         <Label
             x:Name="DevInfo"
