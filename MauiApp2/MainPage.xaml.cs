@@ -47,33 +47,6 @@ public partial class MainPage : ContentPage
          * If User is creating a new account
          */
         
-        //For the time being, just creating two new bowling balls for every account
-        Ball ball1 = new Ball(null)
-        {
-            color = "green", comments = "n/a",core = "",cover = "", name = "ball1-1",weight = 10,serial = Guid.NewGuid()
-        };
-        
-        Ball ball2 = new Ball(null)
-        {
-            color = "red", comments = "", core = "", cover = "", name = "ball 2-1", weight = 123, serial = Guid.NewGuid()
-        };
-        
-        var bowlingBallList = new List<Ball> { ball1, ball2 };
-        string bowlingBallListString = JsonSerializer.Serialize(bowlingBallList);
-        
-        //Get rid of Users that are populating local db
-        for (int i = 0; i <= App.UserRepository.GetAllUsers().Count; i++)
-        {
-            
-            App.UserRepository.Delete(App.UserRepository.GetAllUsers()[i].UserId);
-        }
-        App.UserRepository.Add(new User
-        {
-            LastLogin = DateTime.Now,
-            Password = mvm.Password,
-            UserName = mvm.Username,
-            BallList = bowlingBallListString
-        });
         
         
         for (int i = 0 /*App.UserRepository.GetAllUsers().Count-1*/; i < App.UserRepository.GetAllUsers().Count; i++)
