@@ -41,9 +41,11 @@ public partial class MainPage : ContentPage
         user = usernm;
         App.UserRepository.GetAllUsers();
         
-        for (int i = /*0*/App.UserRepository.GetAllUsers().Count-1; i < App.UserRepository.GetAllUsers().Count; i++)
+        
+        for (int i = 0 /*App.UserRepository.GetAllUsers().Count-1*/; i < App.UserRepository.GetAllUsers().Count; i++)
         {
-            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
+            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin + " ID: " + 
+                              App.UserRepository.GetAllUsers()[i].UserId + " BallList: " + App.UserRepository.GetAllUsers()[i].BallList);
             // App.UserRepository.Delete(App.UserRepository.GetAllUsers()[i].UserId);
             UsrDisplay.Text = $"Hello {App.UserRepository.GetAllUsers()[i].UserName}!";
             UsrTime.Text = $"Time of Login: {App.UserRepository.GetAllUsers()[i].LastLogin}";
