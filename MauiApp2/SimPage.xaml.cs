@@ -30,6 +30,7 @@ public partial class SimPage : ContentPage
     private IReadOnlyList<IDescriptor> descs;
     private string displayRead;
     private string writeText;
+    private bool flag;
     
     
     //sim vars
@@ -44,8 +45,8 @@ public partial class SimPage : ContentPage
         //adapter = CrossBluetoothLE.Current.Adapter; //this being here is causing btpage not to open?????
         deviceList = new List<IDevice>();
         deviceList.Clear();
+        flag = true;
     }
-    string ballwt = "N/A";
     private void OnPrevBtnClicked(object sender, EventArgs e)
     {
         Navigation.PopAsync();
@@ -61,7 +62,7 @@ public partial class SimPage : ContentPage
     async void OnDevEnter(object sender, EventArgs e)
     {
         Console.WriteLine("Searching List...");
-        deviceName = "LUKESCOOLLAPTOP";//hardcoded for lukes machine running sim
+        deviceName = /*"ESAM";*/"LUKESCOOLLAPTOP";//hardcoded for lukes machine running sim
         for (int i = 0; i < deviceList.Count(); i++)
         {
             if (deviceList[i].Name == deviceName)
@@ -119,8 +120,25 @@ public partial class SimPage : ContentPage
     {
         if (device != null)//displays all device info from service down to characteristic
         {
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("\n");
+            /*IService serv0 = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
+            Console.WriteLine("Got here");
+            ICharacteristic char0 =
+                await serv0.GetCharacteristicAsync(new Guid("72563044-DB33-4692-A45D-C5212EEBABFA"));
+            Console.WriteLine("Can Read Read/Write: "+char0.CanRead);
+            Console.WriteLine("Can Read Read/Write: "+char0.CanWrite);
+            var bytes = await char0.ReadAsync();
+            Console.WriteLine("Byte 0: "+bytes.data[0]);
+            Console.WriteLine("Byte 0: "+bytes.data[1]);
+            Console.WriteLine(bytes.data + " Got here too "+bytes.resultCode);
+            for (int i = 0; i < bytes.data.Length; i++)
+            {
+                Console.WriteLine("Serv 0 Bytes: "+ bytes.data[i]);
+            }*/
+            
             services = await device.GetServicesAsync();
-            for (int j = 0; j < services.Count(); j++)
+            for (int j = 0; j < services.Count; j++)
             {
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("Service "+j+": " + services[j].Name + " - ID: " + services[j].Id);
@@ -136,9 +154,10 @@ public partial class SimPage : ContentPage
                         if (i == 1 && j == 1)
                         {
                             displayRead = charstics[i].StringValue;
-                            ReadInfo.Text = "Read data: " + displayRead;
+                            ReadInfo.Text += "Read data: " + displayRead;
                         }
                     }
+                    else Console.WriteLine("\nCan't Read");
                     DevInfo.Text += $"      Characteristic: {charstics[i].Name}\n";
                     
                     descs = await charstics[i].GetDescriptorsAsync();
@@ -149,8 +168,7 @@ public partial class SimPage : ContentPage
                     }
                 }
             }
-            Console.WriteLine("------------------------------------");
-            
+
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
     
@@ -173,12 +191,19 @@ public partial class SimPage : ContentPage
         {
            try
            {
+               
+               /*IService servy0 = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
+               Console.WriteLine("Got here");
+               ICharacteristic chary0 =
+                   await servy0.GetCharacteristicAsync(new Guid("72563044-DB33-4692-A45D-C5212EEBABFA"));
+               byte[] writetest = Encoding.ASCII.GetBytes("writeBytes");
+               await chary0.WriteAsync(writetest);*/
+               
                simServ = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
-               simWrite = await simServ.GetCharacteristicAsync(new Guid("72563044-db33-4692-a45d-c5212eebabfa"));
-               //string toSend = "Data from Michael!";
-               byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);//new byte[2] {5, 5};
+               simWrite = await simServ.GetCharacteristicAsync(new Guid("bc1926ea-6ffa-4d04-928b-76cccd068cea"/*"72563044-db33-4692-a45d-c5212eebabfa"*/));
+               byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);
                await simWrite.WriteAsync(writeBytes);
-               Console.WriteLine("Writing to Sim");
+               Console.WriteLine("Writing to Sim...");
            }
            catch (DeviceConnectionException erm)
            {
@@ -186,6 +211,39 @@ public partial class SimPage : ContentPage
            } 
         }
         else await DisplayAlert("Alert", "Connect to a device", "OK");
+        
+    }
+
+    async void listen(object sender, EventArgs e)
+    {
+        IService theService = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
+        ICharacteristic notify = await theService.GetCharacteristicAsync(new Guid("BC1926EA-6FFA-4D04-928B-76CCCD068CEA"));
+
+        if (flag)
+        {
+            Console.WriteLine("Listening...");
+            await notify.StartUpdatesAsync();
+            flag = false;
+        }
+
+        if (flag == false)
+        {
+            await notify.StopUpdatesAsync();
+            Console.WriteLine("Stopped Listening");
+            flag = true;
+        }
+        
+    }
+    
+    async void OnDisconnect(object sender, EventArgs e)
+    {
+        if (device != null)
+        {
+            await adapter.DisconnectDeviceAsync(device); 
+            Console.WriteLine("Disconnected from " + device.Name);
+            Console.WriteLine("\n");
+            device = null;
+        } else Console.WriteLine("No device connected");
         
     }
 

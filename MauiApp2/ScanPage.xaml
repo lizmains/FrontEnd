@@ -96,12 +96,7 @@
                 SemanticProperties.Hint="Displays device info in console"
                 Clicked="getServices"
                 HorizontalOptions="Center" />
-            <Button 
-                x:Name="MMSBtn"
-                Text="Get MMS Info"
-                SemanticProperties.Hint="Displays MMS device info in console"
-                Clicked="getMMSInfo"
-                HorizontalOptions="Center" />
+            
             <Button 
                 x:Name="MMSInit"
                 Text="Connect To MMS"
@@ -116,6 +111,10 @@
                 HorizontalOptions="Center" />
             <Label
                 x:Name="DevInfo"
+                Text="{Binding names}"
+                HorizontalOptions="Center"></Label>
+            <Label
+                x:Name="SensorInfo"
                 Text="{Binding names}"
                 HorizontalOptions="Center"></Label>
 
@@ -165,6 +164,18 @@
             </CollectionView>
             </Grid>
 
+            <Button 
+                x:Name="MMSBtn"
+                Text="Read MMS Data"
+                SemanticProperties.Hint="Displays MMS device info in console"
+                Clicked="getMMSInfo"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="WriteMetaWear"
+                Text="Start Accelerometer"
+                SemanticProperties.Hint="Writes to mms"
+                Clicked="WriteMMS"
+                HorizontalOptions="Center" />
         </VerticalStackLayout>
     </ScrollView>
     </RefreshView>

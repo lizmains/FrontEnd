@@ -58,14 +58,14 @@ public partial class btPage : ContentPage
         newBall = new Ball(null);
         addedBall = new Ball(null);
         DotsList.ItemsSource = displayList;//savedDots;
-        RefView.Command = new Command(async () => await RefreshItems());
+        //RefView.Command = new Command(async () => await RefreshItems());
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
         
         //Getting the json string from Local Db
         string bowlingBallStringList = App.UserRepository.GetAllUsers()[0].BallList;
         
         //Deserializing the balls into their ball list
-        List<Ball> ballList = JsonSerializer.Deserialize<List<Ball>>(bowlingBallStringList);
+        List<Ball> ballList = /*new List<Ball>();*/ JsonSerializer.Deserialize<List<Ball>>(bowlingBallStringList);
         foreach (var ball in ballList)
         {
             savedDots.Add(ball);

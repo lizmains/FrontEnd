@@ -16,6 +16,12 @@
             x:Name="ConDev"
             Text="{Binding devName}"
             HorizontalOptions="End"></Label>
+        <Button 
+            x:Name="DiscBtn"
+            Text="Disconnect"
+            SemanticProperties.Hint="Disconnect from connected device"
+            Clicked="OnDisconnect"
+            HorizontalOptions="End" />
 
         <!--<Label x:Name="DevEntry"
                Text="{Binding ballwt}"
@@ -64,6 +70,12 @@
             Text="Write to Sim"
             SemanticProperties.Hint="Writes to sim"
             Clicked="WriteToSim"
+            HorizontalOptions="Center" />
+        <Button 
+            x:Name="NotifySim"
+            Text="Listen to Sim"
+            SemanticProperties.Hint="Starts/stops listening to sim"
+            Clicked="listen"
             HorizontalOptions="Center" />
         
         <Label
