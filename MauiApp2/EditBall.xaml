@@ -52,6 +52,8 @@
                             Completed="OnComEnter"
                             ReturnType="Go"
                      />
+                     <Label x:Name="ballSerialID"
+                            Text="Enter Serial ID"/>
                   <HorizontalStackLayout>
                      <Button
                          x:Name="SaveBtn"
