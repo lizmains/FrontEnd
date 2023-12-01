@@ -40,13 +40,6 @@ public partial class MainPage : ContentPage
         };
         user = usernm;
         App.UserRepository.GetAllUsers();
-        //We need an option where if user created account, it creates ballList, all new everything
-        //Otherwise, we pull from api infrastructure
-        
-        /*
-         * If User is creating a new account
-         */
-        
         
         
         for (int i = 0 /*App.UserRepository.GetAllUsers().Count-1*/; i < App.UserRepository.GetAllUsers().Count; i++)
