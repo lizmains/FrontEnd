@@ -98,7 +98,7 @@ public partial class LoginPage : ContentPage
             BluetoothState state = ble.State;
             MainViewModel mvm = new MainViewModel(usrnm, pass);
             //ApiLogin();
-            await api.Login(usrnm, pass); //commented out until db server active
+            // await api.Login(usrnm, pass); //commented out until db server active
             //Console.WriteLine("logged in maybe");
             Console.WriteLine("API CONNECTION==");
             //Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
@@ -121,6 +121,11 @@ public partial class LoginPage : ContentPage
     async void OnCreateAccBtnClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new CreateAccountPage(api));
+    }
+    
+    async void OnSkipLoginBtnClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MainPage());
     }
     
 }

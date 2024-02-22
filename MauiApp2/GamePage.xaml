@@ -4,11 +4,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.GamePage">
     <ContentPage.Content>
-        <Button
-            x:Name="NewGameBtn"
-            Text="New Game"
-            SemanticProperties.Hint="Start new game"
-            Clicked="OnNewGameBtnClicked"
-            HorizontalOptions="Center" />
+        <VerticalStackLayout>
+           <Button
+               x:Name="NewGameBtn"
+               Text="New Game"
+               SemanticProperties.Hint="Start new game"
+               Clicked="OnNewGameBtnClicked"
+               HorizontalOptions="Center" />
+                   
+           <Button
+               x:Name="Pin1"
+               Text="1"
+               HeightRequest="100"
+               WidthRequest="100"
+               CornerRadius="50" /> 
+        </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>
