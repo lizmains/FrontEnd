@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using MauiApp2.ViewModel;
@@ -14,6 +15,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
 using System.Windows.Input;
+//using Android.OS.Strictmode;
 using CommunityToolkit.Maui.Converters;
 using MbientLab.MetaWear;
 using MbientLab.MetaWear.Core;
@@ -25,7 +27,14 @@ using MbientLab.Warble;
 using IAccelerometer = MbientLab.MetaWear.Sensor.IAccelerometer;
 using netstandard = MbientLab.MetaWear.NetStandard;
 using MbientLab.MetaWear.Peripheral.Led;
+using MbientLab.MetaWear.Sensor;
+using MbientLab.MetaWear.Sensor.AmbientLightLtr329;
 using Color = MbientLab.MetaWear.Peripheral.Led.Color;
+using Gain = MbientLab.MetaWear.Sensor.AmbientLightLtr329.Gain;
+using ODR = MbientLab.MetaWear.Sensor.GyroBmi160.OutputDataRate;
+using DRg = MbientLab.MetaWear.Sensor.GyroBmi160.DataRange;
+using FM = MbientLab.MetaWear.Sensor.GyroBmi160.FilterMode;
+
 
 //using Color = System.Drawing.Color;
 
@@ -56,6 +65,10 @@ public partial class ScanPage : ContentPage
     private IMetaWearBoard metawear;
     private ICharacteristic readChar;
     private (byte[] data, int resultCode) sensorData;
+    private int sens; //temporary for differentiating sensor used, delete once sensor fusion is figured out
+    private int light_flag;
+    private IService writeServ;
+    private ICharacteristic writeChar;
     
     //sim vars
     private IService simServ;
@@ -76,6 +89,10 @@ public partial class ScanPage : ContentPage
         //adapter.ScanTimeout = 60000; //timeout for bluetooth scanning 60 seconds(?)
         dataRange = 0;
         tempNew = newBall;
+        sens = 0;
+        light_flag = 0;
+        IService writeServ = null;
+        ICharacteristic writeChar = null;
     }
     
     private void OnConnBtnClicked(object sender, EventArgs e)
@@ -165,6 +182,14 @@ public partial class ScanPage : ContentPage
                         //charstics = await services[0].GetCharacteristicsAsync();
                         savedDots.Add(new Ball(device)); //adds device to list of saved balls
                         tempNew.dev = device;
+                        if (device.Name == "MetaWear")
+                        { //Getting characteristics for mms interactions
+                            writeServ = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
+                            writeChar =//mms write characteristic, presumably
+                                await writeServ.GetCharacteristicAsync(new Guid("326a9001-85cb-9195-d9dd-464cfbbae75a"));
+                        }
+                        
+                        await adapter.StopScanningForDevicesAsync();
                     } else Console.WriteLine("Failed to Connect");
                 }
                 break;
@@ -245,13 +270,14 @@ public partial class ScanPage : ContentPage
             batteryChars = await services[3].GetCharacteristicsAsync();
             if (batteryChars[0].CanRead)
             {
-               var bytes = await batteryChars[0].ReadAsync();
-               //var stringBytes = batteryChars[0].StringValue;// same as bytes.data;
-               Console.WriteLine("Battery: " + bytes.data[0] + "%");
-               DevInfo.Text += $"Battery: {bytes.data[0]}%";
-               Console.WriteLine("RSSI: "+ device.Rssi);
-            } else Console.WriteLine("Can't Do it Boss");
-            
+                var bytes = await batteryChars[0].ReadAsync();
+                //var stringBytes = batteryChars[0].StringValue;// same as bytes.data;
+                Console.WriteLine("Battery: " + bytes.data[0] + "%");
+                DevInfo.Text += $"Battery: {bytes.data[0]}%";
+                Console.WriteLine("RSSI: " + device.Rssi);
+            }
+            else Console.WriteLine("Can't Do it Boss");
+
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
 
@@ -286,7 +312,7 @@ public partial class ScanPage : ContentPage
             for (int j = 0; j < charstics.Count; j++)
             {
                 var mmsBytes = await charstics[j].ReadAsync();
-                Console.WriteLine("MMS Bytes from Service 2: " + mmsBytes.data[0]);
+                Console.WriteLine("MMS Bytes from Service 2: ");
                 
                 for (int i = 0; i < mmsBytes.data.Length; i++)
                 {
@@ -296,16 +322,41 @@ public partial class ScanPage : ContentPage
 
             readChar = await mmsServ2.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
             sensorData = await readChar.ReadAsync();
+            if (sens == 1)
+            {
+               float x = BitConverter.ToInt16(sensorData.data, 2);
+               float y = BitConverter.ToInt16(sensorData.data, 4);
+               float z = BitConverter.ToInt16(sensorData.data, 6);
+               x = (x/32768.0f)*16.0f;
+               y = (y/32768.0f)*16.0f;
+               z = (z/32768.0f)*16.0f;
+               
+               Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+               SensorInfo.Text += "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+            }
+            else if (sens == 2)
+            {
+                for (int i = 2; i < sensorData.data.Length; i++)
+                {
+                    Console.WriteLine(sensorData.data[i]);//need to correctly parse bytes into data
+                }
+                float lux = BitConverter.ToInt16(sensorData.data, 2);
+                Console.WriteLine("Light Data: " + lux); 
+                SensorInfo.Text += "Light Data: " + lux + " \n";
+            }
             
-            float x = BitConverter.ToInt16(sensorData.data, 2);
-            float y = BitConverter.ToInt16(sensorData.data, 4);
-            float z = BitConverter.ToInt16(sensorData.data, 6);
-            x = (x/32768.0f)*2.0f;
-            y = (y/32768.0f)*2.0f;
-            z = (z/32768.0f)*2.0f;
-            
-            Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-            SensorInfo.Text += "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n";
+            else if (sens == 3)
+            {//gyro may convert just like the accelerometer 
+                float x = BitConverter.ToInt16(sensorData.data, 2);
+                float y = BitConverter.ToInt16(sensorData.data, 4);
+                float z = BitConverter.ToInt16(sensorData.data, 6);
+                x = (x/32768.0f)*2.0f;
+                y = (y/32768.0f)*2.0f;
+                z = (z/32768.0f)*2.0f;
+               
+                Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+                SensorInfo.Text += "Gyroscope Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+            }
 
             //Console.WriteLine(mmsBytes.resultCode);
             //Console.WriteLine("RSSI: "+ device.Rssi);
@@ -354,16 +405,14 @@ public partial class ScanPage : ContentPage
 
     async void WriteMMS(object sender, EventArgs e)
     {
+        sens = 1;
         SensorInfo.Text = ""; //clear display sensor data in app
         
         //3 for accelerometer, 3 for accelerometer data config, stuff from example, acc_range
         //byte[] data = { 3, 3, (8 << 4)+ (2<<1)+1, 3<<5};               //mms read/write service
-        IService writeServ = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
-        ICharacteristic writeChar =//mms write characteristic, presumably
-            await writeServ.GetCharacteristicAsync(new Guid("326a9001-85cb-9195-d9dd-464cfbbae75a"));
 
         Color col = Color.Blue;
-        byte[] led = //set led pattern
+        byte[] led = //set led pattern --> solid
         {
             2, 3, (byte) col, 2, 1, 1,
             1, 1 >> 8,
@@ -379,52 +428,21 @@ public partial class ScanPage : ContentPage
         
         Console.WriteLine("Starting Accelerometer");
         
-        //byte[] data = { 25, 2, 1, (3 << 4)+1}; //write the mode --> fusion
-        //byte[] data = { 3, 2, 1, (3 << 4) }; //just accel uc
-        byte[] data = { 3, 4, 1 }; //just accel --> simple way BMi160 accel to be specific
-        await writeChar.WriteAsync(data);
+        byte[] data = { 3, 4, 1 }; //subscribes to accel reading
+        await writeChar.WriteAsync(data); 
+
+        data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
+        await writeChar.WriteAsync(data);             //bmi270 version dont seem to work right
         
-        //data = new byte[]{ 3, 3, (8 << 4)+(2<<1), 3<<5}; // configure accel write uc
-        data = new byte[] { 3, 1, 1 }; //simple accel 
+        data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
+        await writeChar.WriteAsync(data);             
+        
+        //start the stuff
+        data = new byte[] { 3, 1, 1 }; //accel starting
         await writeChar.WriteAsync(data);//send command
         
-        /*data = new byte[]{ 19, 3, (8 << 4)+ (2<<2)+1, 14}; //configure gyro write
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[]{ 21, 4, 4, 14}; //configure magneto write - data repetitions
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[]{ 21, 3, 6}; //further configure magneto write - data rate
-        await writeChar.WriteAsync(data);*/
-        //start the stuff
-        data = new byte[]{ 3, 2, 1, 0}; //accel enable write
-        await writeChar.WriteAsync(data);
-        
-        /*data = new byte[]{ 19, 2, 1, 0}; //gyro enable write
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[]{ 21, 2, 1, 0}; //magneto enable write
-        await writeChar.WriteAsync(data);*/
-        
-        /*data = new byte[]{ 3, 1, 1}; //start accel write uc
-        await writeChar.WriteAsync(data);*/ 
-        
-        /*data = new byte[]{ 19, 1, 1}; //start gyro write
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[]{ 21, 1, 1}; //start magneto write
-        await writeChar.WriteAsync(data);*/
-        
-        //enable fusion
-        //byte mask = 1 << 8;
-        /*data = new byte[] {25, 3, 1<<4, 0 }; //configure fusion for euler angles
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[] {25, 1, 1 }; //enable
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[] {25, 8, 1 }; //start
-        await writeChar.WriteAsync(data);*/
+        data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+        await writeChar.WriteAsync(data); //necessary?
 
         await Task.Delay(15000); //wait 15 seconds
 
@@ -441,6 +459,180 @@ public partial class ScanPage : ContentPage
         await writeChar.WriteAsync(led);
         
         Console.WriteLine("Accelerometer Recording Complete");
+    }
+
+    async void lightSensor(object sender, EventArgs e)
+    {
+        sens = 2;
+        /*if (light_flag == 0)
+        {
+            light_flag = 1;
+        }
+        else light_flag = 0;*/
+        light_flag = light_flag == 0 ? 1 : 0;
+
+        SensorInfo.Text = ""; //clear display sensor data in app
+        ICharacteristic readChar =
+            await writeServ.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
+        byte[] led;
+        byte[] data;
+
+        //if (light_flag == 1)
+        //{
+            Color col = Color.Green; //green for light sensor to differentiate from accel for now
+            led = new byte[]//set led pattern
+            {
+                2, 3, (byte)col, 2, 1, 1,
+                1, 1 >> 8,
+                1, 1 >> 8,
+                1, 1 >> 8,
+                1, 1 >> 8,
+                0, 0, 0xff
+            };
+            await writeChar.WriteAsync(led);
+
+            led = new byte[] { 2, 1, 1 }; //play led
+            await writeChar.WriteAsync(led);
+
+            Console.WriteLine("Starting Ambient Light Sensor..."); //light sensor code = 20
+            Gain gain = Gain._1x; 
+            //int gainMask = (gain == Gain._48x || gain == Gain._96x ? (int) (gain + 2) : (int) gain) << 2;
+            IntegrationTime time = IntegrationTime._100ms;
+            MeasurementRate mRate = MeasurementRate._500ms;
+
+            //configure
+            /*data = new byte[]
+            {
+                20,
+                2,
+                (byte)((gain == Gain._48x || gain == Gain._96x ? (int)(gain + 2) : (int)gain) << 2),
+                (byte)((MeasurementRate)((int)time << 3) | mRate)
+            };*/
+            //{ 20, 2, (byte) gainMask, (byte) ((MeasurementRate) ((int) time << 3) | mRate) };
+            data = new byte[] { 14, 2, 0x0c, 0x28 }; //gain=8x, Integrationtime=250ms, MeasurementRate=50ms
+            await writeChar.WriteAsync(data);
+
+            //start
+            //data = (20, 3, dataattribute(byte{4}, 1, 0, false) not the correct byte array but potentially useful info from metawear
+            data = new byte[] { 14, 1, 1 }; // Sensor #, 1, 1 starts the accelerometer and led so maybe this too?
+            await writeChar.WriteAsync(data);
+            
+            await Task.Delay(15000); //wait 15 seconds
+
+            data = new byte[] { 14, 1, 0 };
+            await writeChar.WriteAsync(data);
+            
+            led = new byte[] { 2, 2, 0 }; //stop led
+            await writeChar.WriteAsync(led);
+            Console.WriteLine("Light Sensor Recording Complete");
+            /*readChar.ValueUpdated += (s, a) =>
+            {
+                Console.WriteLine("DATA RECEIVED!");
+                var bytes = a.Characteristic.Value;
+                for (int i = 2; i < bytes.Length; i++)
+                {
+                    Console.WriteLine("Light Bytes: " + bytes[i]);//need to correctly parse bytes into data
+                }
+            };
+            await readChar.StartUpdatesAsync();*/
+            //}
+
+            //await Task.Delay(15000); //wait 15 seconds
+            /*else if (light_flag == 0)
+            {
+                sensorData = await readChar.ReadAsync();
+                for (int i = 0; i < sensorData.data.Length; i++)
+                {//get rid of this later
+                    Console.WriteLine("data? "+sensorData.data[i]);
+                }
+
+                await readChar.StopUpdatesAsync();
+                data = new byte[] { 20, 1, 0 }; //1=enable register?, 0 = stops the sensor
+                await writeChar.WriteAsync(data);
+
+                led = new byte[] { 2, 2, 0 }; //stop led
+                await writeChar.WriteAsync(led);
+                Console.WriteLine("Light Sensor Recording Complete");
+            }*/
+
+    }
+
+    async void gyroSensor(object sender, EventArgs e)
+    {
+        sens = 3;
+        SensorInfo.Text = ""; //clear display sensor data in app
+        
+        //gyro module # = 19
+        
+        Color col = Color.Red;
+        byte[] led = //set led pattern --> solid
+        {
+            2, 3, (byte) col, 2, 1, 1,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            0, 0, 0xff
+        };
+        await writeChar.WriteAsync(led);
+
+        led = new byte[] { 2, 1, 1 }; //play led
+        await writeChar.WriteAsync(led);
+        
+        //configure gyro
+        Console.WriteLine("Configuring Gyroscope");
+        ODR odr = ODR._100Hz;
+        DRg range = DRg._2000dps;
+        FM filter = FM.Normal;
+        /*byte[] gyroConfig = { 34, 0 };
+        gyroConfig[1] &= 248;
+        gyroConfig[1] |= (byte) range;
+        gyroConfig[0] = (byte)(odr + 6 | (ODR)((int)filter << 4));
+        byte[] data = { 19, 3, gyroConfig[0], gyroConfig[1] };*/
+        /*byte[] data =
+        {
+            19,                 //nonfunctional configuration
+            3,
+            (byte)(((int) odr << 4) + (2 << 2)),
+            (byte) ((int)range << 5)
+        };
+        await writeChar.WriteAsync(data);
+        
+        //start gyro
+        Console.WriteLine("Starting Gyroscope");
+        
+        data = new byte[] { 19, 1, 1}; 
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 19, 2, 1, 0 }; 
+        await writeChar.WriteAsync(data);*/
+        
+        byte[] data = { 19, 4, 1 }; //just accel --> simple way BMi160 accel to be specific
+        await writeChar.WriteAsync(data);
+
+        data = new byte[] { 19, 1, 1 }; //simple accel 
+        await writeChar.WriteAsync(data);//send command
+        
+        //start the stuff
+        data = new byte[]{ 19, 2, 1, 0}; //accel enable write
+        await writeChar.WriteAsync(data);
+
+        await Task.Delay(15000);
+        
+        //stop gyro
+        data = new byte[] { 19, 2, 0, 1 };
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 19, 4, 0, };
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 19, 1, 0 }; 
+        await writeChar.WriteAsync(data);
+        Console.WriteLine("Stopping Gyroscope");
+        
+        led = new byte[] { 2, 2, 0 }; //stop led
+        await writeChar.WriteAsync(led);
+        Console.WriteLine("Gyroscope Recording Complete");
     }
     
     async void MetaMotionStuff(object sender, EventArgs e)

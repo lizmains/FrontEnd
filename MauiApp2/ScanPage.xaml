@@ -176,6 +176,18 @@
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="WriteMMS"
                 HorizontalOptions="Center" />
+            <Button 
+                x:Name="WriteGyro"
+                Text="Start Gyroscope"
+                SemanticProperties.Hint="Writes to mms"
+                Clicked="gyroSensor"
+                HorizontalOptions="Center" />
+            <Button 
+                x:Name="WriteLight"
+                Text="Start Light Sensor"
+                SemanticProperties.Hint="Writes to mms"
+                Clicked="lightSensor"
+                HorizontalOptions="Center" />
         </VerticalStackLayout>
     </ScrollView>
     </RefreshView>
