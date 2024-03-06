@@ -3,21 +3,98 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.GamePage">
-    <ContentPage.Content>
         <VerticalStackLayout>
-           <Button
-               x:Name="NewGameBtn"
-               Text="New Game"
-               SemanticProperties.Hint="Start new game"
-               Clicked="OnNewGameBtnClicked"
-               HorizontalOptions="Center" />
-                   
-           <Button
-               x:Name="Pin1"
-               Text="1"
-               HeightRequest="100"
-               WidthRequest="100"
-               CornerRadius="50" /> 
+            
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- First row -->
+                <RowDefinition Height="Auto"/> <!-- Second row -->
+                <RowDefinition Height="Auto"/> <!-- Third row -->
+                <RowDefinition Height="Auto"/> <!-- Fourth row -->
+                <!-- Add more rows as needed -->
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/> <!-- First column -->
+                <ColumnDefinition Width="Auto"/> <!-- Second column -->
+                <ColumnDefinition Width="Auto"/> <!-- Third column -->
+                <ColumnDefinition Width="Auto"/> <!-- Fourth column -->
+                <ColumnDefinition Width="Auto"/> <!-- Fifth column -->
+                <ColumnDefinition Width="Auto"/> <!-- Sixth column -->
+                <ColumnDefinition Width="Auto"/> <!-- Seventh column -->
+                <ColumnDefinition Width="Auto"/> <!-- Eighth column -->
+                <ColumnDefinition Width="Auto"/> <!-- Ninth column -->
+                <!-- Add more columns as needed -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Top row?\ -->
+            <Button
+                x:Name="P7"
+                Text="7"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="0"
+                Grid.Column="1"/>
+            <Button
+                x:Name="P8"
+                Text="8"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="0"
+                Grid.Column="3"/>
+            <Button
+                x:Name="P9"
+                Text="9"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="0"
+                Grid.Column="5"/>
+            <Button
+                x:Name="P10"
+                Text="10"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="0"
+                Grid.Column="7"/>
+            
+            <!-- Second row -->
+            <Button
+                x:Name="P4"
+                Text="4"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="1"
+                Grid.Column="2"/>
+            <Button
+                x:Name="P5"
+                Text="5"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="1"
+                Grid.Column="4"/>
+            <Button
+                x:Name="P6"
+                Text="6"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="1"
+                Grid.Column="6"/>
+            
+            <!-- Third row -->
+            <Button
+                x:Name="P2"
+                Text="2"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="2"
+                Grid.Column="3"/>
+            <Button
+                x:Name="P3"
+                Text="3"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="2"
+                Grid.Column="5"/>
+            
+            <!-- Fourth row -->
+            <Button
+                x:Name="P1"
+                Text="1"
+                Clicked="OnPinBtnClicked"
+                Grid.Row="3"
+                Grid.Column="4"/>
+        </Grid>
         </VerticalStackLayout>
-    </ContentPage.Content>
 </ContentPage>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.BallArsenal"
+             Title="BallArsenal"
+             BackgroundColor="White">
+
+    <Grid>
+        <!-- Header Row -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /> <!-- Auto-sized header -->
+            <RowDefinition Height="*" />    <!-- Remaining space for content -->
+        </Grid.RowDefinitions>
+
+        <!-- Header Content -->
+        <StackLayout Orientation="Horizontal" Padding="30">
+            <Entry x:Name="search"
+                   Placeholder="Search"/>
+            <Entry x:Name="filter"
+                   Placeholder="Filter"/>
+            <Button
+                x:Name="addBall"
+                Text="Add"
+                SemanticProperties.Hint="Add new ball to arsenal"
+                Clicked="OnAddBallBtnClicked"
+                HorizontalOptions="Center"/>
+        </StackLayout>
+
+        <!-- Content Sections -->
+        <StackLayout Grid.Row="1" Padding="20">
+            <Frame BackgroundColor="LightGray" Padding="10">
+                <Image Source="mcswirly_ball.png" HeightRequest="100" WidthRequest="100" />
+            </Frame>
+        </StackLayout>
+    </Grid>
+</ContentPage>

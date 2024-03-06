@@ -75,14 +75,28 @@
                 SemanticProperties.Hint="Will activate bluetooth pairing"
                 Clicked="OnBTClicked"
                 HorizontalOptions="Center" />
-
             
             <Button
-                x:Name="FileBtn"
-                Text="UI Page"
-                SemanticProperties.Hint="Navigate to File Picker Screen"
-                Clicked="OnFileBtnClicked"
-                HorizontalOptions="Center" />
+                x:Name="ballBtn"
+                Text="Ball Arsenal"
+                SemanticProperties.Hint="Navigate to Ball Arsenal Page"
+                Clicked="OnBallArsenalBtnClicked"
+                HorizontalOptions="Center"/>
+            
+            <Button
+                x:Name="smartDotBtn"
+                Text="SmartDot"
+                SemanticProperties.Hint="Navigate to SmartDot Page"
+                Clicked="OnSmartDotBtnClicked"
+                HorizontalOptions="Center"/>
+
+            
+            <!-- <Button -->
+            <!--     x:Name="FileBtn" -->
+            <!--     Text="UI Page" -->
+            <!--     SemanticProperties.Hint="Navigate to File Picker Screen" -->
+            <!--     Clicked="OnFileBtnClicked" -->
+            <!--     HorizontalOptions="Center" /> -->
             
             <Button
                 x:Name="vidBtn"

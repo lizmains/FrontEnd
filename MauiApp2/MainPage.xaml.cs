@@ -64,6 +64,16 @@ public partial class MainPage : ContentPage
 
         SemanticScreenReader.Announce(bTBtn.Text);
     }
+
+    async private void OnBallArsenalBtnClicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new BallArsenal());
+    }
+    
+    async private void OnSmartDotBtnClicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new SmartDot());
+    }
     private void OnNextBtnClicked(object sender, EventArgs e) //Button to view smartdot stats
     {
         if (bt/*shell.GetBluetooth()*/) //check to see if bt connection is established

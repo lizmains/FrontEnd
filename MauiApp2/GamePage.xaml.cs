@@ -3,52 +3,63 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// using UIKit;
 
 namespace MauiApp2;
 
 public partial class GamePage : ContentPage
 {
+    public List<List<string>> ButtonItems { get; set; }
     public GamePage()
     {
         InitializeComponent();
-        
-        var stackLayout = new StackLayout
+
+        ButtonItems = new List<List<string>>
         {
-            Orientation = StackOrientation.Vertical,
-            HorizontalOptions = LayoutOptions.Center,
-            VerticalOptions = LayoutOptions.Center
+            new List<string> { "Pin 7", "Pin 8", "Pin 9", "Pin 10" },
+            new List<string> { "Pin 4", "Pin 5", "Pin 6" },
+            new List<string> { "Pin 2", "Pin 3" },
+            new List<string> { "Pin 1" }
         };
-
-        for (int i = 4; i > 0; i++)
-        {
-            var horizontalStackLayout = new StackLayout()
-            {
-                Orientation = StackOrientation.Horizontal,
-                HorizontalOptions = LayoutOptions.Center
-            };
-
-            for (int j = 0; j <= i; j++)
-            {
-                var circularButton = new Button()
-                {
-                    Text = $"Pin i",
-                    WidthRequest = 50,
-                    HeightRequest = 50,
-                    CornerRadius = 25,
-                };
-                
-                horizontalStackLayout.Children.Add(circularButton);
-            }
-
-            stackLayout.Children.Add(horizontalStackLayout);
-        }
-
-        Content = stackLayout;
+        // DataContext = this;
     }
-    
     
     private async void OnNewGameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         await Navigation.PushAsync(new NewGame());
+    }
+
+    private async void OnPinBtnClicked(object sender, EventArgs e)
+    {
+        //thing happens here
+    }
+    
+    private async void OnGutterballBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        // go to next shot in frame OR next frame
+        //no pins fall
+        //score += 0
+    }
+    
+    private async void OnFoulBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        // go to next shot in frame OR next frame
+        //no pins fall
+        //score += 0
+        //idk what fouls mean in bowling
+    }
+    
+    private async void OnStrikeBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        // go to next frame
+        //all pins fall
+        //score += 10
+    }
+    
+    private async void OnSpareBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        // go to next frame
+        //all pins fall
+        //score += whatevers left over from first shot
     }
 }
