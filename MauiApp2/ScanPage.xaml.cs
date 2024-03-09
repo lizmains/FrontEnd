@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -67,6 +68,7 @@ public partial class ScanPage : ContentPage
     private (byte[] data, int resultCode) sensorData;
     private int sens; //temporary for differentiating sensor used, delete once sensor fusion is figured out
     private int light_flag;
+    private int accFlag;
     private IService writeServ;
     private ICharacteristic writeChar;
     
@@ -91,6 +93,7 @@ public partial class ScanPage : ContentPage
         tempNew = newBall;
         sens = 0;
         light_flag = 0;
+        accFlag = 0;
         IService writeServ = null;
         ICharacteristic writeChar = null;
     }
@@ -332,7 +335,7 @@ public partial class ScanPage : ContentPage
                z = (z/32768.0f)*16.0f;
                
                Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-               SensorInfo.Text += "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+               SensorInfo.Text /*+*/= "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
             }
             else if (sens == 2)
             {
@@ -355,7 +358,7 @@ public partial class ScanPage : ContentPage
                 z = (z/32768.0f)*2.0f;
                
                 Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-                SensorInfo.Text += "Gyroscope Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+                SensorInfo.Text /*+*/= "Gyroscope Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
             }
 
             //Console.WriteLine(mmsBytes.resultCode);
@@ -449,11 +452,14 @@ public partial class ScanPage : ContentPage
         data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
         await writeChar.WriteAsync(data);
         
-        data = new byte[] { 3, 4, 0}; //disable accel simple
+        data = new byte[] { 3, 4, 0}; //unsubscribe
         await writeChar.WriteAsync(data);
         
         data = new byte[] { 3, 1, 0 }; //disable accel simple
         await writeChar.WriteAsync(data);
+        
+        /*data = new byte[] { 0x0b, 0x10, 0x01 }; //flush cache, not working
+        await writeChar.WriteAsync(data);*/
 
         led = new byte[] { 2, 2, 0 }; //stop led
         await writeChar.WriteAsync(led);
@@ -463,6 +469,8 @@ public partial class ScanPage : ContentPage
 
     async void lightSensor(object sender, EventArgs e)
     {
+        float ratio;
+        float lux;
         sens = 2;
         /*if (light_flag == 0)
         {
@@ -477,8 +485,8 @@ public partial class ScanPage : ContentPage
         byte[] led;
         byte[] data;
 
-        //if (light_flag == 1)
-        //{
+        if (light_flag == 1)
+        {
             Color col = Color.Green; //green for light sensor to differentiate from accel for now
             led = new byte[]//set led pattern
             {
@@ -495,10 +503,10 @@ public partial class ScanPage : ContentPage
             await writeChar.WriteAsync(led);
 
             Console.WriteLine("Starting Ambient Light Sensor..."); //light sensor code = 20
-            Gain gain = Gain._1x; 
+            /*Gain gain = Gain._1x; 
             //int gainMask = (gain == Gain._48x || gain == Gain._96x ? (int) (gain + 2) : (int) gain) << 2;
             IntegrationTime time = IntegrationTime._100ms;
-            MeasurementRate mRate = MeasurementRate._500ms;
+            MeasurementRate mRate = MeasurementRate._500ms;*/
 
             //configure
             /*data = new byte[]
@@ -509,23 +517,31 @@ public partial class ScanPage : ContentPage
                 (byte)((MeasurementRate)((int)time << 3) | mRate)
             };*/
             //{ 20, 2, (byte) gainMask, (byte) ((MeasurementRate) ((int) time << 3) | mRate) };
-            data = new byte[] { 14, 2, 0x0c, 0x28 }; //gain=8x, Integrationtime=250ms, MeasurementRate=50ms
+            data = new byte[] { 0x14, 0x02, 0x18, 0x03 };  
+            await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
+            
+            data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
+            await writeChar.WriteAsync(data);
+            
+            data = new byte[] { 0x14, 0x02, 0x00, 0x05 }; //Measurement 2000ms
             await writeChar.WriteAsync(data);
 
             //start
-            //data = (20, 3, dataattribute(byte{4}, 1, 0, false) not the correct byte array but potentially useful info from metawear
-            data = new byte[] { 14, 1, 1 }; // Sensor #, 1, 1 starts the accelerometer and led so maybe this too?
+            data = new byte[] { 0x14, 0x03, 0x01 }; // 3 for streaming?
+            await writeChar.WriteAsync(data);//subscribes to notifications?
+            
+            data = new byte[] { 0x14, 0x01, 0x01 }; // start
             await writeChar.WriteAsync(data);
             
-            await Task.Delay(15000); //wait 15 seconds
+            /*await Task.Delay(15000); //wait 15 seconds
 
-            data = new byte[] { 14, 1, 0 };
+            data = new byte[] { 0x14, 0x03, 0x00 };
             await writeChar.WriteAsync(data);
             
             led = new byte[] { 2, 2, 0 }; //stop led
             await writeChar.WriteAsync(led);
-            Console.WriteLine("Light Sensor Recording Complete");
-            /*readChar.ValueUpdated += (s, a) =>
+            Console.WriteLine("Light Sensor Recording Complete");*/
+            readChar.ValueUpdated += (s, a) =>
             {
                 Console.WriteLine("DATA RECEIVED!");
                 var bytes = a.Characteristic.Value;
@@ -533,27 +549,42 @@ public partial class ScanPage : ContentPage
                 {
                     Console.WriteLine("Light Bytes: " + bytes[i]);//need to correctly parse bytes into data
                 }
+                float ch0 = (bytes[3] << 8) | bytes[2]; 
+                float ch1 = (bytes[5] << 8) | bytes[4];
+                ratio = ch1 / (ch1 + ch0);
+                Console.WriteLine("Ratio: " + ratio);
+                if (ratio < 0.45f)
+                {
+                    lux = (1.7743f * ch0 + 1.1059f * ch1)/48/4; // gain/integration time
+                }
+                else if (ratio is < 0.64f and >= 0.45f)
+                {
+                    lux = (4.2785f * ch0 - 1.9548f * ch1)/48/4;
+                }
+                else if (ratio is < 0.85f and >= 0.64f)
+                {
+                    lux = (0.5926f * ch0 + 0.1185f * ch1)/48/4;
+                }
+                else lux = 0;
+                
+                SensorInfo.Text = "Light Data " + lux + " Lux";
             };
-            await readChar.StartUpdatesAsync();*/
-            //}
+            await readChar.StartUpdatesAsync();
+        }
 
             //await Task.Delay(15000); //wait 15 seconds
-            /*else if (light_flag == 0)
+            else if (light_flag == 0)
             {
-                sensorData = await readChar.ReadAsync();
-                for (int i = 0; i < sensorData.data.Length; i++)
-                {//get rid of this later
-                    Console.WriteLine("data? "+sensorData.data[i]);
-                }
-
                 await readChar.StopUpdatesAsync();
-                data = new byte[] { 20, 1, 0 }; //1=enable register?, 0 = stops the sensor
+                data = new byte[] { 0x14, 0x03, 0x00 }; //stop als stream
+                await writeChar.WriteAsync(data);
+                data = new byte[] { 0x14, 0x01, 0x00 }; //stop
                 await writeChar.WriteAsync(data);
 
                 led = new byte[] { 2, 2, 0 }; //stop led
                 await writeChar.WriteAsync(led);
                 Console.WriteLine("Light Sensor Recording Complete");
-            }*/
+            }
 
     }
 
@@ -607,26 +638,253 @@ public partial class ScanPage : ContentPage
         data = new byte[] { 19, 2, 1, 0 }; 
         await writeChar.WriteAsync(data);*/
         
-        byte[] data = { 19, 4, 1 }; //just accel --> simple way BMi160 accel to be specific
+        //byte[] data = { 19, 4, 1 }; //
+        byte[] data = { 0x13, 0x05, 0x01}; //subscribe to gyro
         await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 0x13, 0x3, 0x29, 0x0 }; //odr 200Hz
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 0x13, 0x03, 0x28, 0x03 }; //fsr 250dps
+        await writeChar.WriteAsync(data);//send command
 
-        data = new byte[] { 19, 1, 1 }; //simple accel 
+        data = new byte[] { 0x13, 0x01, 0x01 }; //start gyro
         await writeChar.WriteAsync(data);//send command
         
         //start the stuff
-        data = new byte[]{ 19, 2, 1, 0}; //accel enable write
+        data = new byte[]{ 0x13, 0x02, 0x01, 0x00}; //enable sampling
         await writeChar.WriteAsync(data);
 
         await Task.Delay(15000);
         
         //stop gyro
-        data = new byte[] { 19, 2, 0, 1 };
+        data = new byte[] { 0x13, 0x02, 0x00, 0x01 }; //disable sampling
         await writeChar.WriteAsync(data);
         
-        data = new byte[] { 19, 4, 0, };
+        /*data = new byte[] { 19, 4, 0, };
+        await writeChar.WriteAsync(data);*/
+        data = new byte[] { 0x13, 0x05, 0x00 }; //unsubscribe gyro
         await writeChar.WriteAsync(data);
         
-        data = new byte[] { 19, 1, 0 }; 
+        data = new byte[] { 0x13, 0x01, 0x00 }; //stop gyro
+        await writeChar.WriteAsync(data);
+        Console.WriteLine("Stopping Gyroscope");
+        
+        led = new byte[] { 2, 2, 0 }; //stop led
+        await writeChar.WriteAsync(led);
+        Console.WriteLine("Gyroscope Recording Complete");
+    }
+
+    async void StreamAcc(object sender, EventArgs e)
+    {
+        sens = 1;
+        accFlag = accFlag == 0 ? 1 : 0;
+        
+        SensorInfo.Text = ""; //clear display sensor data in app
+        ICharacteristic readChar =
+            await writeServ.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
+        byte[] led;
+        byte[] data;
+        
+        Color col = Color.Blue;
+        led = new byte[]//set led pattern --> solid
+        {
+            2, 3, (byte) col, 2, 1, 1,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            0, 0, 0xff
+        };
+        await writeChar.WriteAsync(led);
+  
+        led = new byte[] { 2, 1, 1 }; //play led
+        await writeChar.WriteAsync(led);
+          
+        Console.WriteLine("Starting Accelerometer");
+          
+        data = new byte[]{ 3, 4, 1 }; //subscribes to accel 
+        await writeChar.WriteAsync(data); 
+  
+        data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
+        await writeChar.WriteAsync(data);             //bmi270 version dont seem to work right
+          
+        data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
+        await writeChar.WriteAsync(data);             
+          
+        //start the stuff
+        data = new byte[] { 3, 1, 1 }; //accel starting stream
+        await writeChar.WriteAsync(data);//send command
+          
+        data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+        await writeChar.WriteAsync(data); //necessary? 
+
+        Stopwatch s = new Stopwatch();
+        s.Start();
+        while (s.Elapsed < TimeSpan.FromSeconds(15))
+        {
+            getMMSInfo(sender, e); //auto-poll the MMS the lazy way
+            await Task.Delay(1000);
+        }
+        s.Stop();
+        
+        data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
+        await writeChar.WriteAsync(data);
+
+        data = new byte[] { 3, 4, 0}; //unsubscribe
+        await writeChar.WriteAsync(data);
+
+        data = new byte[] { 3, 1, 0 }; //disable accel simple
+        await writeChar.WriteAsync(data);
+
+        /*data = new byte[] { 0x0b, 0x10, 0x01 }; //flush cache, not working
+        await writeChar.WriteAsync(data);*/
+
+        led = new byte[] { 2, 2, 0 }; //stop led
+        await writeChar.WriteAsync(led);
+
+        Console.WriteLine("Accelerometer Recording Complete");
+
+    /*if (accFlag == 1)
+    {
+      Color col = Color.Blue;
+      led = new byte[]//set led pattern --> solid
+      {
+          2, 3, (byte) col, 2, 1, 1,
+          1, 1 >> 8,
+          1, 1 >> 8,
+          1, 1 >> 8,
+          1, 1 >> 8,
+          0, 0, 0xff
+      };
+      await writeChar.WriteAsync(led);
+
+      led = new byte[] { 2, 1, 1 }; //play led
+      await writeChar.WriteAsync(led);
+
+      Console.WriteLine("Starting Accelerometer");
+
+      data = new byte[]{ 3, 4, 1 }; //subscribes to accel
+      await writeChar.WriteAsync(data);
+
+      data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
+      await writeChar.WriteAsync(data);             //bmi270 version dont seem to work right
+
+      data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
+      await writeChar.WriteAsync(data);
+
+      //start the stuff
+      data = new byte[] { 3, 1, 1 }; //accel starting stream
+      await writeChar.WriteAsync(data);//send command
+
+      data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+      await writeChar.WriteAsync(data); //necessary?
+
+      readChar.ValueUpdated += (s, a) =>
+      {
+          Console.WriteLine("DATA RECEIVED!");
+          var bytes = a.Characteristic.Value;
+          for (int i = 2; i < bytes.Length; i++)
+          {
+              Console.WriteLine("Accelerometer Bytes: " + bytes[i]);//need to correctly parse bytes into data
+          }
+
+          float x = BitConverter.ToInt16(sensorData.data, 2);
+          float y = BitConverter.ToInt16(sensorData.data, 4);
+          float z = BitConverter.ToInt16(sensorData.data, 6);
+          x = (x/32768.0f)*16.0f;
+          y = (y/32768.0f)*16.0f;
+          z = (z/32768.0f)*16.0f;
+
+          Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+          SensorInfo.Text = "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n";
+      };
+      await readChar.StartUpdatesAsync();
+    }
+    else if (accFlag == 0)
+    {
+        await readChar.StopUpdatesAsync();
+        data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
+        await writeChar.WriteAsync(data);
+
+        data = new byte[] { 3, 4, 0}; //unsubscribe
+        await writeChar.WriteAsync(data);
+
+        data = new byte[] { 3, 1, 0 }; //disable accel simple
+        await writeChar.WriteAsync(data);
+
+        /*data = new byte[] { 0x0b, 0x10, 0x01 }; //flush cache, not working
+        await writeChar.WriteAsync(data);
+
+        led = new byte[] { 2, 2, 0 }; //stop led
+        await writeChar.WriteAsync(led);
+
+        Console.WriteLine("Accelerometer Recording Complete");
+    }*/
+    }
+
+    async void StreamGyro(object sender, EventArgs e)
+    {
+        sens = 3;
+        
+        SensorInfo.Text = ""; //clear display sensor data in app
+        ICharacteristic readChar =
+            await writeServ.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
+        byte[] led;
+        byte[] data;
+        
+        Color col = Color.Red;
+        led = new byte[]//set led pattern --> solid
+        {
+            2, 3, (byte) col, 2, 1, 1,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            1, 1 >> 8,
+            0, 0, 0xff
+        };
+        await writeChar.WriteAsync(led);
+  
+        led = new byte[] { 2, 1, 1 }; //play led
+        await writeChar.WriteAsync(led);
+          
+        Console.WriteLine("Starting Gyroscope");
+          
+        data = new byte[]{ 0x13, 0x05, 0x01}; //subscribe to gyro
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 0x13, 0x3, 0x29, 0x0 }; //odr 200Hz
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 0x13, 0x03, 0x28, 0x03 }; //fsr 250dps
+        await writeChar.WriteAsync(data);//send command
+
+        data = new byte[] { 0x13, 0x01, 0x01 }; //start gyro
+        await writeChar.WriteAsync(data);//send command
+        
+        //start the stuff
+        data = new byte[]{ 0x13, 0x02, 0x01, 0x00}; //enable sampling
+        await writeChar.WriteAsync(data);
+
+        Stopwatch s = new Stopwatch();
+        s.Start();
+        while (s.Elapsed < TimeSpan.FromSeconds(15))
+        {
+            getMMSInfo(sender, e); //auto-poll the MMS the lazy way
+            await Task.Delay(1000);
+        }
+        s.Stop();
+        
+        //stop gyro
+        data = new byte[] { 0x13, 0x02, 0x00, 0x01 }; //disable sampling
+        await writeChar.WriteAsync(data);
+        
+        /*data = new byte[] { 19, 4, 0, };
+        await writeChar.WriteAsync(data);*/
+        data = new byte[] { 0x13, 0x05, 0x00 }; //unsubscribe gyro
+        await writeChar.WriteAsync(data);
+        
+        data = new byte[] { 0x13, 0x01, 0x00 }; //stop gyro
         await writeChar.WriteAsync(data);
         Console.WriteLine("Stopping Gyroscope");
         

@@ -115,6 +115,7 @@
                 HorizontalOptions="Center"></Label>
             <Label
                 x:Name="SensorInfo"
+                FontSize="24"
                 Text="{Binding names}"
                 HorizontalOptions="Center"></Label>
 
@@ -177,14 +178,38 @@
                 Clicked="WriteMMS"
                 HorizontalOptions="Center" />
             <Button 
+                x:Name="WriteAcc"
+                Text="Stream Accelerometer"
+                SemanticProperties.Hint="Writes to mms"
+                Clicked="StreamAcc"
+                HorizontalOptions="Center" />
+            <Label
+                Text=" "
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="blank"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            <Button 
                 x:Name="WriteGyro"
                 Text="Start Gyroscope"
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="gyroSensor"
                 HorizontalOptions="Center" />
             <Button 
+                x:Name="GyroStream"
+                Text="Stream Gyroscope"
+                SemanticProperties.Hint="Writes to mms"
+                Clicked="StreamGyro"
+                HorizontalOptions="Center" />
+            <Label
+                Text=" "
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="blank"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            <Button 
                 x:Name="WriteLight"
-                Text="Start Light Sensor"
+                Text="Start/Stop Light Sensor"
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="lightSensor"
                 HorizontalOptions="Center" />
