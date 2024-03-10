@@ -11,10 +11,12 @@ namespace MauiApp2
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            builder.UseMauiApp<App>().ConfigureFonts(fonts =>
+            builder.UseMauiApp<App>();
+            builder.ConfigureFonts(fonts =>
             {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                // fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                // fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("Lobster-Regular.ttf", "Lobster");
             }).UseMauiCommunityToolkitMediaElement().UseMauiCommunityToolkit();
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "revmetrix.db");
             builder.Services.AddSingleton(s => ActivatorUtilities.CreateInstance<UserRepository>(s, dbPath));

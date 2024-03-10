@@ -2,35 +2,74 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.BallArsenal"
-             Title="BallArsenal"
+             Title="Ball Arsenal"
              BackgroundColor="White">
-
-    <Grid>
-        <!-- Header Row -->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" /> <!-- Auto-sized header -->
-            <RowDefinition Height="*" />    <!-- Remaining space for content -->
-        </Grid.RowDefinitions>
-
-        <!-- Header Content -->
-        <StackLayout Orientation="Horizontal" Padding="30">
+    <VerticalStackLayout>
+        <!-- heading stuff -->
+        <Grid Padding="20">
+            <!-- Header Row -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- Auto-sized header -->
+                <RowDefinition Height="*" />    <!-- Remaining space for content -->
+            </Grid.RowDefinitions>
+        
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+        
             <Entry x:Name="search"
-                   Placeholder="Search"/>
-            <Entry x:Name="filter"
-                   Placeholder="Filter"/>
+                   Placeholder="Search"
+                   Grid.Column="0"/>
+            <Picker x:Name="Filter"
+                    Grid.Column="1">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>A to Z</x:String>
+                        <x:String>Z to A</x:String>
+                        <x:String>Newest to Oldest</x:String>
+                        <x:String>Oldest to Newest</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <!-- <Entry x:Name="filter" -->
+            <!--        Placeholder="Filter" -->
+            <!--        Grid.Column="1"/> -->
             <Button
                 x:Name="addBall"
                 Text="Add"
                 SemanticProperties.Hint="Add new ball to arsenal"
                 Clicked="OnAddBallBtnClicked"
-                HorizontalOptions="Center"/>
-        </StackLayout>
-
-        <!-- Content Sections -->
-        <StackLayout Grid.Row="1" Padding="20">
-            <Frame BackgroundColor="LightGray" Padding="10">
-                <Image Source="mcswirly_ball.png" HeightRequest="100" WidthRequest="100" />
+                HorizontalOptions="Center"
+                Grid.Column="2"/>
+        </Grid>
+        
+        <Grid Margin="20">
+            <Frame BackgroundColor="LightGray">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+        
+                    <!-- Labels -->
+                    <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical" Padding="10">
+                        <Label Text="BallName"/>
+                        <Label Text="Weight"/>
+                        <Label Text="Color"/>
+                        <Label Text="Cover"/>
+                        <Label Text="Core Type"/>
+                    </StackLayout>
+        
+                    <!-- Image -->
+                    <Image Source="mcswirly.png" HeightRequest="100" WidthRequest="100" Grid.Row="0" Grid.Column="1" HorizontalOptions="End"/>
+                </Grid>
             </Frame>
-        </StackLayout>
-    </Grid>
+        </Grid>
+
+    </VerticalStackLayout>
 </ContentPage>

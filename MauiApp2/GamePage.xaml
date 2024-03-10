@@ -2,172 +2,172 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp2.GamePage">
+             x:Class="MauiApp2.GamePage"
+             Title="Game">
         <VerticalStackLayout Padding="5">
             
-        
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/> <!-- First row -->
-                    <RowDefinition Height="Auto"/> <!-- Second row -->
-                    <RowDefinition Height="Auto"/> <!-- Third row -->
-                    <RowDefinition Height="Auto"/> <!-- Fourth row -->
-                    <RowDefinition Height="Auto"/> <!-- 5 row -->
-                    <RowDefinition Height="Auto"/> <!-- 6 row -->
-                    <RowDefinition Height="Auto"/> <!-- 7 row -->
-                    <RowDefinition Height="Auto"/> <!-- 8 row -->
-                    <RowDefinition Height="Auto"/> <!-- 9 row -->
-                    <RowDefinition Height="Auto"/> <!-- 10 row -->
-                    <RowDefinition Height="Auto"/> <!-- 11 row -->
-                    <RowDefinition Height="Auto"/> <!-- 12 row -->
-                    <RowDefinition Height="Auto"/> <!-- 13 row -->
-                    <!-- Add more rows as needed -->
-                </Grid.RowDefinitions>
+            <Grid RowDefinitions="400, 200" Margin="20, 30, 20, 0">
+                <!-- pins -->
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/> <!-- First row -->
+                        <RowDefinition Height="Auto"/> <!-- Second row -->
+                        <RowDefinition Height="Auto"/> <!-- Third row -->
+                        <RowDefinition Height="Auto"/> <!-- Fourth row -->
+                        <!-- Add more rows as needed -->
+                    </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/> <!-- First column -->
-                    <ColumnDefinition Width="1*"/> <!-- Second column -->
-                    <ColumnDefinition Width="1*"/> <!-- Third column -->
-                    <ColumnDefinition Width="1*"/> <!-- Fourth column -->
-                    <ColumnDefinition Width="1*"/> <!-- Fifth column -->
-                    <ColumnDefinition Width="1*"/> <!-- Sixth column -->
-                    <ColumnDefinition Width="1*"/> <!-- Seventh column -->
-                    <ColumnDefinition Width="1*"/> <!-- Eighth column -->
-                    <ColumnDefinition Width="1*"/> <!-- Ninth column -->
-                    <!-- Add more columns as needed -->
-                </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/> <!-- First column -->
+                        <ColumnDefinition Width="1*"/> <!-- Second column -->
+                        <ColumnDefinition Width="1*"/> <!-- Third column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fourth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fifth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Sixth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Seventh column -->
+                        <ColumnDefinition Width="1*"/> <!-- Eighth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Ninth column -->
+                        <!-- Add more columns as needed -->
+                    </Grid.ColumnDefinitions>
 
-                <!-- Top row?\ -->
-                <Button
-                    x:Name="P7"
-                    Text="7"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="0"
-                    Grid.Column="1"/>
-                <Button
-                    x:Name="P8"
-                    Text="8"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="0"
-                    Grid.Column="3"/>
-                <Button
-                    x:Name="P9"
-                    Text="9"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="0"
-                    Grid.Column="5"/>
-                <Button
-                    x:Name="P10"
-                    Text="10"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="0"
-                    Grid.Column="7"/>
+                    <!-- Top row?\ -->
+                    <Button
+                        x:Name="P7"
+                        Text="7"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="0"
+                        Grid.Column="1"/>
+                    <Button
+                        x:Name="P8"
+                        Text="8"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="0"
+                        Grid.Column="3"/>
+                    <Button
+                        x:Name="P9"
+                        Text="9"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="0"
+                        Grid.Column="5"/>
+                    <Button
+                        x:Name="P10"
+                        Text="10"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="0"
+                        Grid.Column="7"/>
+                    
+                    <!-- Second row -->
+                    <Button
+                        x:Name="P4"
+                        Text="4"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="1"
+                        Grid.Column="2"/>
+                    <Button
+                        x:Name="P5"
+                        Text="5"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="1"
+                        Grid.Column="4"/>
+                    <Button
+                        x:Name="P6"
+                        Text="6"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="1"
+                        Grid.Column="6"/>
+                    
+                    <!-- Third row -->
+                    <Button
+                        x:Name="P2"
+                        Text="2"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="2"
+                        Grid.Column="3"/>
+                    <Button
+                        x:Name="P3"
+                        Text="3"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="2"
+                        Grid.Column="5"/>
+                    
+                    <!-- Fourth row -->
+                    <Button
+                        x:Name="P1"
+                        Text="1"
+                        Clicked="OnPinBtnClicked"
+                        Grid.Row="3"
+                        Grid.Column="4"/>
+                </Grid>
                 
-                <!-- Second row -->
-                <Button
-                    x:Name="P4"
-                    Text="4"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="1"
-                    Grid.Column="2"/>
-                <Button
-                    x:Name="P5"
-                    Text="5"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="1"
-                    Grid.Column="4"/>
-                <Button
-                    x:Name="P6"
-                    Text="6"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="1"
-                    Grid.Column="6"/>
                 
-                <!-- Third row -->
-                <Button
-                    x:Name="P2"
-                    Text="2"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="2"
-                    Grid.Column="3"/>
-                <Button
-                    x:Name="P3"
-                    Text="3"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="2"
-                    Grid.Column="5"/>
-                
-                <!-- Fourth row -->
-                <Button
-                    x:Name="P1"
-                    Text="1"
-                    Clicked="OnPinBtnClicked"
-                    Grid.Row="3"
-                    Grid.Column="4"/>
+                <Grid Grid.Row="1" Padding="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/> <!-- First row -->
+                        <RowDefinition Height="1*"/> <!-- Second row -->
+                        <RowDefinition Height="1*"/> <!-- Third row -->
+                        <RowDefinition Height="1*"/> <!-- Fourth row -->
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/> <!-- First column -->
+                        <ColumnDefinition Width="1*"/> <!-- Second column -->
+                        <ColumnDefinition Width="1*"/> <!-- Third column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fourth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fifth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Sixth column -->
+                        <!-- Add more columns as needed -->
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Score display -->
+                    <Label
+                        x:Name="FrameP1"
+                        Text="X"
+                        FontSize="32"
+                        Grid.Row="1"
+                        Grid.Column="2"/>
+                    <!-- will eventually be {Binding scoreNum} -->
+                    <Label
+                        x:Name="FrameP2"
+                        Text="X"
+                        FontSize="32"
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        />
+                    <!-- Quick buttons -->
+                    <Button
+                        x:Name="Foul"
+                        Text="F"
+                        Clicked="OnFoulBtnClicked"
+                        Padding="5"
+                        Grid.Row="2"
+                        Grid.Column="1"/>
+                    <Button
+                        x:Name="Gutterball"
+                        Text="-"
+                        Clicked="OnGutterballBtnClicked"
+                        Padding="5"
+                        Grid.Row="2"
+                        Grid.Column="2"/>
+                    <Button
+                        x:Name="Strike"
+                        Text="X"
+                        Clicked="OnStrikeBtnClicked"
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Padding="5"/>
+                    <Button
+                        x:Name="Spare"
+                        Text="/"
+                        Clicked="OnSpareBtnClicked"
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        Padding="5"/>
+                </Grid>
             </Grid>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/> <!-- First row -->
-                    <RowDefinition Height="1*"/> <!-- Second row -->
-                    <RowDefinition Height="1*"/> <!-- Third row -->
-                    <RowDefinition Height="1*"/> <!-- Fourth row -->
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/> <!-- First column -->
-                    <ColumnDefinition Width="1*"/> <!-- Second column -->
-                    <ColumnDefinition Width="1*"/> <!-- Third column -->
-                    <ColumnDefinition Width="1*"/> <!-- Fourth column -->
-                    <ColumnDefinition Width="1*"/> <!-- Fifth column -->
-                    <ColumnDefinition Width="1*"/> <!-- Sixth column -->
-                    <!-- Add more columns as needed -->
-                </Grid.ColumnDefinitions>
-                
-                <!-- Score display -->
-                <Label
-                    x:Name="FrameP1"
-                    Text="X"
-                    Grid.Row="1"
-                    Grid.Column="2"/>
-                <!-- will eventually be {Binding userI} -->
-                <Label
-                    x:Name="FrameP2"
-                    Text="X"
-                    Grid.Row="1"
-                    Grid.Column="3"
-                    />
-                <!-- Quick buttons -->
-                <Button
-                    x:Name="Gutterball"
-                    Text="Gutterball"
-                    Clicked="OnGutterballBtnClicked"
-                    Padding="5"
-                    Grid.Row="2"
-                    Grid.Column="1"/>
-                <Button
-                    x:Name="Foul"
-                    Text="Foul"
-                    Clicked="OnFoulBtnClicked"
-                    Padding="5"
-                    Grid.Row="2"
-                    Grid.Column="2"/>
-                <Button
-                    x:Name="Strike"
-                    Text="Strike"
-                    Clicked="OnStrikeBtnClicked"
-                    Grid.Row="2"
-                    Grid.Column="3"
-                    Padding="5"/>
-                <Button
-                    x:Name="Spare"
-                    Text="Spare"
-                    Clicked="OnSpareBtnClicked"
-                    Grid.Row="2"
-                    Grid.Column="4"
-                    Padding="5"/>
-            </Grid>
-            <Entry x:Name="Username"
-                   Placeholder="Notes"
-            />
+            <Frame BackgroundColor="LightGray" Padding="10">
+               <Entry x:Name="Notes"
+                      Placeholder="Notes"/> 
+            </Frame>
+            
         </VerticalStackLayout>
 </ContentPage>
