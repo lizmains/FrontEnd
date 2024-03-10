@@ -54,16 +54,16 @@ public partial class MainPage : ContentPage
         //UsrDisplay.Text = $"Hello {user}!";
     }
     
-    async private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
-    {
-        bTBtn.Text = $"Pairing...";
-        //steps for actual pairing will go here
-        // Navigation.PushAsync(new btPage());
-        await Shell.Current.GoToAsync(nameof(btPage));
-        bt = true;
-
-        SemanticScreenReader.Announce(bTBtn.Text);
-    }
+    // async private void OnBTClicked(object sender, EventArgs e) //bluetooth connection button
+    // {
+    //     bTBtn.Text = $"Pairing...";
+    //     //steps for actual pairing will go here
+    //     // Navigation.PushAsync(new btPage());
+    //     await Shell.Current.GoToAsync(nameof(btPage));
+    //     bt = true;
+    //
+    //     SemanticScreenReader.Announce(bTBtn.Text);
+    // }
 
     async private void OnBallArsenalBtnClicked(object sender, EventArgs e)
     {
@@ -106,5 +106,10 @@ public partial class MainPage : ContentPage
     async private void OnGameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         await Navigation.PushAsync(new GamePage());
+    }
+    
+    async private void OnNotesBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        await Navigation.PushAsync(new NotePage());
     }
 }

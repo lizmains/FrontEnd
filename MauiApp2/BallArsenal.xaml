@@ -6,7 +6,7 @@
              BackgroundColor="White">
     <VerticalStackLayout>
         <!-- heading stuff -->
-        <Grid Padding="20">
+        <Grid Padding="5">
             <!-- Header Row -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" /> <!-- Auto-sized header -->
@@ -57,8 +57,9 @@
                     </Grid.ColumnDefinitions>
         
                     <!-- Labels -->
-                    <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical" Padding="10">
-                        <Label Text="BallName"/>
+                    <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                        <Label Text="BallName"
+                               FontSize="25"/>
                         <Label Text="Weight"/>
                         <Label Text="Color"/>
                         <Label Text="Cover"/>

@@ -25,6 +25,6 @@ public partial class SmartDot : ContentPage
     
     private void OnAddSmartDotBtnClicked(object sender, EventArgs e)
     {
-        //Navigation.PushAsync(new AddSmartDotPage()); //navigate to main page
+        Navigation.PushAsync(new NewSmartDot()); //navigate to main page
     }
 }
