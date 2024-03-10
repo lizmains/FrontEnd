@@ -91,12 +91,12 @@
                 HorizontalOptions="Center"/>
 
             
-            <!-- <Button -->
-            <!--     x:Name="FileBtn" -->
-            <!--     Text="UI Page" -->
-            <!--     SemanticProperties.Hint="Navigate to File Picker Screen" -->
-            <!--     Clicked="OnFileBtnClicked" -->
-            <!--     HorizontalOptions="Center" /> -->
+            <Button
+                x:Name="FileBtn"
+                Text="UI Page"
+                SemanticProperties.Hint="Navigate to File Picker Screen"
+                Clicked="OnFileBtnClicked"
+                HorizontalOptions="Center" />
             
             <Button
                 x:Name="vidBtn"
