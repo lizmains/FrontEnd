@@ -6,7 +6,7 @@
              Title="Game">
         <VerticalStackLayout Padding="5">
             
-            <Grid RowDefinitions="30, 220, 200" Margin="10">
+            <Grid RowDefinitions="30, 220, 200, 200" Margin="10">
                 <!-- pins -->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -155,7 +155,7 @@
                 </Grid>
                 
                 
-                <Grid Grid.Row="2" Padding="10">
+                <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/> <!-- First row -->
                         <RowDefinition Height="1*"/> <!-- Second row -->
@@ -209,44 +209,52 @@
                         Text="X"
                         Clicked="OnStrikeBtnClicked"
                         Grid.Row="2"
-                        Grid.Column="3"
-                        Padding="5"/>
+                        Grid.Column="3"/>
                     <Button
                         x:Name="Spare"
                         Text="/"
                         Clicked="OnSpareBtnClicked"
                         Grid.Row="2"
-                        Grid.Column="4"
-                        Padding="5"/>
+                        Grid.Column="4"/>
                 </Grid>
-            </Grid>
-            <Frame BackgroundColor="LightGray" Padding="10" Margin="10, 30, 10, 0">
-               <Editor x:Name="Notes"
-                      Placeholder="Notes"
-                      HeightRequest="60"/> 
-            </Frame>
             
-            <Grid Margin="10">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/> <!-- First column -->
-                    <ColumnDefinition Width="1*"/> <!-- Second column -->
-                    <ColumnDefinition Width="1*"/> <!-- Third column -->
-                    <ColumnDefinition Width="1*"/> <!-- Fourth column -->
-                    <!-- Add more columns as needed -->
-                </Grid.ColumnDefinitions>
+            
+            <Grid Grid.Row="3" Margin="10, -20, 10, -10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/> <!-- First row -->
+                    <RowDefinition Height="1*"/> <!-- Second row -->
+                </Grid.RowDefinitions>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" >
+                               <Editor x:Name="Notes"
+                                      Placeholder="Notes"
+                                      HeightRequest="60"/> 
+                            </Frame>
+                            
+                            <Grid Margin="10, -10, 10, 0" Grid.Row="1">
                 
-                <Button
-                    x:Name="PrevFrame"
-                    Text="Back"
-                    Clicked="OnPrevFrameBtnClicked"
-                    Grid.Column="0"/>
-                    
-                <Button
-                    x:Name="NextFrame"
-                    Text="Next"
-                    Clicked="OnNextFrameBtnClicked"
-                    Grid.Column="3"/>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/> <!-- First column -->
+                                    <ColumnDefinition Width="1*"/> <!-- Second column -->
+                                    <ColumnDefinition Width="1*"/> <!-- Third column -->
+                                    <ColumnDefinition Width="1*"/> <!-- Fourth column -->
+                                    <!-- Add more columns as needed -->
+                                </Grid.ColumnDefinitions>
+                                
+                                <Button
+                                    x:Name="PrevFrame"
+                                    Text="Back"
+                                    Clicked="OnPrevFrameBtnClicked"
+                                    Grid.Column="0"
+                                    HeightRequest="35"/>
+                                    
+                                <Button
+                                    x:Name="NextFrame"
+                                    Text="Next"
+                                    Clicked="OnNextFrameBtnClicked"
+                                    Grid.Column="3"
+                                    HeightRequest="35"/>
+                            </Grid>
+            </Grid>
             </Grid>
             
         </VerticalStackLayout>
