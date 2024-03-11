@@ -17,4 +17,12 @@ public partial class NewSmartDot : ContentPage
     {
         InitializeComponent();
     }
+    
+    private void OnIdAdded(object sender, TextChangedEventArgs e)
+    {
+        string oldUsr = e.OldTextValue;
+        string newUsr = e.NewTextValue;
+    }
+    
+    
 }

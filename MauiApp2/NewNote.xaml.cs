@@ -18,5 +18,23 @@ public partial class NewNote : ContentPage
         InitializeComponent();
     }
     
+    private void OnTitleAdded(object sender, TextChangedEventArgs e)
+    {
+        string oldUsr = e.OldTextValue;
+        string newUsr = e.NewTextValue;
+    }
+    
+    private void OnNoteBodyAdded(object sender, TextChangedEventArgs e)
+    {
+        string oldUsr = e.OldTextValue;
+        string newUsr = e.NewTextValue;
+    }
+    
+    private void OnSaveNoteBtnClicked(object sender, EventArgs e)
+    {
+        //something happens
+        Navigation.PushAsync(new NotePage());
+    }
+    
     
 }

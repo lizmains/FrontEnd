@@ -6,7 +6,7 @@
              BackgroundColor="White">
     <VerticalStackLayout>
         <!-- heading stuff -->
-        <Grid Padding="5">
+        <Grid Padding="5" Margin="20">
             <!-- Header Row -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" /> <!-- Auto-sized header -->
@@ -39,7 +39,7 @@
             <Button
                 x:Name="addNote"
                 Text="Add"
-                SemanticProperties.Hint="Add new ball to arsenal"
+                SemanticProperties.Hint="Create new note"
                 Clicked="OnAddNoteBtnClicked"
                 HorizontalOptions="Center"
                 Grid.Column="2"/>

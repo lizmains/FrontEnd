@@ -2,6 +2,56 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.NewNote"
-             Title="NewBall">
+             Title="New Note">
+    
+    <VerticalStackLayout>
+           <!-- <Grid Margin="15"> -->
+           <!--        <Grid.RowDefinitions> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--               <RowDefinition Height="1*" /> -->
+           <!--        </Grid.RowDefinitions> -->
+           <!--        <Grid.ColumnDefinitions> -->
+           <!--               <ColumnDefinition Width="1*" /> -->
+           <!--               <ColumnDefinition Width="1*" /> -->
+           <!--        </Grid.ColumnDefinitions> -->
+           <!--        <Frame BackgroundColor="LightGray" Margin="15" Padding="5"> -->
+           <!--               <Entry x:Name="BallName" -->
+           <!--                      Placeholder="BallName" -->
+           <!--                      TextChanged="OnBallNameAdded" -->
+           <!--                      PlaceholderColor="Black"/>  -->
+           <!--        </Frame> -->
+           <!--         -->
+           <!--         -->
+           <!-- </Grid> -->
+           
+           <Frame BackgroundColor="LightGray" Margin="15" Padding="5">
+                  <Entry x:Name="Title"
+                         Placeholder="Title"
+                         TextChanged="OnTitleAdded"
+                         PlaceholderColor="Black"/> 
+           </Frame>
+           
+           <Frame BackgroundColor="LightGray" Margin="15" Padding="5">
+               <Editor x:Name="noteBody"
+                      HeightRequest="100"
+                      Placeholder="Notes"
+                      TextChanged="OnNoteBodyAdded"
+                      PlaceholderColor="Black"/> 
+           </Frame>
+           
+           <Button
+                  x:Name="saveNote"
+                  Text="Save"
+                  SemanticProperties.Hint="Saves note"
+                  Clicked="OnSaveNoteBtnClicked"
+                  HorizontalOptions="Center"
+                  />
+           
+    </VerticalStackLayout>
     
 </ContentPage>

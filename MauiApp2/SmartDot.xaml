@@ -6,7 +6,7 @@
 
    <VerticalStackLayout>
         <!-- heading stuff -->
-        <Grid Padding="5">
+        <Grid Padding="5" Margin="20">
             <!-- Header Row -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" /> <!-- Auto-sized header -->
