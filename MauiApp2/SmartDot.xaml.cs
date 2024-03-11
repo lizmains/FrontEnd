@@ -27,4 +27,6 @@ public partial class SmartDot : ContentPage
     {
         Navigation.PushAsync(new NewSmartDot()); //navigate to main page
     }
+    
+    
 }

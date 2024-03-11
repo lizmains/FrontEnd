@@ -20,14 +20,13 @@
                    TextChanged="OnIdAdded"
             />
             
-            <Picker x:Name="BallPicker"
-                    Grid.Column="1">
+            <Picker x:Name="BallPicker" Title="Connect to a ball">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>Ball A</x:String>
-                        <x:String>Z to A</x:String>
-                        <x:String>Newest to Oldest</x:String>
-                        <x:String>Oldest to Newest</x:String>
+                        <x:String>Ball B</x:String>
+                        <x:String>Ball C</x:String>
+                        <x:String>Ball D</x:String>
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>

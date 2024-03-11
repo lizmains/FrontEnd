@@ -4,100 +4,103 @@
              x:Class="MauiApp2.NewBall"
              Title="Add New Ball">
     
-    <VerticalStackLayout>
-           <Grid Margin="15">
-                  <Grid.RowDefinitions>
-                         <RowDefinition Height="1*" />
-                         <RowDefinition Height="1*" />
-                         <RowDefinition Height="1*" />
-                         <RowDefinition Height="1*" />
-                         <RowDefinition Height="1*" />
-                         <RowDefinition Height="1*" />
-                         <RowDefinition Height="1*" />
-                  </Grid.RowDefinitions>
-                  <Grid.ColumnDefinitions>
-                         <ColumnDefinition Width="1*" />
-                         <ColumnDefinition Width="1*" />
-                  </Grid.ColumnDefinitions>
-                  <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="BallName"
-                                Placeholder="BallName"
-                                TextChanged="OnBallNameAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="BallWeight"
-                                Placeholder="Ball Weight"
-                                TextChanged="OnBallWeightAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="2" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="BallColor"
-                                Placeholder="Ball Color"
-                                TextChanged="OnBallColorAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="3" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="CoreType"
-                                Placeholder="Core Type"
-                                TextChanged="OnCoreTypeAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="4" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="CoverstockTexture"
-                                Placeholder="Coverstock Texture"
-                                TextChanged="OnCoverstockTextureAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="4" Grid.Column="1" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="Finish"
-                                Placeholder="Finish"
-                                TextChanged="OnFinishAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="5" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="RG"
-                                Placeholder="Radius of Gyration"
-                                TextChanged="OnRGAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="5" Grid.Column="1" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="DiffRG"
-                                Placeholder="Diff of RG"
-                                TextChanged="OnDiffRGAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="6" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="Brand"
-                                Placeholder="Brand"
-                                TextChanged="OnBrandAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-                  
-                  <Frame Grid.Row="6" Grid.Column="1" BackgroundColor="LightGray" Margin="15" Padding="5">
-                         <Entry x:Name="SerialNum"
-                                Placeholder="Serial Number"
-                                TextChanged="OnSerialNumAdded"
-                                PlaceholderColor="Black"/> 
-                  </Frame>
-           </Grid>
-           
-           <Button
-                  x:Name="saveBall"
-                  Text="Save"
-                  SemanticProperties.Hint="Saves ball to arsenal"
-                  Clicked="OnSaveBallBtnClicked"
-                  HorizontalOptions="Center"
-                  />
-           
-    </VerticalStackLayout>
+       <ScrollView>
+          <VerticalStackLayout>
+                     <Grid Margin="15">
+                            <Grid.RowDefinitions>
+                                   <RowDefinition Height="1*" />
+                                   <RowDefinition Height="1*" />
+                                   <RowDefinition Height="1*" />
+                                   <RowDefinition Height="1*" />
+                                   <RowDefinition Height="1*" />
+                                   <RowDefinition Height="1*" />
+                                   <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="1*" />
+                                   <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="BallName"
+                                          Placeholder="BallName"
+                                          TextChanged="OnBallNameAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="BallWeight"
+                                          Placeholder="Ball Weight"
+                                          TextChanged="OnBallWeightAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="2" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="BallColor"
+                                          Placeholder="Ball Color"
+                                          TextChanged="OnBallColorAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="3" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="CoreType"
+                                          Placeholder="Core Type"
+                                          TextChanged="OnCoreTypeAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="4" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="CoverstockTexture"
+                                          Placeholder="Coverstock Texture"
+                                          TextChanged="OnCoverstockTextureAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="4" Grid.Column="1" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="Finish"
+                                          Placeholder="Finish"
+                                          TextChanged="OnFinishAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="5" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="RG"
+                                          Placeholder="Radius of Gyration"
+                                          TextChanged="OnRGAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="5" Grid.Column="1" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="DiffRG"
+                                          Placeholder="Diff of RG"
+                                          TextChanged="OnDiffRGAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="6" Grid.Column="0" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="Brand"
+                                          Placeholder="Brand"
+                                          TextChanged="OnBrandAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                            
+                            <Frame Grid.Row="6" Grid.Column="1" BackgroundColor="LightGray" Margin="15" Padding="5">
+                                   <Entry x:Name="SerialNum"
+                                          Placeholder="Serial Number"
+                                          TextChanged="OnSerialNumAdded"
+                                          PlaceholderColor="Black"/> 
+                            </Frame>
+                     </Grid>
+                     
+                     <Button
+                            x:Name="saveBall"
+                            Text="Save"
+                            SemanticProperties.Hint="Saves ball to arsenal"
+                            Clicked="OnSaveBallBtnClicked"
+                            HorizontalOptions="Center"
+                            />
+                     
+              </VerticalStackLayout>    
+       </ScrollView>
+    
     
 </ContentPage>

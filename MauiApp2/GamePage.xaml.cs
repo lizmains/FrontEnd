@@ -62,4 +62,18 @@ public partial class GamePage : ContentPage
         //all pins fall
         //score += whatevers left over from first shot
     }
+    
+    private async void OnPrevFrameBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        // go to next frame
+        //all pins fall
+        //score += whatevers left over from first shot
+    }
+    
+    private async void OnNextFrameBtnClicked(object sender, EventArgs e) //navigate to simulator
+    {
+        // go to next frame
+        //all pins fall
+        //score += whatevers left over from first shot
+    }
 }
