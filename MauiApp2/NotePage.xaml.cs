@@ -23,6 +23,11 @@ public partial class NotePage : ContentPage
         Navigation.PushAsync(new NewNote());
     }
 
+    private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+        
+    }
+
     
     
 }

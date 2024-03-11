@@ -18,12 +18,13 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-        
-            <Entry x:Name="search"
-                   Placeholder="Search"
-                   Grid.Column="0"/>
-            <Picker x:Name="Filter"
-                    Grid.Column="1">
+            
+            <SearchBar x:Name="searchBar"
+                       Placeholder="Search"
+                       SearchCommand="{Binding SearchCommand}"
+                       Grid.Column="0"/>
+            
+            <Picker x:Name="Filter" Title="Filter" Grid.Column="1">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>A to Z</x:String>
@@ -33,9 +34,7 @@
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
-            <!-- <Entry x:Name="filter" -->
-            <!--        Placeholder="Filter" -->
-            <!--        Grid.Column="1"/> -->
+            
             <Button
                 x:Name="addBall"
                 Text="Add"

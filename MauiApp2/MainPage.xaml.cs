@@ -25,6 +25,7 @@ public partial class MainPage : ContentPage
             BlueStat.Text = $"Bluetooth: {blue}";
             
         };
+
     }
     Boolean bt;
     public MainPage(string usernm, MainViewModel mvm)
