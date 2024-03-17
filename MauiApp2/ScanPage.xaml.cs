@@ -366,6 +366,58 @@ public partial class ScanPage : ContentPage
 
         } else await DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
+
+    void ConvertMMSData(byte[] bytes)
+    {
+        if (sens == 1)
+        {
+            float x = BitConverter.ToInt16(bytes, 2);
+            float y = BitConverter.ToInt16(bytes, 4);
+            float z = BitConverter.ToInt16(bytes, 6);
+            x = (x/32768.0f)*16.0f;
+            y = (y/32768.0f)*16.0f;
+            z = (z/32768.0f)*16.0f;
+               
+            Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+            SensorInfo.Text /*+*/= "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+        }
+        else if (sens == 2)
+        {
+            float lux;
+            float ch0 = (bytes[3] << 8) | bytes[2];
+            float ch1 = (bytes[5] << 8) | bytes[4];
+            float ratio = ch1 / (ch1 + ch0);
+            Console.WriteLine("Ratio: " + ratio);
+            if (ratio < 0.45f)
+            {
+                lux = (1.7743f * ch0 + 1.1059f * ch1) / 48 / 4; // gain/integration time
+            }
+            else if (ratio is < 0.64f and >= 0.45f)
+            {
+                lux = (4.2785f * ch0 - 1.9548f * ch1) / 48 / 4;
+            }
+            else if (ratio is < 0.85f and >= 0.64f)
+            {
+                lux = (0.5926f * ch0 + 0.1185f * ch1) / 48 / 4;
+            }
+            else lux = 0;
+
+            LightInfo.Text = "Light Data " + lux + " Lux";
+        }
+            
+        else if (sens == 3)
+        { 
+            float x = BitConverter.ToInt16(bytes, 2);
+            float y = BitConverter.ToInt16(bytes, 4);
+            float z = BitConverter.ToInt16(bytes, 6);
+            x = (x/32768.0f)*2.0f;
+            y = (y/32768.0f)*2.0f;
+            z = (z/32768.0f)*2.0f;
+               
+            Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+            GyroInfo.Text /*+*/= "Gyroscope Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+        }
+    }
     
     async void OnDisconnect(object sender, EventArgs e)
     {
@@ -485,55 +537,90 @@ public partial class ScanPage : ContentPage
         byte[] led;
         byte[] data;
 
-        if (light_flag == 1)
+        switch (light_flag)
         {
-            Color col = Color.Green; //green for light sensor to differentiate from accel for now
-            led = new byte[]//set led pattern
+            case 1:
             {
-                2, 3, (byte)col, 2, 1, 1,
-                1, 1 >> 8,
-                1, 1 >> 8,
-                1, 1 >> 8,
-                1, 1 >> 8,
-                0, 0, 0xff
-            };
-            await writeChar.WriteAsync(led);
+                Color col = Color.Green; //green for light sensor to differentiate from accel for now
+                led = new byte[]//set led pattern
+                {
+                    2, 3, (byte)col, 2, 1, 1,
+                    1, 1 >> 8,
+                    1, 1 >> 8,
+                    1, 1 >> 8,
+                    1, 1 >> 8,
+                    0, 0, 0xff
+                };
+                await writeChar.WriteAsync(led);
 
-            led = new byte[] { 2, 1, 1 }; //play led
-            await writeChar.WriteAsync(led);
+                led = new byte[] { 2, 1, 1 }; //play led
+                await writeChar.WriteAsync(led);
 
-            Console.WriteLine("Starting Ambient Light Sensor..."); //light sensor code = 20
-            /*Gain gain = Gain._1x; 
+                Console.WriteLine("Starting Everything..."); //light sensor code = 20
+                /*Gain gain = Gain._1x; 
             //int gainMask = (gain == Gain._48x || gain == Gain._96x ? (int) (gain + 2) : (int) gain) << 2;
             IntegrationTime time = IntegrationTime._100ms;
             MeasurementRate mRate = MeasurementRate._500ms;*/
 
-            //configure
-            /*data = new byte[]
+                //configure
+                /*data = new byte[]
             {
                 20,
                 2,
                 (byte)((gain == Gain._48x || gain == Gain._96x ? (int)(gain + 2) : (int)gain) << 2),
                 (byte)((MeasurementRate)((int)time << 3) | mRate)
             };*/
-            //{ 20, 2, (byte) gainMask, (byte) ((MeasurementRate) ((int) time << 3) | mRate) };
-            data = new byte[] { 0x14, 0x02, 0x18, 0x03 };  
-            await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
+                //{ 20, 2, (byte) gainMask, (byte) ((MeasurementRate) ((int) time << 3) | mRate) };
+                data = new byte[] { 0x14, 0x02, 0x18, 0x03 };  
+                await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
             
-            data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
-            await writeChar.WriteAsync(data);
+                data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
+                await writeChar.WriteAsync(data);
             
-            data = new byte[] { 0x14, 0x02, 0x00, 0x05 }; //Measurement 2000ms
-            await writeChar.WriteAsync(data);
+                data = new byte[] { 0x14, 0x02, 0x00, 0x03 }; //Measurement 2000ms
+                await writeChar.WriteAsync(data);
+            
+                //start
+                data = new byte[] { 0x14, 0x03, 0x01 }; // 3 for streaming?
+                await writeChar.WriteAsync(data);//subscribes to notifications?
+            
+                data = new byte[] { 0x14, 0x01, 0x01 }; // start
+                await writeChar.WriteAsync(data);
+                //-------------------------
+                //---------------------accelerometer section--------
+                data = new byte[]{ 3, 4, 1 }; //subscribes to accel reading
+                await writeChar.WriteAsync(data); 
 
-            //start
-            data = new byte[] { 0x14, 0x03, 0x01 }; // 3 for streaming?
-            await writeChar.WriteAsync(data);//subscribes to notifications?
-            
-            data = new byte[] { 0x14, 0x01, 0x01 }; // start
-            await writeChar.WriteAsync(data);
-            
-            /*await Task.Delay(15000); //wait 15 seconds
+                data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
+                await writeChar.WriteAsync(data);             //bmi270 version dont seem to work right
+        
+                data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
+                await writeChar.WriteAsync(data); 
+                //-----------------------
+                //start the stuff
+                data = new byte[] { 3, 1, 1 }; //accel starting
+                await writeChar.WriteAsync(data);//send command
+        
+                data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+                await writeChar.WriteAsync(data);
+                //---------------------------gyro section-------
+                data = new byte[]{ 0x13, 0x05, 0x01}; //subscribe to gyro
+                await writeChar.WriteAsync(data);
+        
+                data = new byte[] { 0x13, 0x3, 0x29, 0x0 }; //odr 200Hz
+                await writeChar.WriteAsync(data);
+        
+                data = new byte[] { 0x13, 0x03, 0x28, 0x03 }; //fsr 250dps
+                await writeChar.WriteAsync(data);//send command
+
+                data = new byte[] { 0x13, 0x01, 0x01 }; //start gyro
+                await writeChar.WriteAsync(data);//send command
+        
+                //start the stuff
+                data = new byte[]{ 0x13, 0x02, 0x01, 0x00}; //enable sampling
+                await writeChar.WriteAsync(data);
+                //----------------------------
+                /*await Task.Delay(15000); //wait 15 seconds
 
             data = new byte[] { 0x14, 0x03, 0x00 };
             await writeChar.WriteAsync(data);
@@ -541,50 +628,72 @@ public partial class ScanPage : ContentPage
             led = new byte[] { 2, 2, 0 }; //stop led
             await writeChar.WriteAsync(led);
             Console.WriteLine("Light Sensor Recording Complete");*/
-            readChar.ValueUpdated += (s, a) =>
-            {
-                Console.WriteLine("DATA RECEIVED!");
-                var bytes = a.Characteristic.Value;
-                for (int i = 2; i < bytes.Length; i++)
+                readChar.ValueUpdated += (s, a) =>
                 {
-                    Console.WriteLine("Light Bytes: " + bytes[i]);//need to correctly parse bytes into data
-                }
-                float ch0 = (bytes[3] << 8) | bytes[2]; 
-                float ch1 = (bytes[5] << 8) | bytes[4];
-                ratio = ch1 / (ch1 + ch0);
-                Console.WriteLine("Ratio: " + ratio);
-                if (ratio < 0.45f)
-                {
-                    lux = (1.7743f * ch0 + 1.1059f * ch1)/48/4; // gain/integration time
-                }
-                else if (ratio is < 0.64f and >= 0.45f)
-                {
-                    lux = (4.2785f * ch0 - 1.9548f * ch1)/48/4;
-                }
-                else if (ratio is < 0.85f and >= 0.64f)
-                {
-                    lux = (0.5926f * ch0 + 0.1185f * ch1)/48/4;
-                }
-                else lux = 0;
+                    Console.WriteLine("DATA RECEIVED!");
+                    var bytes = a.Characteristic.Value;
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        Console.WriteLine("Light Bytes: " + bytes[i]);
+                    }
                 
-                SensorInfo.Text = "Light Data " + lux + " Lux";
-            };
-            await readChar.StartUpdatesAsync();
-        }
-
+                    switch (bytes[0])
+                    {
+                        case 20:
+                            sens = 2;
+                            ConvertMMSData(bytes);
+                            break;
+                        case 3:
+                            sens = 1;
+                            ConvertMMSData(bytes);
+                            break;
+                        case 19:
+                            sens = 3;
+                            ConvertMMSData(bytes);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Sensor Use!");
+                            break;
+                    }
+                };
+                await readChar.StartUpdatesAsync();
+                break;
+            }
             //await Task.Delay(15000); //wait 15 seconds
-            else if (light_flag == 0)
-            {
+            case 0:
                 await readChar.StopUpdatesAsync();
                 data = new byte[] { 0x14, 0x03, 0x00 }; //stop als stream
                 await writeChar.WriteAsync(data);
                 data = new byte[] { 0x14, 0x01, 0x00 }; //stop
                 await writeChar.WriteAsync(data);
+                //------   
+                data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
+                await writeChar.WriteAsync(data);
+        
+                data = new byte[] { 3, 4, 0}; //unsubscribe
+                await writeChar.WriteAsync(data);
+        
+                data = new byte[] { 3, 1, 0 }; //disable accel simple
+                await writeChar.WriteAsync(data);
+                //------------   
+                data = new byte[] { 0x13, 0x02, 0x00, 0x01 }; //disable sampling
+                await writeChar.WriteAsync(data);
+        
+                /*data = new byte[] { 19, 4, 0, };
+                await writeChar.WriteAsync(data);*/
+                data = new byte[] { 0x13, 0x05, 0x00 }; //unsubscribe gyro
+                await writeChar.WriteAsync(data);
+        
+                data = new byte[] { 0x13, 0x01, 0x00 }; //stop gyro
+                await writeChar.WriteAsync(data);
+                Console.WriteLine("Stopping Everything");
+                //------------------
 
                 led = new byte[] { 2, 2, 0 }; //stop led
                 await writeChar.WriteAsync(led);
                 Console.WriteLine("Light Sensor Recording Complete");
-            }
+                break;
+        }
 
     }
 
@@ -724,7 +833,7 @@ public partial class ScanPage : ContentPage
         while (s.Elapsed < TimeSpan.FromSeconds(15))
         {
             getMMSInfo(sender, e); //auto-poll the MMS the lazy way
-            await Task.Delay(1000);
+            await Task.Delay(100); //polling too much causes a crash
         }
         s.Stop();
         
@@ -871,7 +980,7 @@ public partial class ScanPage : ContentPage
         while (s.Elapsed < TimeSpan.FromSeconds(15))
         {
             getMMSInfo(sender, e); //auto-poll the MMS the lazy way
-            await Task.Delay(1000);
+            await Task.Delay(100);
         }
         s.Stop();
         

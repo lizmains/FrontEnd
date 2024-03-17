@@ -113,11 +113,6 @@
                 x:Name="DevInfo"
                 Text="{Binding names}"
                 HorizontalOptions="Center"></Label>
-            <Label
-                x:Name="SensorInfo"
-                FontSize="24"
-                Text="{Binding names}"
-                HorizontalOptions="Center"></Label>
 
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -165,6 +160,21 @@
             </CollectionView>
             </Grid>
 
+            <Label
+                x:Name="SensorInfo"
+                FontSize="24"
+                Text="{Binding names}"
+                HorizontalOptions="Center"></Label>
+            <Label
+                x:Name="GyroInfo"
+                FontSize="24"
+                Text="{Binding names}"
+                HorizontalOptions="Center"></Label>
+            <Label
+                x:Name="LightInfo"
+                FontSize="24"
+                Text="{Binding names}"
+                HorizontalOptions="Center"></Label>
             <Button 
                 x:Name="MMSBtn"
                 Text="Read MMS Data"
