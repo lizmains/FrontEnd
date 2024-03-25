@@ -71,6 +71,9 @@ public partial class ScanPage : ContentPage
     private int accFlag;
     private IService writeServ;
     private ICharacteristic writeChar;
+    private int metamotion;
+    private FileStream outStream;
+    private StreamWriter streamWriter;
     
     //sim vars
     private IService simServ;
@@ -96,6 +99,7 @@ public partial class ScanPage : ContentPage
         accFlag = 0;
         IService writeServ = null;
         ICharacteristic writeChar = null;
+        metamotion = 0;
     }
     
     private void OnConnBtnClicked(object sender, EventArgs e)
@@ -173,7 +177,7 @@ public partial class ScanPage : ContentPage
                 }
                 catch (DeviceConnectionException erm)
                 {
-                    DisplayAlert("Alert", "Unable to connect to device", "OK");
+                    await DisplayAlert("Alert", "Unable to connect to device", "OK");
                 }
                 finally
                 {
@@ -198,7 +202,82 @@ public partial class ScanPage : ContentPage
                 break;
             }
         }
-
+        if (device == null)
+        {
+            DisplayAlert("Alert", "Unknown Device", "OK");
+        }
+    }
+    
+    async void ConnectMMS(object sender, EventArgs e)
+    {
+        try
+        {
+            await adapter.ConnectToKnownDeviceAsync(new Guid("ec5ddd38-6362-c5e0-6cd0-ae865b8d483c"));
+            device = adapter.ConnectedDevices[0];
+        }
+        catch (DeviceConnectionException erm)
+        {
+            await DisplayAlert("Alert", "Unable to connect to device", "OK");
+        }
+        finally
+        {
+            if (device != null) //if a device is connected, write to console, get device info
+            {
+                Console.WriteLine("Connected to MMS");
+                metamotion = 0;
+                ConDev.Text = "Connected: " + device.Name;
+                services = await device.GetServicesAsync();
+                //charstics = await services[0].GetCharacteristicsAsync();
+                savedDots.Add(new Ball(device)); //adds device to list of saved balls
+                tempNew.dev = device;
+                if (device.Name == "MetaWear")
+                { //Getting characteristics for mms interactions
+                    writeServ = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
+                    writeChar =//mms write characteristic, presumably
+                        await writeServ.GetCharacteristicAsync(new Guid("326a9001-85cb-9195-d9dd-464cfbbae75a"));
+                }
+                        
+                //await adapter.StopScanningForDevicesAsync();
+            } else Console.WriteLine("Failed to Connect");
+        }
+        if (device == null)
+        {
+            DisplayAlert("Alert", "Unknown Device", "OK");
+        }
+    }
+    
+    async void ConnectMMC(object sender, EventArgs e)
+    {
+        try
+        {
+            await adapter.ConnectToKnownDeviceAsync(new Guid("e504016e-4f0e-f64b-4a1c-39a7cae943a5"));
+            device = adapter.ConnectedDevices[0];
+        }
+        catch (DeviceConnectionException erm)
+        {
+            await DisplayAlert("Alert", "Unable to connect to device", "OK");
+        }
+        finally
+        {
+            if (device != null) //if a device is connected, write to console, get device info
+            {
+                Console.WriteLine("Connected to MMC");
+                metamotion = 1;
+                ConDev.Text = "Connected: " + device.Name;
+                services = await device.GetServicesAsync();
+                //charstics = await services[0].GetCharacteristicsAsync();
+                savedDots.Add(new Ball(device)); //adds device to list of saved balls
+                tempNew.dev = device;
+                if (device.Name == "MetaWear")
+                { //Getting characteristics for mms interactions
+                    writeServ = await device.GetServiceAsync(new Guid("326a9000-85cb-9195-d9dd-464cfbbae75a"));
+                    writeChar =//mms write characteristic, presumably
+                        await writeServ.GetCharacteristicAsync(new Guid("326a9001-85cb-9195-d9dd-464cfbbae75a"));
+                }
+                        
+                //await adapter.StopScanningForDevicesAsync();
+            } else Console.WriteLine("Failed to Connect");
+        }
         if (device == null)
         {
             DisplayAlert("Alert", "Unknown Device", "OK");
@@ -303,7 +382,7 @@ public partial class ScanPage : ContentPage
 
     async void getMMSInfo(object sender, EventArgs e) //service 0 id 0000180f-0000-1000-8000-00805f9b34fb
     {//testing getting data from specific MMS module
-        if (true/*device.Id == new Guid("ec5ddd38-6362-c5e0-6cd0-ae865b8d483c")*/)
+        if (device.Name == "MetaWear"/*true device.Id == new Guid("ec5ddd38-6362-c5e0-6cd0-ae865b8d483c")*/)
         {
             mmsBat = await device.GetServiceAsync(new Guid("0000180f-0000-1000-8000-00805f9b34fb"));
             charstics = await mmsBat.GetCharacteristicsAsync();
@@ -364,10 +443,24 @@ public partial class ScanPage : ContentPage
             //Console.WriteLine(mmsBytes.resultCode);
             //Console.WriteLine("RSSI: "+ device.Rssi);
 
-        } else await DisplayAlert("Alert", "Connect to the MMS", "OK");
+        } 
+        else if (device.Name == "raspberrypi")
+        {
+            mmsServ2 = await device.GetServiceAsync(new Guid("00000001-710e-4a5b-8d75-3e5b444bc3cf"));
+            readChar = await mmsServ2.GetCharacteristicAsync(new Guid("00000002-710e-4a5b-8d75-3e5b444bc3cf"));
+
+            sensorData = await readChar.ReadAsync();
+            Console.WriteLine("reading Sim");
+            for (int i = 0; i < sensorData.data.Length; i++)
+            {
+                Console.WriteLine("Sim Data: "+ sensorData.data[i]);
+            }
+            Console.WriteLine("Sim Data Value: "+readChar.StringValue);
+        }
+        else await DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
 
-    void ConvertMMSData(byte[] bytes)
+    void ConvertMMSData(byte[] bytes, StreamWriter stream)
     {
         if (sens == 1)
         {
@@ -379,7 +472,10 @@ public partial class ScanPage : ContentPage
             z = (z/32768.0f)*16.0f;
                
             Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-            SensorInfo.Text /*+*/= "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+            SensorInfo.Text /*+*/= "Accelerometer Data: X: " + x.ToString("0.00") + ", Y: " + y.ToString("0.00") + ", Z: " + z.ToString("0.00") + "\n"; 
+            //WriteFile(x + "," + y + "," + z);
+            streamWriter.WriteLine(x + "," + y + "," + z); 
+            Console.WriteLine("\n Wrote to File successfully \n");
         }
         else if (sens == 2)
         {
@@ -402,7 +498,7 @@ public partial class ScanPage : ContentPage
             }
             else lux = 0;
 
-            LightInfo.Text = "Light Data " + lux + " Lux";
+            LightInfo.Text = "Light Data " + lux.ToString("0.00") + " Lux";
         }
             
         else if (sens == 3)
@@ -415,7 +511,7 @@ public partial class ScanPage : ContentPage
             z = (z/32768.0f)*2.0f;
                
             Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-            GyroInfo.Text /*+*/= "Gyroscope Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n"; 
+            GyroInfo.Text /*+*/= "Gyroscope Data: X: " + x.ToString("0.00") + ", Y: " + y.ToString("0.00") + ", Z: " + z.ToString("0.00") + "\n"; 
         }
     }
     
@@ -492,12 +588,12 @@ public partial class ScanPage : ContentPage
         data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
         await writeChar.WriteAsync(data);             
         
+        data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+        await writeChar.WriteAsync(data); //necessary?
+        
         //start the stuff
         data = new byte[] { 3, 1, 1 }; //accel starting
         await writeChar.WriteAsync(data);//send command
-        
-        data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
-        await writeChar.WriteAsync(data); //necessary?
 
         await Task.Delay(15000); //wait 15 seconds
 
@@ -524,11 +620,7 @@ public partial class ScanPage : ContentPage
         float ratio;
         float lux;
         sens = 2;
-        /*if (light_flag == 0)
-        {
-            light_flag = 1;
-        }
-        else light_flag = 0;*/
+        
         light_flag = light_flag == 0 ? 1 : 0;
 
         SensorInfo.Text = ""; //clear display sensor data in app
@@ -556,107 +648,108 @@ public partial class ScanPage : ContentPage
                 led = new byte[] { 2, 1, 1 }; //play led
                 await writeChar.WriteAsync(led);
 
-                Console.WriteLine("Starting Everything..."); //light sensor code = 20
-                /*Gain gain = Gain._1x; 
-            //int gainMask = (gain == Gain._48x || gain == Gain._96x ? (int) (gain + 2) : (int) gain) << 2;
-            IntegrationTime time = IntegrationTime._100ms;
-            MeasurementRate mRate = MeasurementRate._500ms;*/
+                Console.WriteLine("Starting Everything..."); //light sensor code = 20 / 0x14
+                
+                MakeFile(); //create new csv to write sensor data into
 
-                //configure
-                /*data = new byte[]
-            {
-                20,
-                2,
-                (byte)((gain == Gain._48x || gain == Gain._96x ? (int)(gain + 2) : (int)gain) << 2),
-                (byte)((MeasurementRate)((int)time << 3) | mRate)
-            };*/
-                //{ 20, 2, (byte) gainMask, (byte) ((MeasurementRate) ((int) time << 3) | mRate) };
-                data = new byte[] { 0x14, 0x02, 0x18, 0x03 };  
+                data = new byte[] { 0x14, 0x02, 0x18, 0x03 };
                 await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
-            
+
                 data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
                 await writeChar.WriteAsync(data);
-            
+
                 data = new byte[] { 0x14, 0x02, 0x00, 0x03 }; //Measurement 2000ms
                 await writeChar.WriteAsync(data);
-            
+
                 //start
                 data = new byte[] { 0x14, 0x03, 0x01 }; // 3 for streaming?
-                await writeChar.WriteAsync(data);//subscribes to notifications?
-            
+                await writeChar.WriteAsync(data); //subscribes to notifications?
+
                 data = new byte[] { 0x14, 0x01, 0x01 }; // start
                 await writeChar.WriteAsync(data);
                 //-------------------------
                 //---------------------accelerometer section--------
-                data = new byte[]{ 3, 4, 1 }; //subscribes to accel reading
-                await writeChar.WriteAsync(data); 
+                data = new byte[] { 3, 4, 1 }; //subscribes to accel reading
+                await writeChar.WriteAsync(data);
 
                 data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
-                await writeChar.WriteAsync(data);             //bmi270 version dont seem to work right
-        
+                await writeChar.WriteAsync(data); //bmi270 version dont seem to work right
+
                 data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
-                await writeChar.WriteAsync(data); 
+                await writeChar.WriteAsync(data);
                 //-----------------------
                 //start the stuff
                 data = new byte[] { 3, 1, 1 }; //accel starting
-                await writeChar.WriteAsync(data);//send command
-        
-                data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+                await writeChar.WriteAsync(data); //send command
+
+                data = new byte[] { 3, 2, 1, 0 }; //accel enable sampling
                 await writeChar.WriteAsync(data);
                 //---------------------------gyro section-------
-                data = new byte[]{ 0x13, 0x05, 0x01}; //subscribe to gyro
+                data = new byte[] { 0x13, 0x05, 0x01 }; //subscribe to gyro
                 await writeChar.WriteAsync(data);
-        
+
                 data = new byte[] { 0x13, 0x3, 0x29, 0x0 }; //odr 200Hz
                 await writeChar.WriteAsync(data);
-        
+
                 data = new byte[] { 0x13, 0x03, 0x28, 0x03 }; //fsr 250dps
-                await writeChar.WriteAsync(data);//send command
+                await writeChar.WriteAsync(data); //send command
 
                 data = new byte[] { 0x13, 0x01, 0x01 }; //start gyro
-                await writeChar.WriteAsync(data);//send command
-        
+                await writeChar.WriteAsync(data); //send command
+
                 //start the stuff
-                data = new byte[]{ 0x13, 0x02, 0x01, 0x00}; //enable sampling
+                data = new byte[] { 0x13, 0x02, 0x01, 0x00 }; //enable sampling
                 await writeChar.WriteAsync(data);
                 //----------------------------
                 /*await Task.Delay(15000); //wait 15 seconds
 
-            data = new byte[] { 0x14, 0x03, 0x00 };
-            await writeChar.WriteAsync(data);
-            
-            led = new byte[] { 2, 2, 0 }; //stop led
-            await writeChar.WriteAsync(led);
-            Console.WriteLine("Light Sensor Recording Complete");*/
-                readChar.ValueUpdated += (s, a) =>
+                data = new byte[] { 0x14, 0x03, 0x00 };
+                await writeChar.WriteAsync(data);
+
+                led = new byte[] { 2, 2, 0 }; //stop led
+                await writeChar.WriteAsync(led);
+                Console.WriteLine("Light Sensor Recording Complete");*/
+                string targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+                if (File.Exists(targetFile))
                 {
-                    Console.WriteLine("DATA RECEIVED!");
-                    var bytes = a.Characteristic.Value;
-                    for (int i = 0; i < bytes.Length; i++)
+                    outStream = System.IO.File.OpenWrite(targetFile);
+                    streamWriter = new StreamWriter(outStream);
+
+                    readChar.ValueUpdated += (s, a) =>
                     {
-                        Console.WriteLine("Light Bytes: " + bytes[i]);
-                    }
-                
-                    switch (bytes[0])
-                    {
-                        case 20:
-                            sens = 2;
-                            ConvertMMSData(bytes);
-                            break;
-                        case 3:
-                            sens = 1;
-                            ConvertMMSData(bytes);
-                            break;
-                        case 19:
-                            sens = 3;
-                            ConvertMMSData(bytes);
-                            break;
-                        default:
-                            Console.WriteLine("Invalid Sensor Use!");
-                            break;
-                    }
-                };
-                await readChar.StartUpdatesAsync();
+                        Console.WriteLine("DATA RECEIVED!");
+                        var bytes = a.Characteristic.Value;
+                        for (int i = 0; i < bytes.Length; i++)
+                        {
+                            Console.WriteLine("Light Bytes: " + bytes[i]);
+                        }
+
+                        switch (bytes[0])
+                        {
+                            case 20:
+                                sens = 2;
+                                ConvertMMSData(bytes, streamWriter);
+                                break;
+                            case 3:
+                                sens = 1;
+                                ConvertMMSData(bytes, streamWriter);
+                                break;
+                            case 19:
+                                sens = 3;
+                                ConvertMMSData(bytes, streamWriter);
+                                break;
+                            default:
+                                Console.WriteLine("Invalid Sensor Use!");
+                                break;
+                        }
+                    };
+                    await readChar.StartUpdatesAsync();
+                }
+                else
+                {
+                    Console.Write("File write failed\n");
+                }
+
                 break;
             }
             //await Task.Delay(15000); //wait 15 seconds
@@ -688,10 +781,11 @@ public partial class ScanPage : ContentPage
                 await writeChar.WriteAsync(data);
                 Console.WriteLine("Stopping Everything");
                 //------------------
-
+                
                 led = new byte[] { 2, 2, 0 }; //stop led
                 await writeChar.WriteAsync(led);
                 Console.WriteLine("Light Sensor Recording Complete");
+                streamWriter.Close();
                 break;
         }
 
@@ -702,7 +796,7 @@ public partial class ScanPage : ContentPage
         sens = 3;
         SensorInfo.Text = ""; //clear display sensor data in app
         
-        //gyro module # = 19
+        //gyro module # = 19 / 0x13
         
         Color col = Color.Red;
         byte[] led = //set led pattern --> solid
@@ -724,30 +818,7 @@ public partial class ScanPage : ContentPage
         ODR odr = ODR._100Hz;
         DRg range = DRg._2000dps;
         FM filter = FM.Normal;
-        /*byte[] gyroConfig = { 34, 0 };
-        gyroConfig[1] &= 248;
-        gyroConfig[1] |= (byte) range;
-        gyroConfig[0] = (byte)(odr + 6 | (ODR)((int)filter << 4));
-        byte[] data = { 19, 3, gyroConfig[0], gyroConfig[1] };*/
-        /*byte[] data =
-        {
-            19,                 //nonfunctional configuration
-            3,
-            (byte)(((int) odr << 4) + (2 << 2)),
-            (byte) ((int)range << 5)
-        };
-        await writeChar.WriteAsync(data);
         
-        //start gyro
-        Console.WriteLine("Starting Gyroscope");
-        
-        data = new byte[] { 19, 1, 1}; 
-        await writeChar.WriteAsync(data);
-        
-        data = new byte[] { 19, 2, 1, 0 }; 
-        await writeChar.WriteAsync(data);*/
-        
-        //byte[] data = { 19, 4, 1 }; //
         byte[] data = { 0x13, 0x05, 0x01}; //subscribe to gyro
         await writeChar.WriteAsync(data);
         
@@ -821,12 +892,11 @@ public partial class ScanPage : ContentPage
         data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
         await writeChar.WriteAsync(data);             
           
+        data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
+        await writeChar.WriteAsync(data); //necessary?
         //start the stuff
         data = new byte[] { 3, 1, 1 }; //accel starting stream
         await writeChar.WriteAsync(data);//send command
-          
-        data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
-        await writeChar.WriteAsync(data); //necessary? 
 
         Stopwatch s = new Stopwatch();
         s.Start();
@@ -853,83 +923,6 @@ public partial class ScanPage : ContentPage
         await writeChar.WriteAsync(led);
 
         Console.WriteLine("Accelerometer Recording Complete");
-
-    /*if (accFlag == 1)
-    {
-      Color col = Color.Blue;
-      led = new byte[]//set led pattern --> solid
-      {
-          2, 3, (byte) col, 2, 1, 1,
-          1, 1 >> 8,
-          1, 1 >> 8,
-          1, 1 >> 8,
-          1, 1 >> 8,
-          0, 0, 0xff
-      };
-      await writeChar.WriteAsync(led);
-
-      led = new byte[] { 2, 1, 1 }; //play led
-      await writeChar.WriteAsync(led);
-
-      Console.WriteLine("Starting Accelerometer");
-
-      data = new byte[]{ 3, 4, 1 }; //subscribes to accel
-      await writeChar.WriteAsync(data);
-
-      data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
-      await writeChar.WriteAsync(data);             //bmi270 version dont seem to work right
-
-      data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
-      await writeChar.WriteAsync(data);
-
-      //start the stuff
-      data = new byte[] { 3, 1, 1 }; //accel starting stream
-      await writeChar.WriteAsync(data);//send command
-
-      data = new byte[]{ 3, 2, 1, 0}; //accel enable sampling
-      await writeChar.WriteAsync(data); //necessary?
-
-      readChar.ValueUpdated += (s, a) =>
-      {
-          Console.WriteLine("DATA RECEIVED!");
-          var bytes = a.Characteristic.Value;
-          for (int i = 2; i < bytes.Length; i++)
-          {
-              Console.WriteLine("Accelerometer Bytes: " + bytes[i]);//need to correctly parse bytes into data
-          }
-
-          float x = BitConverter.ToInt16(sensorData.data, 2);
-          float y = BitConverter.ToInt16(sensorData.data, 4);
-          float z = BitConverter.ToInt16(sensorData.data, 6);
-          x = (x/32768.0f)*16.0f;
-          y = (y/32768.0f)*16.0f;
-          z = (z/32768.0f)*16.0f;
-
-          Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-          SensorInfo.Text = "Accelerometer Data: X: " + x + ", Y: " + y + ", Z: " + z + "\n";
-      };
-      await readChar.StartUpdatesAsync();
-    }
-    else if (accFlag == 0)
-    {
-        await readChar.StopUpdatesAsync();
-        data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
-        await writeChar.WriteAsync(data);
-
-        data = new byte[] { 3, 4, 0}; //unsubscribe
-        await writeChar.WriteAsync(data);
-
-        data = new byte[] { 3, 1, 0 }; //disable accel simple
-        await writeChar.WriteAsync(data);
-
-        /*data = new byte[] { 0x0b, 0x10, 0x01 }; //flush cache, not working
-        await writeChar.WriteAsync(data);
-
-        led = new byte[] { 2, 2, 0 }; //stop led
-        await writeChar.WriteAsync(led);
-
-        Console.WriteLine("Accelerometer Recording Complete");
-    }*/
     }
 
     async void StreamGyro(object sender, EventArgs e)
@@ -1002,19 +995,37 @@ public partial class ScanPage : ContentPage
         Console.WriteLine("Gyroscope Recording Complete");
     }
     
-    async void MetaMotionStuff(object sender, EventArgs e)
+    void MakeFile()
     {
-        try
+        //string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "sensorData.csv");
+        string targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+        if (File.Exists(targetFile))
         {
-            metawear = netstandard.Application.GetMetaWearBoard("C4:0E:7F:6E:59:3A"); //hard coded for an mms
-            await metawear.InitializeAsync();
-            Console.WriteLine("Board Initialized;");
+            Console.Write("\nNo need to make file.\n");
         }
-        catch(Exception erm)
+        else
         {
-            Console.WriteLine("Error: " + erm.Message);
+            Console.Write("\nCreating new file\n");
+            FileStream fs = File.Create(targetFile);
+            Console.WriteLine("New file created");
         }
-        
+    }
+    
+    void WriteFile(string text)
+    {
+        //string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "sensorData.csv");
+        /*string targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+        if (File.Exists(targetFile))
+        {
+            using FileStream outStream = System.IO.File.OpenWrite(targetFile);
+            using StreamWriter streamWriter = new StreamWriter(outStream);
+            streamWriter.WriteLine(text);
+            Console.WriteLine("\n Wrote to File successfully \n");
+        }
+        else
+        {
+            Console.Write("File write failed\n");
+        }*/
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)

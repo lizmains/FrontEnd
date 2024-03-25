@@ -83,6 +83,21 @@
                     SemanticProperties.Hint="Connects to typed device"
                     Clicked="OnDevEnter"
                     HorizontalOptions="Center" />
+            <HorizontalStackLayout>
+               <Button 
+                   x:Name="ConnectMMSBtn"
+                   Text="Connect MMS"
+                   SemanticProperties.Hint="Connects to MMS"
+                   Clicked="ConnectMMS"
+                   HorizontalOptions="Center" />
+               <Button 
+                   x:Name="ConnectMMCBtn"
+                   Text="Connect MMC"
+                   SemanticProperties.Hint="Connects to MMC"
+                   Clicked="ConnectMMC"
+                   HorizontalOptions="Center" /> 
+            </HorizontalStackLayout>
+            
             <Button 
                 x:Name="BondBtn"
                 Text="Pair"
@@ -95,13 +110,6 @@
                 Text="Get Device Info"
                 SemanticProperties.Hint="Displays device info in console"
                 Clicked="getServices"
-                HorizontalOptions="Center" />
-            
-            <Button 
-                x:Name="MMSInit"
-                Text="Connect To MMS"
-                SemanticProperties.Hint="Connects to MMS SDK way"
-                Clicked="MetaMotionStuff"
                 HorizontalOptions="Center" />
             <Button 
                 x:Name="WriteSim"
