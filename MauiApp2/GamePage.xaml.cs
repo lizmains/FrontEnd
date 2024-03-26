@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -52,30 +53,25 @@ public partial class GamePage : ContentPage
             }
         }
 
-        if (button.BackgroundColor == Colors.DarkOrchid)
-        {
-            button.BackgroundColor = Colors.Teal;
-        }
-        else
-        {
-            button.BackgroundColor = Colors.DarkOrchid;
-        }
+        button.BackgroundColor = button.BackgroundColor.Equals(Colors.DarkOrchid) ? Colors.Teal : Colors.DarkOrchid;
 
         scoreNum = frameScore;
         score += scoreNum;
         UpdateScoreDisplay();
-
     }
 
     void UpdateScoreDisplay()
     {
         FrameP1.Text = $"{scoreNum}";
+        F1.Text = $"{scoreNum}";
+        
     }
     
     
     private async void OnGutterballBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         frameNum++;
+        FrameP2.Text = $"{frameNum + 1}";
         shotNum++;
     }
     
@@ -85,6 +81,8 @@ public partial class GamePage : ContentPage
         //still have to calculate how many pins were knocked down, just doesn;'t contribute to score
         //can spare off a foul
         //idk what fouls mean in bowling
+        frameNum++;
+        FrameP2.Text = $"{frameNum + 1}";
     }
     
     private async void OnStrikeBtnClicked(object sender, EventArgs e) //navigate to simulator
@@ -92,6 +90,8 @@ public partial class GamePage : ContentPage
         // go to next frame
         //all pins fall
         //score += 10
+        frameNum++;
+        FrameP2.Text = $"{frameNum + 1}";
     }
     
     private async void OnSpareBtnClicked(object sender, EventArgs e) //navigate to simulator
@@ -99,15 +99,32 @@ public partial class GamePage : ContentPage
         // go to next frame
         //all pins fall
         //score += whatevers left over from first shot
+        frameNum++;
+        FrameP2.Text = $"{frameNum + 1}";
     }
 
     private async void OnPrevFrameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         frameNum--;
+        FrameP2.Text = $"{frameNum+1}";
+
+        if (frameNum < 0)
+        {
+            frameNum++;
+            FrameP2.Text = $"{frameNum+1}";
+            await DisplayAlert("No", "You are on the first frame", "OK");
+        }
     }
     
     private async void OnNextFrameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         frameNum++;
+        FrameP2.Text = $"{frameNum + 1}";
+        if (frameNum > 9)
+        {
+            frameNum--;
+            FrameP2.Text = $"{frameNum + 1}";
+            await DisplayAlert("No", "You are on the last frame", "OK");
+        }
     }
 }

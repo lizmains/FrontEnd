@@ -190,14 +190,14 @@
                     <!-- Score display -->
                     <Label
                         x:Name="FrameP1"
-                        Text="X"
+                        Text="10"
                         FontSize="32"
                         Grid.Row="1"
                         Grid.Column="2"/>
                     <!-- will eventually be {Binding scoreNum} -->
                     <Label
                         x:Name="FrameP2"
-                        Text="X"
+                        Text="1"
                         FontSize="32"
                         Grid.Row="1"
                         Grid.Column="3"/>
@@ -236,39 +236,93 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/> <!-- First row -->
                     <RowDefinition Height="1*"/> <!-- Second row -->
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <Frame BackgroundColor="LightGray" Grid.Row="0" >
-                               <Editor x:Name="Notes"
-                                      Placeholder="Notes"
-                                      HeightRequest="60"/> 
-                            </Frame>
-                            
-                            <Grid Margin="10, -10, 10, 0" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <!-- <Frame BackgroundColor="LightGray" Grid.Row="0" > -->
+                <!--                <Editor x:Name="Notes" -->
+                <!--                       Placeholder="Notes" -->
+                <!--                       HeightRequest="60"/> -->
+                <!-- </Frame> -->
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" >
+                    <Label x:Name="F1"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" >
+                    <Label x:Name="F2"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="3" >
+                    <Label x:Name="F3"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="4" >
+                    <Label x:Name="F4"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="5" >
+                    <Label x:Name="F5"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" >
+                    <Label x:Name="F6"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" >
+                    <Label x:Name="F7"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="3" >
+                    <Label x:Name="F8"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="4" >
+                    <Label x:Name="F9"
+                           Text="X"/>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="5" >
+                    <Label x:Name="F10"
+                           Text="X"/>
+                </Frame>
+                <!--              -->
+                <!--             <Grid Margin="10, -10, 10, 0" Grid.Row="1"> -->
+                <!-- -->
+                <!--                 <Grid.ColumnDefinitions> -->
+                <!--                     <ColumnDefinition Width="1*"/>  -->
+                <!--                     <ColumnDefinition Width="1*"/> -->
+                <!--                     <ColumnDefinition Width="1*"/>  -->
+                <!--                     <ColumnDefinition Width="1*"/> -->
+                <!--                     ~1~ Add more columns as needed @1@ -->
+                <!--                 </Grid.ColumnDefinitions> -->
+                <!--                  -->
                 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/> <!-- First column -->
-                                    <ColumnDefinition Width="1*"/> <!-- Second column -->
-                                    <ColumnDefinition Width="1*"/> <!-- Third column -->
-                                    <ColumnDefinition Width="1*"/> <!-- Fourth column -->
-                                    <!-- Add more columns as needed -->
-                                </Grid.ColumnDefinitions>
-                                
-                                <Button
-                                    x:Name="PrevFrame"
-                                    Text="Back"
-                                    Clicked="OnPrevFrameBtnClicked"
-                                    Grid.Column="0"
-                                    HeightRequest="35"/>
-                                    
-                                <Button
-                                    x:Name="NextFrame"
-                                    Text="Next"
-                                    Clicked="OnNextFrameBtnClicked"
-                                    Grid.Column="3"
-                                    HeightRequest="35"/>
-                            </Grid>
+                <!--             </Grid> -->
+                <Button
+                    x:Name="PrevFrame"
+                    Text="B"
+                    Clicked="OnPrevFrameBtnClicked"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HeightRequest="35"/>
+                
+                <Button
+                    x:Name="NextFrame"
+                    Text="->"
+                    FontSize="20"
+                    Clicked="OnNextFrameBtnClicked"
+                    Grid.Row="2"
+                    Grid.Column="5"
+                    HeightRequest="35"/>
             </Grid>
-            </Grid>
+        </Grid>
             
         </VerticalStackLayout>
 </ContentPage>
