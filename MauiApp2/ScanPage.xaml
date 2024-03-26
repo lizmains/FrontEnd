@@ -83,7 +83,8 @@
                     SemanticProperties.Hint="Connects to typed device"
                     Clicked="OnDevEnter"
                     HorizontalOptions="Center" />
-            <HorizontalStackLayout>
+            <HorizontalStackLayout
+                HorizontalOptions="Center">
                <Button 
                    x:Name="ConnectMMSBtn"
                    Text="Connect MMS"
@@ -97,14 +98,14 @@
                    Clicked="ConnectMMC"
                    HorizontalOptions="Center" /> 
             </HorizontalStackLayout>
-            
+            <!--
             <Button 
                 x:Name="BondBtn"
                 Text="Pair"
                 SemanticProperties.Hint="Pairs to connected device"
                 Clicked="OnBondEnter"
                 HorizontalOptions="Center" />
-            
+            -->
             <Button 
                 x:Name="ServBtn"
                 Text="Get Device Info"
@@ -227,7 +228,7 @@
                 HorizontalOptions="Center" />
             <Button 
                 x:Name="WriteLight"
-                Text="Start/Stop Light Sensor"
+                Text="Start/Stop Sensors"
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="lightSensor"
                 HorizontalOptions="Center" />

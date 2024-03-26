@@ -74,6 +74,13 @@ public partial class ScanPage : ContentPage
     private int metamotion;
     private FileStream outStream;
     private StreamWriter streamWriter;
+    private FileStream gyroStream;
+    private StreamWriter gyroWriter;
+    private FileStream lightStream;
+    private StreamWriter lightWriter;
+    private string targetFile;
+    private string lightFile;
+    private string gyroFile;
     
     //sim vars
     private IService simServ;
@@ -100,6 +107,9 @@ public partial class ScanPage : ContentPage
         IService writeServ = null;
         ICharacteristic writeChar = null;
         metamotion = 0;
+        targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+        lightFile = "/Users/michaelhensel/Desktop/lightData.csv"; //temporary
+        gyroFile = "/Users/michaelhensel/Desktop/gyroData.csv"; //temporary
     }
     
     private void OnConnBtnClicked(object sender, EventArgs e)
@@ -474,15 +484,20 @@ public partial class ScanPage : ContentPage
             Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
             SensorInfo.Text /*+*/= "Accelerometer Data: X: " + x.ToString("0.00") + ", Y: " + y.ToString("0.00") + ", Z: " + z.ToString("0.00") + "\n"; 
             //WriteFile(x + "," + y + "," + z);
-            streamWriter.WriteLine(x + "," + y + "," + z); 
+            stream.WriteLine(x + "," + y + "," + z); 
             Console.WriteLine("\n Wrote to File successfully \n");
         }
         else if (sens == 2)
         {
             float lux;
+            float ratio;
             float ch0 = (bytes[3] << 8) | bytes[2];
             float ch1 = (bytes[5] << 8) | bytes[4];
-            float ratio = ch1 / (ch1 + ch0);
+            if (ch1 != 0 || ch0 != 0)
+            {
+                ratio = ch1 / (ch1 + ch0);
+            }
+            else ratio = 0;
             Console.WriteLine("Ratio: " + ratio);
             if (ratio < 0.45f)
             {
@@ -499,6 +514,8 @@ public partial class ScanPage : ContentPage
             else lux = 0;
 
             LightInfo.Text = "Light Data " + lux.ToString("0.00") + " Lux";
+            stream.WriteLine(lux + ",");
+            Console.WriteLine("\n Wrote to File successfully \n");
         }
             
         else if (sens == 3)
@@ -511,7 +528,9 @@ public partial class ScanPage : ContentPage
             z = (z/32768.0f)*2.0f;
                
             Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
+            stream.WriteLine(x + "," + y + "," + z);
             GyroInfo.Text /*+*/= "Gyroscope Data: X: " + x.ToString("0.00") + ", Y: " + y.ToString("0.00") + ", Z: " + z.ToString("0.00") + "\n"; 
+            Console.WriteLine("\n Wrote to File successfully \n");
         }
     }
     
@@ -617,10 +636,6 @@ public partial class ScanPage : ContentPage
 
     async void lightSensor(object sender, EventArgs e)
     {
-        float ratio;
-        float lux;
-        sens = 2;
-        
         light_flag = light_flag == 0 ? 1 : 0;
 
         SensorInfo.Text = ""; //clear display sensor data in app
@@ -650,7 +665,7 @@ public partial class ScanPage : ContentPage
 
                 Console.WriteLine("Starting Everything..."); //light sensor code = 20 / 0x14
                 
-                MakeFile(); //create new csv to write sensor data into
+                MakeFiles(); //create new csv to write sensor data into
 
                 data = new byte[] { 0x14, 0x02, 0x18, 0x03 };
                 await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
@@ -658,7 +673,7 @@ public partial class ScanPage : ContentPage
                 data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
                 await writeChar.WriteAsync(data);
 
-                data = new byte[] { 0x14, 0x02, 0x00, 0x03 }; //Measurement 2000ms
+                data = new byte[] { 0x14, 0x02, 0x00, 0x00 }; //Measurement 0 for 50ms, 3 for 500ms
                 await writeChar.WriteAsync(data);
 
                 //start
@@ -672,7 +687,7 @@ public partial class ScanPage : ContentPage
                 data = new byte[] { 3, 4, 1 }; //subscribes to accel reading
                 await writeChar.WriteAsync(data);
 
-                data = new byte[] { 0x03, 0x03, 0x28, 0x03 }; //configures bmi160 to 100Hz
+                data = new byte[] { 0x03, 0x03, 0x29, 0x03 }; //configures bmi160 to 200Hz
                 await writeChar.WriteAsync(data); //bmi270 version dont seem to work right
 
                 data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
@@ -709,11 +724,17 @@ public partial class ScanPage : ContentPage
                 led = new byte[] { 2, 2, 0 }; //stop led
                 await writeChar.WriteAsync(led);
                 Console.WriteLine("Light Sensor Recording Complete");*/
-                string targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+ 
                 if (File.Exists(targetFile))
                 {
                     outStream = System.IO.File.OpenWrite(targetFile);
                     streamWriter = new StreamWriter(outStream);
+                    
+                    lightStream = System.IO.File.OpenWrite(lightFile);
+                    lightWriter = new StreamWriter(lightStream);
+                    
+                    gyroStream = System.IO.File.OpenWrite(gyroFile);
+                    gyroWriter = new StreamWriter(gyroStream);
 
                     readChar.ValueUpdated += (s, a) =>
                     {
@@ -721,14 +742,14 @@ public partial class ScanPage : ContentPage
                         var bytes = a.Characteristic.Value;
                         for (int i = 0; i < bytes.Length; i++)
                         {
-                            Console.WriteLine("Light Bytes: " + bytes[i]);
+                            Console.WriteLine("Sensor Bytes: " + bytes[i]);
                         }
 
                         switch (bytes[0])
                         {
                             case 20:
                                 sens = 2;
-                                ConvertMMSData(bytes, streamWriter);
+                                ConvertMMSData(bytes, lightWriter);
                                 break;
                             case 3:
                                 sens = 1;
@@ -736,7 +757,7 @@ public partial class ScanPage : ContentPage
                                 break;
                             case 19:
                                 sens = 3;
-                                ConvertMMSData(bytes, streamWriter);
+                                ConvertMMSData(bytes, gyroWriter);
                                 break;
                             default:
                                 Console.WriteLine("Invalid Sensor Use!");
@@ -784,8 +805,10 @@ public partial class ScanPage : ContentPage
                 
                 led = new byte[] { 2, 2, 0 }; //stop led
                 await writeChar.WriteAsync(led);
-                Console.WriteLine("Light Sensor Recording Complete");
+                Console.WriteLine("Sensor Recording Complete");
                 streamWriter.Close();
+                lightWriter.Close();
+                gyroWriter.Close();
                 break;
         }
 
@@ -995,20 +1018,46 @@ public partial class ScanPage : ContentPage
         Console.WriteLine("Gyroscope Recording Complete");
     }
     
-    void MakeFile()
+    void MakeFiles()
     {
         //string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "sensorData.csv");
-        string targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+        
         if (File.Exists(targetFile))
         {
-            Console.Write("\nNo need to make file.\n");
+            Console.Write("\nNo need to make acc file.\n");
         }
         else
         {
-            Console.Write("\nCreating new file\n");
-            FileStream fs = File.Create(targetFile);
-            Console.WriteLine("New file created");
+            Console.Write("\nCreating new file...\n");
+            FileStream fs1 = File.Create(targetFile);
+            Console.WriteLine("New acc file created");
+            fs1.Close(); //there's a better way to do this, but I don't get paid for this
         }
+        
+        if (File.Exists(lightFile))
+        {
+            Console.Write("\nNo need to make light file.\n");
+        }
+        else
+        {
+            Console.Write("\nCreating new file...\n");
+            FileStream fs2 = File.Create(lightFile);
+            Console.WriteLine("New light file created");
+            fs2.Close();
+        }
+        
+        if (File.Exists(gyroFile))
+        {
+            Console.Write("\nNo need to make gyro file.\n");
+        }
+        else
+        {
+            Console.Write("\nCreating new file...\n");
+            FileStream fs3 = File.Create(gyroFile);
+            Console.WriteLine("New gyro file created");
+            fs3.Close();
+        }
+        
     }
     
     void WriteFile(string text)
