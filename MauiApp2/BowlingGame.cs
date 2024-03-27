@@ -19,4 +19,10 @@ public class BowlingGame
     }
     
     //calculate shit in here later also for scores and rolls
+
+    private int calculateScore(Frame frame, int score)
+    {
+        
+        return score;
+    }
 }

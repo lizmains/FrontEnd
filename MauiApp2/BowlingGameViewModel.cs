@@ -32,4 +32,10 @@ public class BowlingGameViewModel : INotifyPropertyChanged
     //end previous notes
     
     //update scores n frame shit here later
+    private void updateFrameScore(string pinNum)
+    {
+        int frameScore = 10;
+
+        Frames[1].frameScore = frameScore;
+    }
 }
