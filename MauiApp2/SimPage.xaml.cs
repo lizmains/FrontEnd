@@ -31,6 +31,9 @@ public partial class SimPage : ContentPage
     private string displayRead;
     private string writeText;
     private bool flag;
+    private IService piServ;
+    private ICharacteristic readChar;
+    private (byte[] data, int resultCode) simData;
     
     
     //sim vars
@@ -62,7 +65,7 @@ public partial class SimPage : ContentPage
     async void OnDevEnter(object sender, EventArgs e)
     {
         Console.WriteLine("Searching List...");
-        deviceName = /*"ESAM";*/"LUKESCOOLLAPTOP";//hardcoded for lukes machine running sim
+        deviceName = /*"ESAM";*/"raspberrypi";//hardcoded for lukes machine running sim
         for (int i = 0; i < deviceList.Count(); i++)
         {
             if (deviceList[i].Name == deviceName)
@@ -114,6 +117,41 @@ public partial class SimPage : ContentPage
             DisplayAlert("Alert", "Scan Failed", "OK");
         }
         
+    }
+
+    async void OnPiConnect(object sender, EventArgs e)
+    {
+        try
+        {
+            await adapter.ConnectToKnownDeviceAsync(new Guid("pi uuid"));
+            device = adapter.ConnectedDevices[0];
+        }
+        catch (DeviceConnectionException erm)
+        {
+            await DisplayAlert("Alert", "Unable to connect to device", "OK");
+        }
+        finally
+        {
+            if (device != null) //if a device is connected, write to console, get device info
+            {
+                Console.WriteLine("Connected to Pi");
+                ConDev.Text = "Connected: " + device.Name;
+                services = await device.GetServicesAsync();
+                //charstics = await services[0].GetCharacteristicsAsync();
+                if (device.Name == "raspberrypi")
+                { //Getting characteristics for pi interactions
+                    piServ = await device.GetServiceAsync(new Guid("00000001-710e-4a5b-8d75-3e5b444bc3cf"));
+                    readChar =//mms write characteristic, presumably
+                        await piServ.GetCharacteristicAsync(new Guid("00000002-710e-4a5b-8d75-3e5b444bc3cf"));
+                }
+                        
+                //await adapter.StopScanningForDevicesAsync();
+            } else Console.WriteLine("Failed to Connect");
+        }
+        if (device == null)
+        {
+            DisplayAlert("Alert", "Unknown Device", "OK");
+        }
     }
     
     async void getServices(object sender, EventArgs e)
@@ -171,6 +209,12 @@ public partial class SimPage : ContentPage
 
         } else DisplayAlert("Alert", "Connect to a device", "OK");
     }
+
+    async void ReadSim(object sender, EventArgs e)
+    {
+        Console.WriteLine("Reading sim data...");
+        ReadInfo.Text += "Sim Data: "+readChar.StringValue+"\n";
+    }
     
     private void OnWriteChanged(object sender, TextChangedEventArgs e)
     {
@@ -200,7 +244,7 @@ public partial class SimPage : ContentPage
                await chary0.WriteAsync(writetest);*/
                
                simServ = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
-               simWrite = await simServ.GetCharacteristicAsync(new Guid("bc1926ea-6ffa-4d04-928b-76cccd068cea"/*"72563044-db33-4692-a45d-c5212eebabfa"*/));
+               simWrite = await simServ.GetCharacteristicAsync(new Guid(/*"bc1926ea-6ffa-4d04-928b-76cccd068cea"*/"72563044-db33-4692-a45d-c5212eebabfa"));
                byte[] writeBytes = Encoding.ASCII.GetBytes(writeText);
                await simWrite.WriteAsync(writeBytes);
                Console.WriteLine("Writing to Sim...");
@@ -214,7 +258,7 @@ public partial class SimPage : ContentPage
         
     }
 
-    async void listen(object sender, EventArgs e)
+    async void listen(object sender, EventArgs e) //listener function for notify characteristics
     {
         IService theService = await device.GetServiceAsync(new Guid("19536e67-3682-4588-9f3a-5340b6712150"));
         ICharacteristic notify = await theService.GetCharacteristicAsync(new Guid("BC1926EA-6FFA-4D04-928B-76CCCD068CEA"));
@@ -222,8 +266,8 @@ public partial class SimPage : ContentPage
         if (flag)
         {
             Console.WriteLine("Listening...");
-            await notify.StartUpdatesAsync();
             flag = false;
+            await notify.StartUpdatesAsync();
         }
 
         if (flag == false)

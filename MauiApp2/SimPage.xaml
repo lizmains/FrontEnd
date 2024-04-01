@@ -51,10 +51,22 @@
             Clicked="OnDevEnter"
             HorizontalOptions="Center" />
         <Button 
+            x:Name="ConnectPi"
+            Text="Connect to Sim"
+            SemanticProperties.Hint="Connect To Sim Pi"
+            Clicked="OnPiConnect"
+            HorizontalOptions="Center" />
+        <Button 
             x:Name="ServBtn"
             Text="Read From Sim"
             SemanticProperties.Hint="Displays device info in console"
             Clicked="getServices"
+            HorizontalOptions="Center" />
+        <Button 
+            x:Name="ReadBtn"
+            Text="Read Data"
+            SemanticProperties.Hint="Displays Sim Values"
+            Clicked="ReadSim"
             HorizontalOptions="Center" />
         <Label
             x:Name="ReadInfo"

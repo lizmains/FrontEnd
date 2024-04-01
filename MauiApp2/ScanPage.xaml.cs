@@ -81,6 +81,7 @@ public partial class ScanPage : ContentPage
     private string targetFile;
     private string lightFile;
     private string gyroFile;
+    private Stopwatch timer;
     
     //sim vars
     private IService simServ;
@@ -110,6 +111,7 @@ public partial class ScanPage : ContentPage
         targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
         lightFile = "/Users/michaelhensel/Desktop/lightData.csv"; //temporary
         gyroFile = "/Users/michaelhensel/Desktop/gyroData.csv"; //temporary
+        timer = new Stopwatch();
     }
     
     private void OnConnBtnClicked(object sender, EventArgs e)
@@ -466,11 +468,12 @@ public partial class ScanPage : ContentPage
                 Console.WriteLine("Sim Data: "+ sensorData.data[i]);
             }
             Console.WriteLine("Sim Data Value: "+readChar.StringValue);
+            SensorInfo.Text += "Sim Data: "+readChar.StringValue;
         }
         else await DisplayAlert("Alert", "Connect to the MMS", "OK");
     }
 
-    void ConvertMMSData(byte[] bytes, StreamWriter stream)
+    void ConvertMMSData(byte[] bytes, StreamWriter stream, long ms)
     {
         if (sens == 1)
         {
@@ -484,7 +487,7 @@ public partial class ScanPage : ContentPage
             Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
             SensorInfo.Text /*+*/= "Accelerometer Data: X: " + x.ToString("0.00") + ", Y: " + y.ToString("0.00") + ", Z: " + z.ToString("0.00") + "\n"; 
             //WriteFile(x + "," + y + "," + z);
-            stream.WriteLine(x + "," + y + "," + z); 
+            stream.WriteLine(ms + "," + x + "," + y + "," + z); 
             Console.WriteLine("\n Wrote to File successfully \n");
         }
         else if (sens == 2)
@@ -514,7 +517,7 @@ public partial class ScanPage : ContentPage
             else lux = 0;
 
             LightInfo.Text = "Light Data " + lux.ToString("0.00") + " Lux";
-            stream.WriteLine(lux + ",");
+            stream.WriteLine(ms + "," + lux);
             Console.WriteLine("\n Wrote to File successfully \n");
         }
             
@@ -528,7 +531,7 @@ public partial class ScanPage : ContentPage
             z = (z/32768.0f)*2.0f;
                
             Console.WriteLine("\nX: "+x+"  Y: "+y+"  Z: "+z);
-            stream.WriteLine(x + "," + y + "," + z);
+            stream.WriteLine(ms + "," + x + "," + y + "," + z);
             GyroInfo.Text /*+*/= "Gyroscope Data: X: " + x.ToString("0.00") + ", Y: " + y.ToString("0.00") + ", Z: " + z.ToString("0.00") + "\n"; 
             Console.WriteLine("\n Wrote to File successfully \n");
         }
@@ -666,6 +669,8 @@ public partial class ScanPage : ContentPage
                 Console.WriteLine("Starting Everything..."); //light sensor code = 20 / 0x14
                 
                 MakeFiles(); //create new csv to write sensor data into
+                
+                Console.WriteLine("Stopwatch good");
 
                 data = new byte[] { 0x14, 0x02, 0x18, 0x03 };
                 await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
@@ -715,6 +720,8 @@ public partial class ScanPage : ContentPage
                 //start the stuff
                 data = new byte[] { 0x13, 0x02, 0x01, 0x00 }; //enable sampling
                 await writeChar.WriteAsync(data);
+                
+                timer.Start();
                 //----------------------------
                 /*await Task.Delay(15000); //wait 15 seconds
 
@@ -725,7 +732,7 @@ public partial class ScanPage : ContentPage
                 await writeChar.WriteAsync(led);
                 Console.WriteLine("Light Sensor Recording Complete");*/
  
-                if (File.Exists(targetFile))
+                if (File.Exists(targetFile) && File.Exists(lightFile) && File.Exists(gyroFile))
                 {
                     outStream = System.IO.File.OpenWrite(targetFile);
                     streamWriter = new StreamWriter(outStream);
@@ -735,7 +742,12 @@ public partial class ScanPage : ContentPage
                     
                     gyroStream = System.IO.File.OpenWrite(gyroFile);
                     gyroWriter = new StreamWriter(gyroStream);
-
+                    
+                    
+                    streamWriter.WriteLine("Milliseconds,X,Y,Z");
+                    lightWriter.WriteLine("Milliseconds,Lux"); //async overload warning generated, seems fine for now
+                    gyroWriter.WriteLine("Milliseconds,X,Y,Z");
+                    
                     readChar.ValueUpdated += (s, a) =>
                     {
                         Console.WriteLine("DATA RECEIVED!");
@@ -749,15 +761,15 @@ public partial class ScanPage : ContentPage
                         {
                             case 20:
                                 sens = 2;
-                                ConvertMMSData(bytes, lightWriter);
+                                ConvertMMSData(bytes, lightWriter, timer.ElapsedMilliseconds);
                                 break;
                             case 3:
                                 sens = 1;
-                                ConvertMMSData(bytes, streamWriter);
+                                ConvertMMSData(bytes, streamWriter, timer.ElapsedMilliseconds);
                                 break;
                             case 19:
                                 sens = 3;
-                                ConvertMMSData(bytes, gyroWriter);
+                                ConvertMMSData(bytes, gyroWriter, timer.ElapsedMilliseconds);
                                 break;
                             default:
                                 Console.WriteLine("Invalid Sensor Use!");
@@ -776,6 +788,7 @@ public partial class ScanPage : ContentPage
             //await Task.Delay(15000); //wait 15 seconds
             case 0:
                 await readChar.StopUpdatesAsync();
+                timer.Stop();
                 data = new byte[] { 0x14, 0x03, 0x00 }; //stop als stream
                 await writeChar.WriteAsync(data);
                 data = new byte[] { 0x14, 0x01, 0x00 }; //stop
@@ -1021,6 +1034,9 @@ public partial class ScanPage : ContentPage
     void MakeFiles()
     {
         //string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "sensorData.csv");
+        targetFile = "/Users/michaelhensel/Desktop/graphs/accData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
+        lightFile = "/Users/michaelhensel/Desktop/graphs/lightData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
+        gyroFile = "/Users/michaelhensel/Desktop/graphs/gyroData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
         
         if (File.Exists(targetFile))
         {
@@ -1058,23 +1074,6 @@ public partial class ScanPage : ContentPage
             fs3.Close();
         }
         
-    }
-    
-    void WriteFile(string text)
-    {
-        //string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "sensorData.csv");
-        /*string targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
-        if (File.Exists(targetFile))
-        {
-            using FileStream outStream = System.IO.File.OpenWrite(targetFile);
-            using StreamWriter streamWriter = new StreamWriter(outStream);
-            streamWriter.WriteLine(text);
-            Console.WriteLine("\n Wrote to File successfully \n");
-        }
-        else
-        {
-            Console.Write("File write failed\n");
-        }*/
     }
     
     private void OnHomeBtnClicked(object sender, EventArgs e)
