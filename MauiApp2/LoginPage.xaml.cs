@@ -22,7 +22,6 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
-        //api = new FeaturedAPI("https://revmetrixapi.robertwood.dev/api/");
         api = new FeaturedAPI("https://api.revmetrix.io/api/");
     }
 
@@ -101,8 +100,8 @@ public partial class LoginPage : ContentPage
             // await api.Login(usrnm, pass); //commented out until db server active
             //Console.WriteLine("logged in maybe");
             Console.WriteLine("API CONNECTION==");
-            //Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
-            HttpStatusCode authentication = (await api.Get("Test/TestAuthorize")).StatusCode;
+            //Console.WriteLine((await api.Get("tests/TestAuthorize")).StatusCode);
+            HttpStatusCode authentication = (await api.Get("tests/TestAuthorize")).StatusCode;
             if (authentication == HttpStatusCode.OK)
             {
                 Console.WriteLine(authentication);

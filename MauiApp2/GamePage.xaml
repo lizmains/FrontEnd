@@ -7,8 +7,9 @@
     
 
     <VerticalStackLayout Padding="5">
+        <!-- <Entry x:Name="pinCountEntry" Placeholder="Enter pin count" Keyboard="Numeric"/> -->
             
-            <Grid RowDefinitions="30, 220, 200, 200" Margin="10">
+        <Grid RowDefinitions="30, 220, 200, 200" Margin="10">
             <!-- <Grid RowDefinitions="5%, 34%, 31%, 30%" Margin="10"> -->
                 <!-- pins -->
                 <Grid Grid.Row="0">
@@ -68,7 +69,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
-                        Grid.Column="1"/>
+                        Grid.Column="1"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="7"/>
                     <Button
                         x:Name="P8"
                         Text="8"
@@ -78,7 +81,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
-                        Grid.Column="3"/>
+                        Grid.Column="3"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="8"/>
                     <Button
                         x:Name="P9"
                         Text="9"
@@ -88,7 +93,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
-                        Grid.Column="5"/>
+                        Grid.Column="5"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="9"/>
                     <Button
                         x:Name="P10"
                         Text="10"
@@ -98,7 +105,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
-                        Grid.Column="7"/>
+                        Grid.Column="7"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="10"/>
                     
                     <!-- Second row -->
                     <Button
@@ -110,7 +119,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="2"
-                        Grid.Column="2"/>
+                        Grid.Column="2"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="4"/>
                     <Button
                         x:Name="P5"
                         Text="5"
@@ -120,7 +131,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="2"
-                        Grid.Column="4"/>
+                        Grid.Column="4"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="5"/>
                     <Button
                         x:Name="P6"
                         Text="6"
@@ -130,7 +143,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="2"
-                        Grid.Column="6"/>
+                        Grid.Column="6"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="6"/>
                     
                     <!-- Third row -->
                     <Button
@@ -142,7 +157,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="3"
-                        Grid.Column="3"/>
+                        Grid.Column="3"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="2"/>
                     <Button
                         x:Name="P3"
                         Text="3"
@@ -152,7 +169,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="3"
-                        Grid.Column="5"/>
+                        Grid.Column="5"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="3"/>
                     
                     <!-- Fourth row -->
                     <Button
@@ -164,7 +183,9 @@
                         Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="4"
-                        Grid.Column="4"/>
+                        Grid.Column="4"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="1"/>
                 </Grid>
                 
                 
@@ -190,14 +211,14 @@
                     <!-- Score display -->
                     <Label
                         x:Name="FrameP1"
-                        Text="10"
+                        Text="X"
                         FontSize="32"
                         Grid.Row="1"
                         Grid.Column="2"/>
                     <!-- will eventually be {Binding scoreNum} -->
                     <Label
                         x:Name="FrameP2"
-                        Text="1"
+                        Text="X"
                         FontSize="32"
                         Grid.Row="1"
                         Grid.Column="3"/>
@@ -253,58 +274,107 @@
                 <!--                       HeightRequest="60"/> -->
                 <!-- </Frame> -->
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" >
-                    <Label x:Name="F1"
-                           Text="X"/>
+                    <StackLayout>
+                       <Label x:Name="F1"
+                              Text="{Binding game.Frames[0].firstRollScore}"/>
+                       <Label x:Name="F12"
+                              Text="{Binding game.Frames[0].secondRollScore}"/>
+                       <Label x:Name="score1"
+                              Text="{Binding game.Frames[0].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" >
-                    <Label x:Name="F2"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F2"
+                               Text="{Binding game.Frames[1].firstRollScore}"/>
+                        <Label x:Name="F22"
+                               Text="{Binding game.Frames[1].secondRollScore}"/>
+                        <Label x:Name="score2"
+                               Text="{Binding game.Frames[1].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="3" >
-                    <Label x:Name="F3"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F3"
+                               Text="{Binding game.Frames[2].firstRollScore}"/>
+                        <Label x:Name="F32"
+                               Text="{Binding game.Frames[2].secondRollScore}"/>
+                        <Label x:Name="score3"
+                               Text="{Binding game.Frames[2].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="4" >
-                    <Label x:Name="F4"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F4"
+                               Text="{Binding game.Frames[3].firstRollScore}"/>
+                        <Label x:Name="F42"
+                               Text="{Binding game.Frames[3].secondRollScore}"/>
+                        <Label x:Name="score4"
+                               Text="{Binding game.Frames[3].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="5" >
-                    <Label x:Name="F5"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F5"
+                               Text="{Binding game.Frames[4].firstRollScore}"/>
+                        <Label x:Name="F52"
+                               Text="{Binding game.Frames[4].secondRollScore}"/>
+                        <Label x:Name="score5"
+                               Text="{Binding game.Frames[4].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" >
-                    <Label x:Name="F6"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F6"
+                               Text="{Binding game.Frames[5].firstRollScore}"/>
+                        <Label x:Name="F62"
+                               Text="{Binding game.Frames[5].secondRollScore}"/>
+                        <Label x:Name="score6"
+                               Text="{Binding game.Frames[5].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" >
-                    <Label x:Name="F7"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F7"
+                               Text="{Binding game.Frames[6].firstRollScore}"/>
+                        <Label x:Name="F72"
+                               Text="{Binding game.Frames[6].secondRollScore}"/>
+                        <Label x:Name="score7"
+                               Text="{Binding game.Frames[6].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="3" >
-                    <Label x:Name="F8"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F8"
+                               Text="{Binding game.Frames[7].firstRollScore}"/>
+                        <Label x:Name="F82"
+                               Text="{Binding game.Frames[7].secondRollScore}"/>
+                        <Label x:Name="score8"
+                               Text="{Binding game.Frames[7].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="4" >
-                    <Label x:Name="F9"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F9"
+                               Text="{Binding game.Frames[8].firstRollScore}"/>
+                        <Label x:Name="F92"
+                               Text="{Binding game.Frames[8].secondRollScore}"/>
+                        <Label x:Name="score9"
+                               Text="{Binding game.Frames[8].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="5" >
-                    <Label x:Name="F10"
-                           Text="X"/>
+                    <StackLayout>
+                        <Label x:Name="F10"
+                               Text="{Binding game.Frames[9].firstRollScore}"/>
+                        <Label x:Name="F102"
+                               Text="{Binding game.Frames[9].secondRollScore}"/>
+                        <Label x:Name="score10"
+                               Text="{Binding game.Frames[9].frameScore}"/> 
+                    </StackLayout>
                 </Frame>
-                <!--              -->
-                <!--             <Grid Margin="10, -10, 10, 0" Grid.Row="1"> -->
-                <!-- -->
-                <!--                 <Grid.ColumnDefinitions> -->
-                <!--                     <ColumnDefinition Width="1*"/>  -->
-                <!--                     <ColumnDefinition Width="1*"/> -->
-                <!--                     <ColumnDefinition Width="1*"/>  -->
-                <!--                     <ColumnDefinition Width="1*"/> -->
-                <!--                     ~1~ Add more columns as needed @1@ -->
-                <!--                 </Grid.ColumnDefinitions> -->
-                <!--                  -->
                 
-                <!--             </Grid> -->
+                
                 <Button
                     x:Name="PrevFrame"
                     Text="B"

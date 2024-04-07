@@ -58,6 +58,7 @@ public partial class GamePage : ContentPage
         scoreNum = frameScore;
         score += scoreNum;
         UpdateScoreDisplay();
+        
     }
 
     void UpdateScoreDisplay()
