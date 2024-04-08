@@ -2,11 +2,11 @@
 
 public class BowlingGame
 {
-    public List<BowlingFrame> Frames { get; set; }
+    public List<BowlingFrame> Frames { get; set; } //maybe private set - not sure
 
     public BowlingGame()
     {
-        // Frames = new List<BowlingFrame>(10);
+        
         Frames = Enumerable.Range(0, 10).Select(_ => new BowlingFrame()).ToList();
         InitializeFrames();
     }

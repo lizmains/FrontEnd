@@ -10,14 +10,14 @@ namespace MauiApp2;
 
 public partial class GamePage : ContentPage
 {
-    public List<Boolean> pins = new List<Boolean>(10);
+    private List<Boolean> pins = new List<Boolean>(10);
     public List<int> frames = new List<int>(10);
     public List<int> shots = new List<int>(21);
     private int frameNum = 0;
     private int shotNum = 0;
-    public int gameNum = 1;
+    // public int gameNum = 1;
     public int score = 0;
-    public int scoreNum = 10;
+    private int scoreNum = 10;
     
     public GamePage()
     {
@@ -28,7 +28,9 @@ public partial class GamePage : ContentPage
             pins.Add(false);
             //KNOCKED DOWN = FALSE
         }
-        
+
+        BindingContext = new BowlingGameViewModel(); //this is the thing causing the upset, im not sure why
+
     }
     
     private async void OnNewGameBtnClicked(object sender, EventArgs e) //navigate to simulator
@@ -36,7 +38,7 @@ public partial class GamePage : ContentPage
         await Navigation.PushAsync(new NewGame());
     }
 
-    private async void OnPinBtnClicked(object sender, EventArgs e)
+    private void OnPinBtnClicked(object sender, EventArgs e)
     {
         var button = (Button)sender;
         int pin = int.Parse(button.Text);
@@ -65,6 +67,7 @@ public partial class GamePage : ContentPage
     {
         FrameP1.Text = $"{scoreNum}";
         F1.Text = $"{scoreNum}";
+        //update score display
         
     }
     
@@ -86,7 +89,7 @@ public partial class GamePage : ContentPage
         FrameP2.Text = $"{frameNum + 1}";
     }
     
-    private async void OnStrikeBtnClicked(object sender, EventArgs e) //navigate to simulator
+    private void OnStrikeBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         // go to next frame
         //all pins fall

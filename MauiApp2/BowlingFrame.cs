@@ -1,33 +1,62 @@
-﻿namespace MauiApp2;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-public class BowlingFrame
+namespace MauiApp2;
+
+public partial class BowlingFrame : INotifyPropertyChanged
 {
     public int frameNum { get; set; }
-    public int? firstRoll { get; set; }
-    public int? secondRoll { get; set; }
+    private int? firstRoll;
+    private int? secondRoll;
     public int? firstRollPinsLeft { get; set; }
     public int? secondRollPinsLeft { get; set; }
-    public int frameScore { get; set; }
-    //add other shit in here later for things like 10th frame
-    //do i add the pin flags here or somewhere else
+    public int frameScore;
+    
+    public int? FirstRoll
+    {
+        get => firstRoll;
+        set => SetField(ref firstRoll, value);
+    }
+    
+    public int? SecondRoll
+    {
+        get => secondRoll;
+        set => SetField(ref secondRoll, value);
+    }
+    
+    public int FrameScore
+    {
+        get => frameScore;
+        set => SetField(ref frameScore, value);
+    }
 
     public void calcluateScore()
     {
-        if (firstRollPinsLeft.HasValue)
+        // if (firstRollPinsLeft.HasValue)
+        // {
+        //     firstRoll = 10 - firstRollPinsLeft.Value;
+        // }
+        //
+        // if (secondRollPinsLeft.HasValue)
+        // {
+        //     secondRoll = firstRoll.HasValue
+        //         ? 10 - secondRollPinsLeft.Value
+        //         : 10 - (firstRollPinsLeft.Value + secondRollPinsLeft.Value);
+        // }
+        //
+        // frameScore = (firstRoll ?? 0) + (secondRoll ?? 0);
+
+        if (firstRollPinsLeft.Value != 0)
         {
             firstRoll = 10 - firstRollPinsLeft.Value;
         }
 
-        if (secondRollPinsLeft.HasValue)
+        if (secondRollPinsLeft.Value != 0)
         {
-            secondRoll = firstRoll.HasValue
-                ? 10 - secondRollPinsLeft.Value
-                : 10 - (firstRollPinsLeft.Value + secondRollPinsLeft.Value);
+            secondRoll = 10 - (firstRollPinsLeft.Value + secondRollPinsLeft.Value);
         }
-
-        frameScore = (firstRoll ?? 0) + (secondRoll ?? 0);
     }
-
+    
     public void addRoll(int pins)
     {
         if (firstRoll + secondRoll == 10)
@@ -39,9 +68,77 @@ public class BowlingFrame
             secondRoll = pins;
         }
     }
-
+    
     public void CalculateScore()
     {
-        throw new NotImplementedException();
+        frameScore = (int)(firstRoll + (secondRoll ?? 0));
+        OnPropertyChanged(nameof(FrameScore));
+    }
+    
+    private int firstRollScore;
+    private int secondRollScore;
+    // private int frameScore;
+
+    public int FirstRollScore
+    {
+        get => firstRollScore;
+        set
+        {
+            if (firstRollScore != value)
+            {
+                firstRollScore = value;
+                OnPropertyChanged(nameof(firstRollScore));
+                UpdateFrameScore();
+            }
+        }
+    }
+
+    public int SecondRollScore
+    {
+        get => secondRollScore;
+        set
+        {
+            if (secondRollScore != value)
+            {
+                secondRollScore = value;
+                OnPropertyChanged(nameof(secondRollScore));
+                UpdateFrameScore();
+            }
+        }
+    }
+
+    // public int FrameScore
+    // {
+    //     get => frameScore;
+    //     private set
+    //     {
+    //         if (frameScore != value)
+    //         {
+    //             frameScore = value;
+    //             OnPropertyChanged(nameof(frameScore));
+    //         }
+    //     }
+    // }
+
+    private void UpdateFrameScore()
+    {
+        // Logic to update the frame score based on first and second roll scores
+        FrameScore = FirstRollScore + SecondRollScore;
+        // Include any additional logic for strikes, spares, and bonuses if necessary
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

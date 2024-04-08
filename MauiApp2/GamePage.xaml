@@ -2,8 +2,10 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mauiApp2="clr-namespace:MauiApp2"
              x:Class="MauiApp2.GamePage"
-             Title="Game">
+             Title="Game"
+             x:DataType="mauiApp2:BowlingGameViewModel">
     
 
     <VerticalStackLayout Padding="5">
@@ -22,18 +24,18 @@
                     
                     <!-- game and frame numberts -->
                     <!-- will eventually be {Binding Game n FrameNum} -->
-                    <Label
-                        x:Name="GameNum"
-                        Text="{Binding gameNum}"
-                        FontSize="15"
-                        Grid.Column="1"
-                    />
-                    <Label
-                        x:Name="FrameNum"
-                        Text="{Binding frameNum}"
-                        FontSize="15"
-                        Grid.Column="2"
-                    />
+                    <!-- <Label -->
+                    <!--     x:Name="GameNum" -->
+                    <!--     Text="{Binding gameNum}" -->
+                    <!--     FontSize="15" -->
+                    <!--     Grid.Column="1" -->
+                    <!-- /> -->
+                    <!-- <Label -->
+                    <!--     x:Name="FrameNum" -->
+                    <!--     Text="{Binding frameNum}" -->
+                    <!--     FontSize="15" -->
+                    <!--     Grid.Column="2" -->
+                    <!-- /> -->
                 </Grid>
                 
                 <Grid Grid.Row="1">
@@ -276,101 +278,104 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" >
                     <StackLayout>
                        <Label x:Name="F1"
-                              Text="{Binding game.Frames[0].firstRollScore}"/>
+                              Text="{Binding Frames[0].FirstRollScore}"
+                              FontSize="10"/>
                        <Label x:Name="F12"
-                              Text="{Binding game.Frames[0].secondRollScore}"/>
+                              Text="{Binding Frames[0].SecondRollScore}"
+                              FontSize="10"/>
                        <Label x:Name="score1"
-                              Text="{Binding game.Frames[0].frameScore}"/> 
+                              Text="{Binding Frames[0].FrameScore}"
+                              FontSize="10"/>
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" >
                     <StackLayout>
                         <Label x:Name="F2"
-                               Text="{Binding game.Frames[1].firstRollScore}"/>
+                               Text="{Binding Frames[1].FirstRollScore}"/>
                         <Label x:Name="F22"
-                               Text="{Binding game.Frames[1].secondRollScore}"/>
+                               Text="{Binding Frames[1].SecondRollScore}"/>
                         <Label x:Name="score2"
-                               Text="{Binding game.Frames[1].frameScore}"/> 
+                               Text="{Binding Frames[1].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="3" >
                     <StackLayout>
                         <Label x:Name="F3"
-                               Text="{Binding game.Frames[2].firstRollScore}"/>
+                               Text="{Binding game.Frames[2].FirstRollScore}"/>
                         <Label x:Name="F32"
-                               Text="{Binding game.Frames[2].secondRollScore}"/>
+                               Text="{Binding game.Frames[2].SecondRollScore}"/>
                         <Label x:Name="score3"
-                               Text="{Binding game.Frames[2].frameScore}"/> 
+                               Text="{Binding game.Frames[2].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="4" >
                     <StackLayout>
                         <Label x:Name="F4"
-                               Text="{Binding game.Frames[3].firstRollScore}"/>
+                               Text="{Binding game.Frames[3].FirstRollScore}"/>
                         <Label x:Name="F42"
-                               Text="{Binding game.Frames[3].secondRollScore}"/>
+                               Text="{Binding game.Frames[3].SecondRollScore}"/>
                         <Label x:Name="score4"
-                               Text="{Binding game.Frames[3].frameScore}"/> 
+                               Text="{Binding game.Frames[3].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="5" >
                     <StackLayout>
                         <Label x:Name="F5"
-                               Text="{Binding game.Frames[4].firstRollScore}"/>
+                               Text="{Binding game.Frames[4].FirstRollScore}"/>
                         <Label x:Name="F52"
-                               Text="{Binding game.Frames[4].secondRollScore}"/>
+                               Text="{Binding game.Frames[4].SecondRollScore}"/>
                         <Label x:Name="score5"
-                               Text="{Binding game.Frames[4].frameScore}"/> 
+                               Text="{Binding game.Frames[4].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" >
                     <StackLayout>
                         <Label x:Name="F6"
-                               Text="{Binding game.Frames[5].firstRollScore}"/>
+                               Text="{Binding game.Frames[5].FirstRollScore}"/>
                         <Label x:Name="F62"
-                               Text="{Binding game.Frames[5].secondRollScore}"/>
+                               Text="{Binding game.Frames[5].SecondRollScore}"/>
                         <Label x:Name="score6"
-                               Text="{Binding game.Frames[5].frameScore}"/> 
+                               Text="{Binding game.Frames[5].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" >
                     <StackLayout>
                         <Label x:Name="F7"
-                               Text="{Binding game.Frames[6].firstRollScore}"/>
+                               Text="{Binding game.Frames[6].FirstRollScore}"/>
                         <Label x:Name="F72"
-                               Text="{Binding game.Frames[6].secondRollScore}"/>
+                               Text="{Binding game.Frames[6].SecondRollScore}"/>
                         <Label x:Name="score7"
-                               Text="{Binding game.Frames[6].frameScore}"/> 
+                               Text="{Binding game.Frames[6].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="3" >
                     <StackLayout>
                         <Label x:Name="F8"
-                               Text="{Binding game.Frames[7].firstRollScore}"/>
+                               Text="{Binding game.Frames[7].FirstRollScore}"/>
                         <Label x:Name="F82"
-                               Text="{Binding game.Frames[7].secondRollScore}"/>
+                               Text="{Binding game.Frames[7].SecondRollScore}"/>
                         <Label x:Name="score8"
-                               Text="{Binding game.Frames[7].frameScore}"/> 
+                               Text="{Binding game.Frames[7].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="4" >
                     <StackLayout>
                         <Label x:Name="F9"
-                               Text="{Binding game.Frames[8].firstRollScore}"/>
+                               Text="{Binding game.Frames[8].FirstRollScore}"/>
                         <Label x:Name="F92"
-                               Text="{Binding game.Frames[8].secondRollScore}"/>
+                               Text="{Binding game.Frames[8].SecondRollScore}"/>
                         <Label x:Name="score9"
-                               Text="{Binding game.Frames[8].frameScore}"/> 
+                               Text="{Binding game.Frames[8].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="5" >
                     <StackLayout>
                         <Label x:Name="F10"
-                               Text="{Binding game.Frames[9].firstRollScore}"/>
+                               Text="{Binding game.Frames[9].FirstRollScore}"/>
                         <Label x:Name="F102"
-                               Text="{Binding game.Frames[9].secondRollScore}"/>
+                               Text="{Binding game.Frames[9].SecondRollScore}"/>
                         <Label x:Name="score10"
-                               Text="{Binding game.Frames[9].frameScore}"/> 
+                               Text="{Binding game.Frames[9].FrameScore}"/> 
                     </StackLayout>
                 </Frame>
                 
@@ -388,6 +393,7 @@
                     Text="->"
                     FontSize="20"
                     Clicked="OnNextFrameBtnClicked"
+                    Command="{Binding nextFrameCommand}"
                     Grid.Row="2"
                     Grid.Column="5"
                     HeightRequest="35"/>
