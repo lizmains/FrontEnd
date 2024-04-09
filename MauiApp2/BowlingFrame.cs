@@ -11,6 +11,9 @@ public partial class BowlingFrame : INotifyPropertyChanged
     public int? firstRollPinsLeft { get; set; }
     public int? secondRollPinsLeft { get; set; }
     public int frameScore;
+    private int firstRollScore;
+    private int secondRollScore;
+    // private int frameScore;
     
     public int? FirstRoll
     {
@@ -49,6 +52,7 @@ public partial class BowlingFrame : INotifyPropertyChanged
         if (firstRollPinsLeft.Value != 0)
         {
             firstRoll = 10 - firstRollPinsLeft.Value;
+            Console.WriteLine($"firstRollPinsLeft.Value {firstRollPinsLeft.Value}");
         }
 
         if (secondRollPinsLeft.Value != 0)
@@ -71,13 +75,12 @@ public partial class BowlingFrame : INotifyPropertyChanged
     
     public void CalculateScore()
     {
-        frameScore = (int)(firstRoll + (secondRoll ?? 0));
+        // frameScore = (int)(firstRoll + (secondRoll ?? 0));
+        frameScore = firstRollScore + secondRollScore;
         OnPropertyChanged(nameof(FrameScore));
     }
     
-    private int firstRollScore;
-    private int secondRollScore;
-    // private int frameScore;
+
 
     public int FirstRollScore
     {
