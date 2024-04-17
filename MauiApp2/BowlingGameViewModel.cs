@@ -62,15 +62,19 @@ public class BowlingGameViewModel : INotifyPropertyChanged
     {
         // BowlingFrame currentFrame = GetCurrentFrame();
     
-        if (!CurrentFrame.FirstRoll.HasValue)
+        if (CurrentFrame.firstRoll == 0)
         {
             // If this is the first roll, calculate the score accordingly.
-            CurrentFrame.FirstRoll = 10 - pinsLeft;
+            CurrentFrame.firstRoll = 10 - pinsLeft;
+            Console.WriteLine($"CurrentFrame.FirstRoll {CurrentFrame.firstRoll}");
+            CurrentFrame.FirstRollScore = 10 - pinsLeft;
+            Console.WriteLine($"CurrentFrame.FirstRoll {CurrentFrame.FirstRollScore}");
+            
         }
-        else if (!CurrentFrame.SecondRoll.HasValue)
+        else if (CurrentFrame.secondRoll == 0)
         {
             // If this is the second roll, calculate the score accordingly.
-            CurrentFrame.SecondRoll = 10 - pinsLeft;
+            CurrentFrame.secondRoll = 10 - pinsLeft;
         }
 
         CurrentFrame.CalculateScore();

@@ -5,33 +5,34 @@ namespace MauiApp2;
 
 public partial class BowlingFrame : INotifyPropertyChanged
 {
-    public int frameNum { get; set; }
-    private int? firstRoll;
-    private int? secondRoll;
-    public int? firstRollPinsLeft { get; set; }
-    public int? secondRollPinsLeft { get; set; }
-    public int frameScore;
-    private int firstRollScore;
-    private int secondRollScore;
+    // public int frameNum { get; set; }
+    public int firstRoll { get; set; }
+    public int secondRoll { get; set; }
+    public int frameScore { get; set; }
+    // public int? firstRollPinsLeft { get; set; }
+    // public int? secondRollPinsLeft { get; set; }
+    //
+    // private int firstRollScore;
+    // private int secondRollScore;
     // private int frameScore;
     
-    public int? FirstRoll
-    {
-        get => firstRoll;
-        set => SetField(ref firstRoll, value);
-    }
-    
-    public int? SecondRoll
-    {
-        get => secondRoll;
-        set => SetField(ref secondRoll, value);
-    }
-    
-    public int FrameScore
-    {
-        get => frameScore;
-        set => SetField(ref frameScore, value);
-    }
+    // public int? FirstRoll
+    // {
+    //     get => firstRoll;
+    //     set => SetField<>(ref firstRoll, value);
+    // }
+    //
+    // public int? SecondRoll
+    // {
+    //     get => secondRoll;
+    //     set => SetField<>(ref secondRoll, value);
+    // }
+    //
+    // public int FrameScore
+    // {
+    //     get => frameScore;
+    //     set => SetField(ref frameScore, value);
+    // }
 
     public void calcluateScore()
     {
@@ -49,15 +50,15 @@ public partial class BowlingFrame : INotifyPropertyChanged
         //
         // frameScore = (firstRoll ?? 0) + (secondRoll ?? 0);
 
-        if (firstRollPinsLeft.Value != 0)
+        if (firstRoll != 0)
         {
-            firstRoll = 10 - firstRollPinsLeft.Value;
-            Console.WriteLine($"firstRollPinsLeft.Value {firstRollPinsLeft.Value}");
+            firstRoll = 10 - firstRoll;
+            Console.WriteLine($"firstRollPinsLeft.Value {firstRoll}");
         }
 
-        if (secondRollPinsLeft.Value != 0)
+        if (secondRoll != 0)
         {
-            secondRoll = 10 - (firstRollPinsLeft.Value + secondRollPinsLeft.Value);
+            secondRoll = 10 - (firstRoll + secondRoll);
         }
     }
     
@@ -76,21 +77,21 @@ public partial class BowlingFrame : INotifyPropertyChanged
     public void CalculateScore()
     {
         // frameScore = (int)(firstRoll + (secondRoll ?? 0));
-        frameScore = firstRollScore + secondRollScore;
-        OnPropertyChanged(nameof(FrameScore));
+        frameScore = firstRoll + secondRoll;
+        OnPropertyChanged(nameof(frameScore));
     }
     
 
 
     public int FirstRollScore
     {
-        get => firstRollScore;
+        get => firstRoll;
         set
         {
-            if (firstRollScore != value)
+            if (firstRoll != value)
             {
-                firstRollScore = value;
-                OnPropertyChanged(nameof(firstRollScore));
+                firstRoll = value;
+                OnPropertyChanged(nameof(firstRoll));
                 UpdateFrameScore();
             }
         }
@@ -98,13 +99,13 @@ public partial class BowlingFrame : INotifyPropertyChanged
 
     public int SecondRollScore
     {
-        get => secondRollScore;
+        get => secondRoll;
         set
         {
-            if (secondRollScore != value)
+            if (secondRoll != value)
             {
-                secondRollScore = value;
-                OnPropertyChanged(nameof(secondRollScore));
+                secondRoll = value;
+                OnPropertyChanged(nameof(secondRoll));
                 UpdateFrameScore();
             }
         }
@@ -126,7 +127,7 @@ public partial class BowlingFrame : INotifyPropertyChanged
     private void UpdateFrameScore()
     {
         // Logic to update the frame score based on first and second roll scores
-        FrameScore = FirstRollScore + SecondRollScore;
+        frameScore = FirstRollScore + SecondRollScore;
         // Include any additional logic for strikes, spares, and bonuses if necessary
     }
 
