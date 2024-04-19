@@ -8,15 +8,17 @@ namespace MauiApp2;
 public class BowlingGameViewModel : INotifyPropertyChanged
 {
     public BowlingGame game { get; }
-    private int currentFrameIndex;
+    private int currentFrameIndex { get; set; }
     public ICommand pinButtonCommand { get; private set; }
-    public ICommand nextFrameCommand { get; set; }
-
+    public ICommand nextShotCommand { get; set; }
+    public BowlingFrame CurrentFrame => Frames[currentFrameIndex];
+    public ICommand addRollCommand { get; private set; }
     // private ObservableCollection<BowlingFrame> frames;
     public ObservableCollection<BowlingFrame> Frames { get; }
+    
     // public ObservableCollection<BowlingFrame> Frames
     // {
-    //     get => frames;
+    //     get => frames;0
     //     set
     //     {
     //         if (frames != value)
@@ -27,23 +29,21 @@ public class BowlingGameViewModel : INotifyPropertyChanged
     //     }
     // }
     
-    public int CurrentFrameIndex
-    {
-        get => currentFrameIndex;
-        set
-        {
-            if (currentFrameIndex != value)
-            {
-                currentFrameIndex = value;
-                OnPropertyChanged(nameof(CurrentFrameIndex));
-                OnPropertyChanged(nameof(CurrentFrame));
-            }
-        }
-    }
+    // public int CurrentFrameIndex
+    // {
+    //     get => currentFrameIndex;
+    //     set
+    //     {
+    //         if (currentFrameIndex != value)
+    //         {
+    //             currentFrameIndex = value;
+    //             OnPropertyChanged(nameof(CurrentFrameIndex));
+    //             OnPropertyChanged(nameof(CurrentFrame));
+    //         }
+    //     }
+    // }
     
-    public BowlingFrame CurrentFrame => Frames[currentFrameIndex];
     
-    public ICommand addRollCommand { get; private set; }
     public BowlingGameViewModel()
     {
         game = new BowlingGame();
@@ -55,42 +55,47 @@ public class BowlingGameViewModel : INotifyPropertyChanged
         currentFrameIndex = 0;
         addRollCommand = new Command<int>(addRoll);
         pinButtonCommand = new Command<int>(HandlePinButtonPress);
-        nextFrameCommand = new Command(MoveToNextFrame);
+        nextShotCommand = new Command(MoveToNextShot);
     }
     
     private void HandlePinButtonPress(int pinsLeft)
     {
         // BowlingFrame currentFrame = GetCurrentFrame();
     
-        if (CurrentFrame.firstRoll == 0)
+        if (CurrentFrame.isFirstShot)
         {
+            //CurrentFrame is a bowlingframe from the MODELS -> checking to see if firstRoll has a score associated with it, 
+            //should there be a flag here? bc otherwise each individual pin is going to trigger this and it wont work...
             // If this is the first roll, calculate the score accordingly.
             CurrentFrame.firstRoll = 10 - pinsLeft;
             Console.WriteLine($"CurrentFrame.FirstRoll {CurrentFrame.firstRoll}");
-            CurrentFrame.FirstRollScore = 10 - pinsLeft;
-            Console.WriteLine($"CurrentFrame.FirstRoll {CurrentFrame.FirstRollScore}");
             
         }
-        else if (CurrentFrame.secondRoll == 0)
+        else if (!CurrentFrame.isFirstShot)
         {
             // If this is the second roll, calculate the score accordingly.
             CurrentFrame.secondRoll = 10 - pinsLeft;
+        }
+        else
+        {
+            //throw error here
         }
 
         CurrentFrame.CalculateScore();
     
         OnPropertyChanged(nameof(Frames));
         
-        //move to next frame or roll as needed... idk how to do that figure out later
     }
     
     private void MoveToNextFrame()
     {
+        
         if (currentFrameIndex < game.Frames.Count - 1)
         {
             currentFrameIndex++;
             Console.WriteLine($"CurrentFrameIndex: {currentFrameIndex}");
             Console.WriteLine($"FramecCFI].frameScore {Frames[currentFrameIndex].frameScore}");
+            CurrentFrame.isFirstShot = !CurrentFrame.isFirstShot;
         }
         
         else
@@ -100,14 +105,42 @@ public class BowlingGameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(CurrentFrame));
         OnPropertyChanged(nameof(game));
     }
-    
-    private BowlingFrame GetCurrentFrame()
+
+    private void MoveToNextShot()
     {
-        //logic here idk
-        BowlingFrame currentFrame = Frames[currentFrameIndex];
         
-        return currentFrame;
+
+        if (CurrentFrame.isFirstShot)
+        {
+            CurrentFrame.isFirstShot = !CurrentFrame.isFirstShot;
+            //switches bool
+        }
+        else
+        {
+            if (currentFrameIndex < game.Frames.Count - 1)
+            {
+                currentFrameIndex++;
+                Console.WriteLine($"CurrentFrameIndex: {currentFrameIndex}");
+                Console.WriteLine($"FramecCFI].frameScore {Frames[currentFrameIndex].frameScore}");
+                CurrentFrame.isFirstShot = !CurrentFrame.isFirstShot;
+            }
+        
+            else
+            {
+                //end of game
+            }
+            OnPropertyChanged(nameof(CurrentFrame));
+        }
+        OnPropertyChanged(nameof(game));
     }
+    
+    // private BowlingFrame GetCurrentFrame()
+    // {
+    //     //logic here idk
+    //     BowlingFrame currentFrame = Frames[currentFrameIndex];
+    //     
+    //     return currentFrame;
+    // }
     
     private void addRoll(int pins)
     {
@@ -120,31 +153,32 @@ public class BowlingGameViewModel : INotifyPropertyChanged
     private BowlingFrame findCurrentFrame()
     {
         //logic goes here
-        return game.Frames.First(); 
+        // return game.Frames.First(); 
+        return Frames[currentFrameIndex];
     }
     
-    private void updateFrameScore(string pinNum)
-    {
-        int frameScore = 10;
+    // private void updateFrameScore(string pinNum)
+    // {
+    //     int frameScore = 10;
+    //
+    //     Frames[1].frameScore = frameScore;
+    // }
     
-        Frames[1].frameScore = frameScore;
-    }
     
-    
-    public void AddRollToFrame(int frameIndex, int rollIndex, int pinsDown)
-    {
-        var frame = Frames[frameIndex];
-
-        if (rollIndex == 1)
-        {
-            frame.FirstRollScore = pinsDown;
-        }
-        else if (rollIndex == 2)
-        {
-            frame.SecondRollScore = pinsDown;
-        }
-    
-    }
+    // public void AddRollToFrame(int frameIndex, int rollIndex, int pinsDown)
+    // {
+    //     var frame = Frames[frameIndex];
+    //
+    //     if (rollIndex == 1)
+    //     {
+    //         frame.FirstRollScore = pinsDown;
+    //     }
+    //     else if (rollIndex == 2)
+    //     {
+    //         frame.SecondRollScore = pinsDown;
+    //     }
+    //
+    // }
     
     //this was auto generated by the IDE bc it was mad about the INotifyPropertyChanged thing
     public event PropertyChangedEventHandler PropertyChanged;

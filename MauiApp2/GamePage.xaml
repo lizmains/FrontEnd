@@ -68,7 +68,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
                         Grid.Column="1"
@@ -80,7 +79,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
                         Grid.Column="3"
@@ -92,7 +90,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
                         Grid.Column="5"
@@ -104,7 +101,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="1"
                         Grid.Column="7"
@@ -118,7 +114,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="2"
                         Grid.Column="2"
@@ -130,7 +125,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="2"
                         Grid.Column="4"
@@ -142,7 +136,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="2"
                         Grid.Column="6"
@@ -156,7 +149,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="3"
                         Grid.Column="3"
@@ -168,7 +160,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="3"
                         Grid.Column="5"
@@ -182,7 +173,6 @@
                         WidthRequest = "60"
                         HeightRequest = "60"
                         CornerRadius = "30"
-                        Clicked="OnPinBtnClicked"
                         BackgroundColor="DarkOrchid"
                         Grid.Row="4"
                         Grid.Column="4"
@@ -229,27 +219,23 @@
                     <Button
                         x:Name="Foul"
                         Text="F"
-                        Clicked="OnFoulBtnClicked"
                         Padding="5"
                         Grid.Row="2"
                         Grid.Column="1"/>
                     <Button
                         x:Name="Gutterball"
                         Text="-"
-                        Clicked="OnGutterballBtnClicked"
                         Padding="5"
                         Grid.Row="2"
                         Grid.Column="2"/>
                     <Button
                         x:Name="Strike"
                         Text="X"
-                        Clicked="OnStrikeBtnClicked"
                         Grid.Row="2"
                         Grid.Column="3"/>
                     <Button
                         x:Name="Spare"
                         Text="/"
-                        Clicked="OnSpareBtnClicked"
                         Grid.Row="2"
                         Grid.Column="4"/>
                 </Grid>
@@ -278,10 +264,10 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" >
                     <StackLayout>
                        <Label x:Name="F1"
-                              Text="{Binding Frames[0].FirstRollScore}"
+                              Text="{Binding Frames[0].firstRoll}"
                               FontSize="10"/>
                        <Label x:Name="F12"
-                              Text="{Binding Frames[0].SecondRollScore}"
+                              Text="{Binding Frames[0].secondRoll}"
                               FontSize="10"/>
                        <Label x:Name="score1"
                               Text="{Binding Frames[0].frameScore}"
@@ -291,9 +277,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" >
                     <StackLayout>
                         <Label x:Name="F2"
-                               Text="{Binding Frames[1].FirstRollScore}"/>
+                               Text="{Binding Frames[1].firstRoll}"/>
                         <Label x:Name="F22"
-                               Text="{Binding Frames[1].SecondRollScore}"/>
+                               Text="{Binding Frames[1].secondRoll}"/>
                         <Label x:Name="score2"
                                Text="{Binding Frames[1].frameScore}"/> 
                     </StackLayout>
@@ -301,9 +287,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="3" >
                     <StackLayout>
                         <Label x:Name="F3"
-                               Text="{Binding game.Frames[2].FirstRollScore}"/>
+                               Text="{Binding game.Frames[2].firstRoll}"/>
                         <Label x:Name="F32"
-                               Text="{Binding game.Frames[2].SecondRollScore}"/>
+                               Text="{Binding game.Frames[2].secondRoll}"/>
                         <Label x:Name="score3"
                                Text="{Binding game.Frames[2].frameScore}"/> 
                     </StackLayout>
@@ -311,9 +297,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="4" >
                     <StackLayout>
                         <Label x:Name="F4"
-                               Text="{Binding game.Frames[3].FirstRollScore}"/>
+                               Text="{Binding game.Frames[3].firstRoll}"/>
                         <Label x:Name="F42"
-                               Text="{Binding game.Frames[3].SecondRollScore}"/>
+                               Text="{Binding game.Frames[3].secondRoll}"/>
                         <Label x:Name="score4"
                                Text="{Binding game.Frames[3].frameScore}"/> 
                     </StackLayout>
@@ -321,9 +307,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="5" >
                     <StackLayout>
                         <Label x:Name="F5"
-                               Text="{Binding game.Frames[4].FirstRollScore}"/>
+                               Text="{Binding game.Frames[4].firstRoll}"/>
                         <Label x:Name="F52"
-                               Text="{Binding game.Frames[4].SecondRollScore}"/>
+                               Text="{Binding game.Frames[4].secondRoll}"/>
                         <Label x:Name="score5"
                                Text="{Binding game.Frames[4].frameScore}"/> 
                     </StackLayout>
@@ -331,9 +317,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" >
                     <StackLayout>
                         <Label x:Name="F6"
-                               Text="{Binding game.Frames[5].FirstRollScore}"/>
+                               Text="{Binding game.Frames[5].firstRoll}"/>
                         <Label x:Name="F62"
-                               Text="{Binding game.Frames[5].SecondRollScore}"/>
+                               Text="{Binding game.Frames[5].secondRoll}"/>
                         <Label x:Name="score6"
                                Text="{Binding game.Frames[5].frameScore}"/> 
                     </StackLayout>
@@ -341,9 +327,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" >
                     <StackLayout>
                         <Label x:Name="F7"
-                               Text="{Binding game.Frames[6].FirstRollScore}"/>
+                               Text="{Binding game.Frames[6].firstRoll}"/>
                         <Label x:Name="F72"
-                               Text="{Binding game.Frames[6].SecondRollScore}"/>
+                               Text="{Binding game.Frames[6].secondRoll}"/>
                         <Label x:Name="score7"
                                Text="{Binding game.Frames[6].frameScore}"/> 
                     </StackLayout>
@@ -351,9 +337,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="3" >
                     <StackLayout>
                         <Label x:Name="F8"
-                               Text="{Binding game.Frames[7].FirstRollScore}"/>
+                               Text="{Binding game.Frames[7].firstRoll}"/>
                         <Label x:Name="F82"
-                               Text="{Binding game.Frames[7].SecondRollScore}"/>
+                               Text="{Binding game.Frames[7].secondRoll}"/>
                         <Label x:Name="score8"
                                Text="{Binding game.Frames[7].frameScore}"/> 
                     </StackLayout>
@@ -361,9 +347,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="4" >
                     <StackLayout>
                         <Label x:Name="F9"
-                               Text="{Binding game.Frames[8].FirstRollScore}"/>
+                               Text="{Binding game.Frames[8].firstRoll}"/>
                         <Label x:Name="F92"
-                               Text="{Binding game.Frames[8].SecondRollScore}"/>
+                               Text="{Binding game.Frames[8].secondRoll}"/>
                         <Label x:Name="score9"
                                Text="{Binding game.Frames[8].frameScore}"/> 
                     </StackLayout>
@@ -371,9 +357,9 @@
                 <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="5" >
                     <StackLayout>
                         <Label x:Name="F10"
-                               Text="{Binding game.Frames[9].FirstRollScore}"/>
+                               Text="{Binding game.Frames[9].firstRoll}"/>
                         <Label x:Name="F102"
-                               Text="{Binding game.Frames[9].SecondRollScore}"/>
+                               Text="{Binding game.Frames[9].secondRoll}"/>
                         <Label x:Name="score10"
                                Text="{Binding game.Frames[9].frameScore}"/> 
                     </StackLayout>
@@ -393,7 +379,7 @@
                     Text="->"
                     FontSize="20"
                     Clicked="OnNextFrameBtnClicked"
-                    Command="{Binding nextFrameCommand}"
+                    Command="{Binding nextShotCommand}"
                     Grid.Row="2"
                     Grid.Column="5"
                     HeightRequest="35"/>
