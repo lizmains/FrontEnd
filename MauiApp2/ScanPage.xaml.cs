@@ -35,6 +35,8 @@ using Gain = MbientLab.MetaWear.Sensor.AmbientLightLtr329.Gain;
 using ODR = MbientLab.MetaWear.Sensor.GyroBmi160.OutputDataRate;
 using DRg = MbientLab.MetaWear.Sensor.GyroBmi160.DataRange;
 using FM = MbientLab.MetaWear.Sensor.GyroBmi160.FilterMode;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 
 //using Color = System.Drawing.Color;
@@ -51,12 +53,12 @@ public partial class ScanPage : ContentPage
     IReadOnlyList<IService> services;
     private IReadOnlyList<ICharacteristic> charstics;
     private IReadOnlyList<IDescriptor> descs;
-    string deviceName;
+    public string deviceName;
     private IReadOnlyList<ICharacteristic> batteryChars;
     private IReadOnlyList<IDescriptor> batCharDescs;
     private /*List*/ObservableCollection<Ball> savedDots;
-    private object selectDev;
-    private ObservableCollection<IDevice> devDisplay;
+    public object selectDev;
+    public ObservableCollection<IDevice> devDisplay;
     private int dataRange;
     private Ball tempNew;
     private IService mmsBat;
@@ -83,6 +85,20 @@ public partial class ScanPage : ContentPage
     private string gyroFile;
     private Stopwatch timer;
     
+    //graphing vars
+    private graphingVM sensorGraph;
+    private List<float> csvData;
+    private List<float> xcsv;
+    private List<float> ycsv;//could be condensed into 1 list if you want to be fancy about it
+    private List<float> zcsv;//and optimize i guess
+    private FileStream inStream;
+    private FileStream inAccStream;
+    private StreamReader reader;
+    private StreamReader accReader;
+    private FileStream inGyroStream;
+    private StreamReader gyroReader;
+
+    
     //sim vars
     private IService simServ;
     private ICharacteristic simWrite;
@@ -108,11 +124,28 @@ public partial class ScanPage : ContentPage
         IService writeServ = null;
         ICharacteristic writeChar = null;
         metamotion = 0;
-        targetFile = "/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
-        lightFile = "/Users/michaelhensel/Desktop/lightData.csv"; //temporary
-        gyroFile = "/Users/michaelhensel/Desktop/gyroData.csv"; //temporary
+        targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "accData.csv");//"/Users/michaelhensel/Desktop/sensorData.csv"; //temporary
+        lightFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "lightData.csv");//"/Users/michaelhensel/Desktop/lightData.csv"; //temporary
+        gyroFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "gyroData.csv");//"/Users/michaelhensel/Desktop/gyroData.csv"; //temporary
         timer = new Stopwatch();
+        
+        sensorGraph = new graphingVM();
+        csvData = new List<float>();
+        xcsv = new List<float>();
+        ycsv = new List<float>();
+        zcsv = new List<float>();
     }
+    
+    /*public ISeries[] Series { get; set; }
+        = new ISeries[]
+        {
+            new LineSeries<float>
+            {
+                Values = new float[] {},
+                Name = "X",
+                Fill = null
+            }
+        };*/
     
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
@@ -789,6 +822,7 @@ public partial class ScanPage : ContentPage
             case 0:
                 await readChar.StopUpdatesAsync();
                 timer.Stop();
+                timer.Reset();
                 data = new byte[] { 0x14, 0x03, 0x00 }; //stop als stream
                 await writeChar.WriteAsync(data);
                 data = new byte[] { 0x14, 0x01, 0x00 }; //stop
@@ -822,6 +856,7 @@ public partial class ScanPage : ContentPage
                 streamWriter.Close();
                 lightWriter.Close();
                 gyroWriter.Close();
+                ToGraphs(sender, e);
                 break;
         }
 
@@ -1034,13 +1069,19 @@ public partial class ScanPage : ContentPage
     void MakeFiles()
     {
         //string targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "sensorData.csv");
-        targetFile = "/Users/michaelhensel/Desktop/graphs/accData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
-        lightFile = "/Users/michaelhensel/Desktop/graphs/lightData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
-        gyroFile = "/Users/michaelhensel/Desktop/graphs/gyroData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
+        targetFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "accData.csv");//"/Users/michaelhensel/Desktop/graphs/accData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
+        lightFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "lightData.csv");//"/Users/michaelhensel/Desktop/graphs/lightData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
+        gyroFile = System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "gyroData.csv");//"/Users/michaelhensel/Desktop/graphs/gyroData"+DateTime.Now.ToString("yyyyMMddHHmmssfff")+".csv";
         
         if (File.Exists(targetFile))
         {
-            Console.Write("\nNo need to make acc file.\n");
+            File.Delete(targetFile);
+            //Console.Write("\nNo need to make acc file.\n");
+            Console.WriteLine("Killing Old file"); //have to do this if creating file in app directory maybe
+            Console.Write("\nCreating new file...\n");
+            FileStream fs1 = File.Create(targetFile);
+            Console.WriteLine("New acc file created");
+            fs1.Close();
         }
         else
         {
@@ -1052,7 +1093,13 @@ public partial class ScanPage : ContentPage
         
         if (File.Exists(lightFile))
         {
-            Console.Write("\nNo need to make light file.\n");
+            //Console.Write("\nNo need to make light file.\n");
+            Console.WriteLine("Killing Old light file");
+            File.Delete(lightFile);
+            Console.Write("\nCreating new file...\n");
+            FileStream fs2 = File.Create(lightFile);
+            Console.WriteLine("New light file created");
+            fs2.Close();
         }
         else
         {
@@ -1064,7 +1111,13 @@ public partial class ScanPage : ContentPage
         
         if (File.Exists(gyroFile))
         {
-            Console.Write("\nNo need to make gyro file.\n");
+            //Console.Write("\nNo need to make gyro file.\n");
+            Console.WriteLine("Killing Old light file");
+            File.Delete(gyroFile);
+            Console.Write("\nCreating new file...\n");
+            FileStream fs3 = File.Create(gyroFile);
+            Console.WriteLine("New gyro file created");
+            fs3.Close();
         }
         else
         {
@@ -1076,15 +1129,192 @@ public partial class ScanPage : ContentPage
         
     }
     
+    /*private void readLight(object sender, EventArgs e)
+    {
+        inStream = File.OpenRead(System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "lightData.csv"));
+        reader = new StreamReader(inStream);
+        string line;
+        csvData.Clear();//empties out the csvdata list once data has been uploaded to graph
+
+        Console.WriteLine("Line: " + reader.ReadLine());
+        while (!reader.EndOfStream)
+        {
+            line = reader.ReadLine();
+            Console.WriteLine("Line: " + line);
+            if (line != null)
+            {
+                csvData.Add(float.Parse(line.Split(',')[1]));
+            } else Console.WriteLine("uh");
+            
+        }
+        reader.Close();
+        Console.WriteLine("Data Changed");
+        DataGraph.Series = sensorGraph.PopulateSeries(csvData); //graphiel.OnNewDataDX(sender, e);
+    }
+    
+    private void readAcc(object sender, EventArgs e)
+    {
+        inAccStream = File.OpenRead(System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "accData.csv"));
+        accReader = new StreamReader(inAccStream);
+        string line;
+        xcsv.Clear();//empties out the csvdata list once data has been uploaded to graph
+        ycsv.Clear();
+        zcsv.Clear();
+        Console.WriteLine("Line: " + accReader.ReadLine());
+        while (!accReader.EndOfStream)
+        {
+            line = accReader.ReadLine();
+            Console.WriteLine("Line: " + line);
+            if (line != null)
+            {
+                xcsv.Add(float.Parse(line.Split(',')[1]));
+                ycsv.Add(float.Parse(line.Split(',')[2]));
+                zcsv.Add(float.Parse(line.Split(',')[3]));
+            } else Console.WriteLine("uh");
+            
+        }
+        accReader.Close();
+        Console.WriteLine("Data Changed");
+        DataGraph.Series = sensorGraph.PopulateAccSeries(xcsv, ycsv, zcsv); //graphiel.OnNewDataDX(sender, e);
+    }
+    
+    private void readGyro(object sender, EventArgs e)
+    {
+        inGyroStream = File.OpenRead(System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, "gyroData.csv"));
+        gyroReader = new StreamReader(inGyroStream);
+        string line;
+        xcsv.Clear();//empties out the csvdata list once data has been uploaded to graph
+        ycsv.Clear();
+        zcsv.Clear();
+        Console.WriteLine("Line: " + gyroReader.ReadLine());
+        while (!gyroReader.EndOfStream)
+        {
+            line = gyroReader.ReadLine();
+            Console.WriteLine("Line: " + line);
+            if (line != null)
+            {
+                xcsv.Add(float.Parse(line.Split(',')[1]));
+                ycsv.Add(float.Parse(line.Split(',')[2]));
+                zcsv.Add(float.Parse(line.Split(',')[3]));
+            } else Console.WriteLine("uh");
+            
+        }
+        gyroReader.Close();
+        Console.WriteLine("Data Changed");
+        DataGraph.Series = sensorGraph.PopulateAccSeries(xcsv, ycsv, zcsv); //graphiel.OnNewDataDX(sender, e);
+    }*/
+
+    async void ToGraphs(object sender, EventArgs e)
+    {
+        await Navigation.PushModalAsync(new graphtest());
+    }
+    
     private void OnHomeBtnClicked(object sender, EventArgs e)
     {
         // Navigation.PushAsync(new MainPage());
-        Shell.Current.GoToAsync(nameof(MainPage));
+        
     }
     
     async void OnBack(object sender, EventArgs e)
     {
         await Navigation.PopModalAsync();
     }
+    
+    
+    /*public ISeries[] PopulateSeries(List<float> list)
+    {
+        Console.WriteLine("Data Loading");
+        return Series = new ISeries[]
+        {
+            new LineSeries<float>
+            {
+                Values = list,
+                Name = "Lux",
+                Fill = null
+            }
+        };
+    }
+    
+    public ISeries[] PopulateAccSeries(List<float> xlist, List<float> ylist, List<float> zlist)
+    {
+        Console.WriteLine("Data Loading");
+        return Series = new ISeries[]
+        {
+            new LineSeries<float>
+            {
+                Values = xlist,
+                Name = "X",
+                Fill = null
+            },
+            new LineSeries<float>
+            {
+                Values = ylist,
+                Name = "Y",
+                Fill = null
+            },
+            new LineSeries<float>
+            {
+                Values = zlist,
+                Name = "Z",
+                Fill = null
+            }
+            
+        };
+    }*/
 
+}
+
+public partial class graphingVM
+{
+    public ISeries[] Series { get; set; }
+        = new ISeries[]
+        {
+            new LineSeries<float>
+            {
+                Values = new float[] {1, 3, 2},
+                Name = "X",
+                Fill = null
+            }
+        };
+
+    public ISeries[] PopulateSeries(List<float> list)
+    {
+        Console.WriteLine("Data Loading");
+        return Series = new ISeries[]
+        {
+            new LineSeries<float>
+            {
+                Values = list,
+                Name = "Lux",
+                Fill = null
+            }
+        };
+    }
+    
+    public ISeries[] PopulateAccSeries(List<float> xlist, List<float> ylist, List<float> zlist)
+    {
+        Console.WriteLine("Data Loading");
+        return Series = new ISeries[]
+        {
+            new LineSeries<float>
+            {
+                Values = xlist,
+                Name = "X",
+                Fill = null
+            },
+            new LineSeries<float>
+            {
+                Values = ylist,
+                Name = "Y",
+                Fill = null
+            },
+            new LineSeries<float>
+            {
+                Values = zlist,
+                Name = "Z",
+                Fill = null
+            }
+            
+        };
+    }
 }

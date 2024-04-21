@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage x:Class="MauiApp2.ScanPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp2.ScanPage">
-    <RefreshView x:Name="RefView" IsRefreshing="{Binding refsh}" Command="{Binding StopRef}">
-    <ScrollView>
+             xmlns:local="clr-namespace:MauiApp2;assembly=MauiApp2"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui">
+    <ContentPage.BindingContext>
+        <local:graphingVM/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+    <!--<RefreshView x:Name="RefView" IsRefreshing="{Binding refsh}" Command="{Binding StopRef}">-->
+        <ScrollView>
         <VerticalStackLayout>
             <Button 
                 x:Name="HomeBtn"
@@ -27,7 +33,7 @@
                 HorizontalOptions="Center" />
             <Label
                 x:Name="ConDev"
-                Text="{Binding devName}"
+                Text=""
                 HorizontalOptions="End"></Label>
             <Button 
                 x:Name="DiscBtn"
@@ -37,14 +43,14 @@
                 HorizontalOptions="End" />
             
             <Label x:Name="BTState"
-                   Text="{Binding state}"
+                   Text=""
                    SemanticProperties.HeadingLevel="Level2"
                    SemanticProperties.Description="Bluetooth connection state"
                    FontSize="18"
                    HorizontalOptions="End"
             />
             <Label x:Name="BondedState"
-                   Text="{Binding bond}"
+                   Text=""
                    SemanticProperties.HeadingLevel="Level2"
                    SemanticProperties.Description="Bluetooth bond state"
                    FontSize="18"
@@ -120,7 +126,7 @@
                 HorizontalOptions="Center" />
             <Label
                 x:Name="DevInfo"
-                Text="{Binding names}"
+                Text=""
                 HorizontalOptions="Center"></Label>
 
             <Grid Margin="5">
@@ -128,10 +134,10 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
-            <CollectionView Grid.Row="1" x:Name="DevsList" ItemsSource="{Binding devDisplay}"
+            <CollectionView Grid.Row="1" x:Name="DevsList" 
                             SelectionMode="Single"
                             SelectionChanged="OnDevSelect"
-                            SelectedItem="{Binding selectDev}">
+                           >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView>
@@ -156,10 +162,10 @@
                                              Margin="0,0,10,0"/>
                             
                                     <Label Grid.Column="1" TextColor="White"
-                                           Text="{Binding Name}"
+                                           Text=""
                                     />
                                     <Label Grid.Column="2" TextColor="White"
-                                           Text="{Binding Id}"
+                                           Text=""
                                     />
                                 </Grid>
                             </Frame>
@@ -172,17 +178,17 @@
             <Label
                 x:Name="SensorInfo"
                 FontSize="24"
-                Text="{Binding names}"
+                Text=""
                 HorizontalOptions="Center"></Label>
             <Label
                 x:Name="GyroInfo"
                 FontSize="24"
-                Text="{Binding names}"
+                Text=""
                 HorizontalOptions="Center"></Label>
             <Label
                 x:Name="LightInfo"
                 FontSize="24"
-                Text="{Binding names}"
+                Text=""
                 HorizontalOptions="Center"></Label>
             <Button 
                 x:Name="MMSBtn"
@@ -190,6 +196,7 @@
                 SemanticProperties.Hint="Displays MMS device info in console"
                 Clicked="getMMSInfo"
                 HorizontalOptions="Center" />
+            <!--
             <Button 
                 x:Name="WriteMetaWear"
                 Text="Start Accelerometer"
@@ -220,6 +227,7 @@
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="StreamGyro"
                 HorizontalOptions="Center" />
+                -->
             <Label
                 Text=" "
                 SemanticProperties.HeadingLevel="Level2"
@@ -232,7 +240,48 @@
                 SemanticProperties.Hint="Writes to mms"
                 Clicked="lightSensor"
                 HorizontalOptions="Center" />
+            <Button 
+                x:Name="ViewGraph"
+                Text="Graph Data"
+                SemanticProperties.Hint="goes to graph pages"
+                Clicked="ToGraphs"
+                HorizontalOptions="Center" />
+            <!--
+            <Grid
+                HorizontalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <lvc:CartesianChart Grid.Row="0"
+                     x:Name = "DataGraph"
+                    Series="{Binding Series}">
+                </lvc:CartesianChart>
+                <HorizontalStackLayout Grid.Row="1">
+                    <Button 
+                            x:Name="accBtn"
+                            Text="Acc data"
+                            SemanticProperties.Hint="put new acc data in the graph"
+                            Clicked = "readAcc"
+                    />
+                    <Button 
+                            x:Name="LightBtn"
+                            Text="Light data"
+                            SemanticProperties.Hint="read light csv data"
+                            Clicked = "readLight"
+                    />
+                    <Button 
+                            x:Name="gyroBtn"
+                            Text="Gyro data"
+                            SemanticProperties.Hint="read gyro csv data"
+                            Clicked = "readGyro"
+                    />
+                </HorizontalStackLayout>
+                
+            </Grid>
+            -->
         </VerticalStackLayout>
     </ScrollView>
-    </RefreshView>
+    <!--</RefreshView>-->
+    </ContentPage.Content>
 </ContentPage>

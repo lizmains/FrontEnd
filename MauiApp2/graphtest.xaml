@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage x:Class="MauiApp2.graphtest"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauiApp2;assembly=MauiApp2"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui">
+    <ContentPage.BindingContext>
+        <local:graphtestVM/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <Button
+                x:Name="BackBtn"
+                Text="Back"
+                SemanticProperties.Hint="Go back to scan page"
+                Clicked="OnBack"
+                HorizontalOptions="Start"
+            />
+            <lvc:CartesianChart Grid.Row="1"
+                x:Name = "Grapho"
+                Series="{Binding Series}"
+                XAxes="{Binding XAxis}">
+            </lvc:CartesianChart>
+            <!--<Button Grid.Row="1"
+                x:Name="dataBtn"
+                Text="New data"
+                SemanticProperties.Hint="put new data in the graph"
+                Clicked = "OnNewData"
+                HorizontalOptions="Center"
+            />-->
+            <HorizontalStackLayout Grid.Row="2">
+                <Button
+                        x:Name="accBtn"
+                        Text="Acc data"
+                        SemanticProperties.Hint="put new acc data in the graph"
+                        Clicked = "accFile"
+                        HorizontalOptions="Center"
+                />
+                <Button
+                        x:Name="LightBtn"
+                        Text="Light data"
+                        SemanticProperties.Hint="read light csv data"
+                        Clicked = "readFile"
+                        HorizontalOptions="Center"
+                />
+                <Button
+                        x:Name="gyroBtn"
+                        Text="Gyro data"
+                        SemanticProperties.Hint="read gyro csv data"
+                        Clicked = "gyroFile"
+                        HorizontalOptions="Center"
+                />
+            </HorizontalStackLayout>
+        </Grid>
+    </ContentPage.Content>
+    
+</ContentPage>

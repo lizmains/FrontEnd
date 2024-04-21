@@ -53,12 +53,13 @@
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="2.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="LiveChartsCore.SkiaSharpView.Maui" Version="2.0.0-rc2" />
 		<PackageReference Include="MediaElement.js" Version="2.23.4" />
 		<PackageReference Include="MediaElementPro" Version="1.0.1" />
 		<PackageReference Include="MetaWear.CSharp" Version="1.2.0" />
 		<PackageReference Include="MetaWear.CSharp.NetStandard" Version="1.0.5" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Plugin.BLE" Version="3.0.0-rc.1" />
+		<PackageReference Include="Plugin.BLE" Version="3.0.0" />
 		<PackageReference Include="RevMetrix.Client.Api" Version="1.0.13" />
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />

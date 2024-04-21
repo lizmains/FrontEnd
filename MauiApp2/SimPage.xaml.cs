@@ -123,7 +123,7 @@ public partial class SimPage : ContentPage
     {
         try
         {
-            await adapter.ConnectToKnownDeviceAsync(new Guid("pi uuid"));
+            await adapter.ConnectToKnownDeviceAsync(new Guid("2c1e6c52-e236-86f4-f3f3-760e9668a739"));
             device = adapter.ConnectedDevices[0];
         }
         catch (DeviceConnectionException erm)
@@ -174,7 +174,7 @@ public partial class SimPage : ContentPage
             {
                 Console.WriteLine("Serv 0 Bytes: "+ bytes.data[i]);
             }*/
-            
+
             services = await device.GetServicesAsync();
             for (int j = 0; j < services.Count; j++)
             {
@@ -212,8 +212,18 @@ public partial class SimPage : ContentPage
 
     async void ReadSim(object sender, EventArgs e)
     {
-        Console.WriteLine("Reading sim data...");
-        ReadInfo.Text += "Sim Data: "+readChar.StringValue+"\n";
+        //for (int j = 0; j < 5; j++)
+        //{
+           await readChar.ReadAsync();
+           Console.WriteLine("Reading sim data...");
+           for (int i = 0; i < readChar.Value.Length; i++)
+           {
+               Console.WriteLine("Byte " + i + ": " + readChar.Value[i]);
+           }
+           
+           ReadInfo.Text += "Sim Data: \n"+readChar.StringValue+"\n"; 
+       // }
+        
     }
     
     private void OnWriteChanged(object sender, TextChangedEventArgs e)
