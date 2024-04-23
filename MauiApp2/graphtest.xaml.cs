@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using Console = System.Console;
 
 namespace MauiApp2;
@@ -66,6 +68,7 @@ public partial class graphtest : ContentPage
         Console.WriteLine("Data Changed");
         Grapho.Series = graphiel.PopulateSeries(csvData); //graphiel.OnNewDataDX(sender, e);
         Grapho.XAxes = graphiel.PopulateAxis(axis);
+        Grapho.YAxes = graphiel.ChangeYLabel(2);
     }
     
     private void accFile(object sender, EventArgs e)
@@ -95,6 +98,7 @@ public partial class graphtest : ContentPage
         Console.WriteLine("Data Changed");
         Grapho.Series = graphiel.PopulateAccSeries(xcsv, ycsv, zcsv); //graphiel.OnNewDataDX(sender, e);
         Grapho.XAxes = graphiel.PopulateAxis(axis);
+        Grapho.YAxes = graphiel.ChangeYLabel(1);
     }
     
     private void gyroFile(object sender, EventArgs e)
@@ -124,6 +128,7 @@ public partial class graphtest : ContentPage
         Console.WriteLine("Data Changed");
         Grapho.Series = graphiel.PopulateAccSeries(xcsv, ycsv, zcsv); //graphiel.OnNewDataDX(sender, e);
         Grapho.XAxes = graphiel.PopulateAxis(axis);
+        Grapho.YAxes = graphiel.ChangeYLabel(3);
     }
     
     async void OnBack(object sender, EventArgs e)
@@ -151,9 +156,31 @@ public partial class graphtestVM
             new Axis
             {
                 Name = "Milliseconds",
-                Labels = new string[] {}
+                Labels = new string[] {},
+                LabelsPaint = new SolidColorPaint(SKColors.DarkRed),
+                NamePaint = new SolidColorPaint(SKColors.DarkRed)
             }
         };
+    public Axis[] YAxis { get; set; }
+        = 
+        {
+            new Axis
+            {
+                Name = "Unit",
+                LabelsPaint = new SolidColorPaint(SKColors.DarkRed),
+                NamePaint = new SolidColorPaint(SKColors.DarkRed)
+            }
+        };
+
+    public Axis[] ChangeYLabel(int unit)
+    {
+        return unit switch
+        {
+            1 => YAxis = new Axis[] { new Axis() { Name = "G", LabelsPaint = new SolidColorPaint(SKColors.DarkRed), NamePaint = new SolidColorPaint(SKColors.DarkRed) } } ,
+            2 => YAxis = new Axis[] { new Axis() { Name = "Lux", LabelsPaint = new SolidColorPaint(SKColors.DarkRed), NamePaint = new SolidColorPaint(SKColors.DarkRed) } },
+            _ => YAxis = new Axis[] { new Axis() { Name = "dps", LabelsPaint = new SolidColorPaint(SKColors.DarkRed), NamePaint = new SolidColorPaint(SKColors.DarkRed) } }
+        };
+    }
 
     /*public ISeries[] OnNewDataDX(object sender, EventArgs e)
     {
@@ -178,7 +205,11 @@ public partial class graphtestVM
             {
                 Values = list,
                 Name = "Lux",
-                Fill = null
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColors.Red),
+                GeometrySize = 0,
+                GeometryFill = new SolidColorPaint(SKColors.Red),
+                GeometryStroke = new SolidColorPaint(SKColors.Red)
             }
         };
     }
@@ -191,7 +222,9 @@ public partial class graphtestVM
            new Axis
            {
                Name = "Milliseconds",
-               Labels = axis
+               Labels = axis,
+               LabelsPaint = new SolidColorPaint(SKColors.DarkRed),
+               NamePaint = new SolidColorPaint(SKColors.DarkRed)
            }
        };
     }
@@ -205,19 +238,31 @@ public partial class graphtestVM
             {
                 Values = xlist,
                 Name = "X",
-                Fill = null
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColors.Red),
+                GeometrySize = 0,
+                GeometryFill = new SolidColorPaint(SKColors.Red),
+                GeometryStroke = new SolidColorPaint(SKColors.Red)
             },
             new LineSeries<float>
             {
             Values = ylist,
             Name = "Y",
-            Fill = null
+            Fill = null,
+            Stroke = new SolidColorPaint(SKColors.MediumBlue),
+            GeometrySize = 0,
+            GeometryFill = new SolidColorPaint(SKColors.MediumBlue),
+            GeometryStroke = new SolidColorPaint(SKColors.MediumBlue)
             },
             new LineSeries<float>
             {
             Values = zlist,
             Name = "Z",
-            Fill = null
+            Fill = null,
+            Stroke = new SolidColorPaint(SKColors.Green),
+            GeometrySize = 0,
+            GeometryFill = new SolidColorPaint(SKColors.Green),
+            GeometryStroke = new SolidColorPaint(SKColors.Green)
             }
             
         };

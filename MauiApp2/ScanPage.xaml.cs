@@ -136,17 +136,6 @@ public partial class ScanPage : ContentPage
         zcsv = new List<float>();
     }
     
-    /*public ISeries[] Series { get; set; }
-        = new ISeries[]
-        {
-            new LineSeries<float>
-            {
-                Values = new float[] {},
-                Name = "X",
-                Fill = null
-            }
-        };*/
-    
     private void OnConnBtnClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new MainPage());
@@ -157,7 +146,10 @@ public partial class ScanPage : ContentPage
         devDisplay.Clear(); //called directly by button
         for (int i=0; i<10; i++)
         {
-            devDisplay.Add(deviceList[i]);
+            if (deviceList.Count >= 10)
+            {
+                devDisplay.Add(deviceList[i]);
+            }
         }
         DevsList.ItemsSource = devDisplay;
     }
@@ -672,193 +664,199 @@ public partial class ScanPage : ContentPage
 
     async void lightSensor(object sender, EventArgs e)
     {
-        light_flag = light_flag == 0 ? 1 : 0;
-
-        SensorInfo.Text = ""; //clear display sensor data in app
-        ICharacteristic readChar =
-            await writeServ.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
-        byte[] led;
-        byte[] data;
-
-        switch (light_flag)
+        if (device != null)
         {
-            case 1:
+
+
+            light_flag = light_flag == 0 ? 1 : 0;
+
+            SensorInfo.Text = ""; //clear display sensor data in app
+            ICharacteristic readChar =
+                await writeServ.GetCharacteristicAsync(new Guid("326a9006-85cb-9195-d9dd-464cfbbae75a"));
+            byte[] led;
+            byte[] data;
+
+            switch (light_flag)
             {
-                Color col = Color.Green; //green for light sensor to differentiate from accel for now
-                led = new byte[]//set led pattern
+                case 1:
                 {
-                    2, 3, (byte)col, 2, 1, 1,
-                    1, 1 >> 8,
-                    1, 1 >> 8,
-                    1, 1 >> 8,
-                    1, 1 >> 8,
-                    0, 0, 0xff
-                };
-                await writeChar.WriteAsync(led);
-
-                led = new byte[] { 2, 1, 1 }; //play led
-                await writeChar.WriteAsync(led);
-
-                Console.WriteLine("Starting Everything..."); //light sensor code = 20 / 0x14
-                
-                MakeFiles(); //create new csv to write sensor data into
-                
-                Console.WriteLine("Stopwatch good");
-
-                data = new byte[] { 0x14, 0x02, 0x18, 0x03 };
-                await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
-
-                data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
-                await writeChar.WriteAsync(data);
-
-                data = new byte[] { 0x14, 0x02, 0x00, 0x00 }; //Measurement 0 for 50ms, 3 for 500ms
-                await writeChar.WriteAsync(data);
-
-                //start
-                data = new byte[] { 0x14, 0x03, 0x01 }; // 3 for streaming?
-                await writeChar.WriteAsync(data); //subscribes to notifications?
-
-                data = new byte[] { 0x14, 0x01, 0x01 }; // start
-                await writeChar.WriteAsync(data);
-                //-------------------------
-                //---------------------accelerometer section--------
-                data = new byte[] { 3, 4, 1 }; //subscribes to accel reading
-                await writeChar.WriteAsync(data);
-
-                data = new byte[] { 0x03, 0x03, 0x29, 0x03 }; //configures bmi160 to 200Hz
-                await writeChar.WriteAsync(data); //bmi270 version dont seem to work right
-
-                data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
-                await writeChar.WriteAsync(data);
-                //-----------------------
-                //start the stuff
-                data = new byte[] { 3, 1, 1 }; //accel starting
-                await writeChar.WriteAsync(data); //send command
-
-                data = new byte[] { 3, 2, 1, 0 }; //accel enable sampling
-                await writeChar.WriteAsync(data);
-                //---------------------------gyro section-------
-                data = new byte[] { 0x13, 0x05, 0x01 }; //subscribe to gyro
-                await writeChar.WriteAsync(data);
-
-                data = new byte[] { 0x13, 0x3, 0x29, 0x0 }; //odr 200Hz
-                await writeChar.WriteAsync(data);
-
-                data = new byte[] { 0x13, 0x03, 0x28, 0x03 }; //fsr 250dps
-                await writeChar.WriteAsync(data); //send command
-
-                data = new byte[] { 0x13, 0x01, 0x01 }; //start gyro
-                await writeChar.WriteAsync(data); //send command
-
-                //start the stuff
-                data = new byte[] { 0x13, 0x02, 0x01, 0x00 }; //enable sampling
-                await writeChar.WriteAsync(data);
-                
-                timer.Start();
-                //----------------------------
-                /*await Task.Delay(15000); //wait 15 seconds
-
-                data = new byte[] { 0x14, 0x03, 0x00 };
-                await writeChar.WriteAsync(data);
-
-                led = new byte[] { 2, 2, 0 }; //stop led
-                await writeChar.WriteAsync(led);
-                Console.WriteLine("Light Sensor Recording Complete");*/
- 
-                if (File.Exists(targetFile) && File.Exists(lightFile) && File.Exists(gyroFile))
-                {
-                    outStream = System.IO.File.OpenWrite(targetFile);
-                    streamWriter = new StreamWriter(outStream);
-                    
-                    lightStream = System.IO.File.OpenWrite(lightFile);
-                    lightWriter = new StreamWriter(lightStream);
-                    
-                    gyroStream = System.IO.File.OpenWrite(gyroFile);
-                    gyroWriter = new StreamWriter(gyroStream);
-                    
-                    
-                    streamWriter.WriteLine("Milliseconds,X,Y,Z");
-                    lightWriter.WriteLine("Milliseconds,Lux"); //async overload warning generated, seems fine for now
-                    gyroWriter.WriteLine("Milliseconds,X,Y,Z");
-                    
-                    readChar.ValueUpdated += (s, a) =>
+                    Color col = Color.Green; //green for light sensor to differentiate from accel for now
+                    led = new byte[] //set led pattern
                     {
-                        Console.WriteLine("DATA RECEIVED!");
-                        var bytes = a.Characteristic.Value;
-                        for (int i = 0; i < bytes.Length; i++)
-                        {
-                            Console.WriteLine("Sensor Bytes: " + bytes[i]);
-                        }
-
-                        switch (bytes[0])
-                        {
-                            case 20:
-                                sens = 2;
-                                ConvertMMSData(bytes, lightWriter, timer.ElapsedMilliseconds);
-                                break;
-                            case 3:
-                                sens = 1;
-                                ConvertMMSData(bytes, streamWriter, timer.ElapsedMilliseconds);
-                                break;
-                            case 19:
-                                sens = 3;
-                                ConvertMMSData(bytes, gyroWriter, timer.ElapsedMilliseconds);
-                                break;
-                            default:
-                                Console.WriteLine("Invalid Sensor Use!");
-                                break;
-                        }
+                        2, 3, (byte)col, 2, 1, 1,
+                        1, 1 >> 8,
+                        1, 1 >> 8,
+                        1, 1 >> 8,
+                        1, 1 >> 8,
+                        0, 0, 0xff
                     };
-                    await readChar.StartUpdatesAsync();
-                }
-                else
-                {
-                    Console.Write("File write failed\n");
-                }
+                    await writeChar.WriteAsync(led);
 
-                break;
+                    led = new byte[] { 2, 1, 1 }; //play led
+                    await writeChar.WriteAsync(led);
+
+                    Console.WriteLine("Starting Everything..."); //light sensor code = 20 / 0x14
+
+                    MakeFiles(); //create new csv to write sensor data into
+
+                    Console.WriteLine("Stopwatch good");
+
+                    data = new byte[] { 0x14, 0x02, 0x18, 0x03 };
+                    await writeChar.WriteAsync(data); //gain 48x, lux values should be between 0.02 and 1.3k
+
+                    data = new byte[] { 0x14, 0x02, 0x00, 0x1b }; //Integration time 400ms
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 0x14, 0x02, 0x00, 0x00 }; //Measurement 0 for 50ms, 3 for 500ms
+                    await writeChar.WriteAsync(data);
+
+                    //start
+                    data = new byte[] { 0x14, 0x03, 0x01 }; // 3 for streaming?
+                    await writeChar.WriteAsync(data); //subscribes to notifications?
+
+                    data = new byte[] { 0x14, 0x01, 0x01 }; // start
+                    await writeChar.WriteAsync(data);
+                    //-------------------------
+                    //---------------------accelerometer section--------
+                    data = new byte[] { 3, 4, 1 }; //subscribes to accel reading
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 0x03, 0x03, 0x29, 0x03 }; //configures bmi160 to 200Hz
+                    await writeChar.WriteAsync(data); //bmi270 version dont seem to work right
+
+                    data = new byte[] { 0x03, 0x03, 0x28, 0x0c }; //configures bmi160 to 16 range
+                    await writeChar.WriteAsync(data);
+                    //-----------------------
+                    //start the stuff
+                    data = new byte[] { 3, 1, 1 }; //accel starting
+                    await writeChar.WriteAsync(data); //send command
+
+                    data = new byte[] { 3, 2, 1, 0 }; //accel enable sampling
+                    await writeChar.WriteAsync(data);
+                    //---------------------------gyro section-------
+                    data = new byte[] { 0x13, 0x05, 0x01 }; //subscribe to gyro
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 0x13, 0x3, 0x29, 0x0 }; //odr 200Hz
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 0x13, 0x03, 0x28, 0x03 }; //fsr 250dps
+                    await writeChar.WriteAsync(data); //send command
+
+                    data = new byte[] { 0x13, 0x01, 0x01 }; //start gyro
+                    await writeChar.WriteAsync(data); //send command
+
+                    //start the stuff
+                    data = new byte[] { 0x13, 0x02, 0x01, 0x00 }; //enable sampling
+                    await writeChar.WriteAsync(data);
+
+                    timer.Start();
+                    //----------------------------
+                    /*await Task.Delay(15000); //wait 15 seconds
+
+                    data = new byte[] { 0x14, 0x03, 0x00 };
+                    await writeChar.WriteAsync(data);
+
+                    led = new byte[] { 2, 2, 0 }; //stop led
+                    await writeChar.WriteAsync(led);
+                    Console.WriteLine("Light Sensor Recording Complete");*/
+
+                    if (File.Exists(targetFile) && File.Exists(lightFile) && File.Exists(gyroFile))
+                    {
+                        outStream = System.IO.File.OpenWrite(targetFile);
+                        streamWriter = new StreamWriter(outStream);
+
+                        lightStream = System.IO.File.OpenWrite(lightFile);
+                        lightWriter = new StreamWriter(lightStream);
+
+                        gyroStream = System.IO.File.OpenWrite(gyroFile);
+                        gyroWriter = new StreamWriter(gyroStream);
+
+
+                        streamWriter.WriteLine("Milliseconds,X,Y,Z");
+                        lightWriter.WriteLine(
+                            "Milliseconds,Lux"); //async overload warning generated, seems fine for now
+                        gyroWriter.WriteLine("Milliseconds,X,Y,Z");
+
+                        readChar.ValueUpdated += (s, a) =>
+                        {
+                            Console.WriteLine("DATA RECEIVED!");
+                            var bytes = a.Characteristic.Value;
+                            for (int i = 0; i < bytes.Length; i++)
+                            {
+                                Console.WriteLine("Sensor Bytes: " + bytes[i]);
+                            }
+
+                            switch (bytes[0])
+                            {
+                                case 20:
+                                    sens = 2;
+                                    ConvertMMSData(bytes, lightWriter, timer.ElapsedMilliseconds);
+                                    break;
+                                case 3:
+                                    sens = 1;
+                                    ConvertMMSData(bytes, streamWriter, timer.ElapsedMilliseconds);
+                                    break;
+                                case 19:
+                                    sens = 3;
+                                    ConvertMMSData(bytes, gyroWriter, timer.ElapsedMilliseconds);
+                                    break;
+                                default:
+                                    Console.WriteLine("Invalid Sensor Use!");
+                                    break;
+                            }
+                        };
+                        await readChar.StartUpdatesAsync();
+                    }
+                    else
+                    {
+                        Console.Write("File write failed\n");
+                    }
+
+                    break;
+                }
+                //await Task.Delay(15000); //wait 15 seconds
+                case 0:
+                    await readChar.StopUpdatesAsync();
+                    timer.Stop();
+                    timer.Reset();
+                    data = new byte[] { 0x14, 0x03, 0x00 }; //stop als stream
+                    await writeChar.WriteAsync(data);
+                    data = new byte[] { 0x14, 0x01, 0x00 }; //stop
+                    await writeChar.WriteAsync(data);
+                    //------   
+                    data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 3, 4, 0 }; //unsubscribe
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 3, 1, 0 }; //disable accel simple
+                    await writeChar.WriteAsync(data);
+                    //------------   
+                    data = new byte[] { 0x13, 0x02, 0x00, 0x01 }; //disable sampling
+                    await writeChar.WriteAsync(data);
+
+                    /*data = new byte[] { 19, 4, 0, };
+                    await writeChar.WriteAsync(data);*/
+                    data = new byte[] { 0x13, 0x05, 0x00 }; //unsubscribe gyro
+                    await writeChar.WriteAsync(data);
+
+                    data = new byte[] { 0x13, 0x01, 0x00 }; //stop gyro
+                    await writeChar.WriteAsync(data);
+                    Console.WriteLine("Stopping Everything");
+                    //------------------
+
+                    led = new byte[] { 2, 2, 0 }; //stop led
+                    await writeChar.WriteAsync(led);
+                    Console.WriteLine("Sensor Recording Complete");
+                    streamWriter.Close();
+                    lightWriter.Close();
+                    gyroWriter.Close();
+                    ToGraphs(sender, e);
+                    break;
             }
-            //await Task.Delay(15000); //wait 15 seconds
-            case 0:
-                await readChar.StopUpdatesAsync();
-                timer.Stop();
-                timer.Reset();
-                data = new byte[] { 0x14, 0x03, 0x00 }; //stop als stream
-                await writeChar.WriteAsync(data);
-                data = new byte[] { 0x14, 0x01, 0x00 }; //stop
-                await writeChar.WriteAsync(data);
-                //------   
-                data = new byte[] { 3, 2, 0, 1 }; //disable accel simple
-                await writeChar.WriteAsync(data);
-        
-                data = new byte[] { 3, 4, 0}; //unsubscribe
-                await writeChar.WriteAsync(data);
-        
-                data = new byte[] { 3, 1, 0 }; //disable accel simple
-                await writeChar.WriteAsync(data);
-                //------------   
-                data = new byte[] { 0x13, 0x02, 0x00, 0x01 }; //disable sampling
-                await writeChar.WriteAsync(data);
-        
-                /*data = new byte[] { 19, 4, 0, };
-                await writeChar.WriteAsync(data);*/
-                data = new byte[] { 0x13, 0x05, 0x00 }; //unsubscribe gyro
-                await writeChar.WriteAsync(data);
-        
-                data = new byte[] { 0x13, 0x01, 0x00 }; //stop gyro
-                await writeChar.WriteAsync(data);
-                Console.WriteLine("Stopping Everything");
-                //------------------
-                
-                led = new byte[] { 2, 2, 0 }; //stop led
-                await writeChar.WriteAsync(led);
-                Console.WriteLine("Sensor Recording Complete");
-                streamWriter.Close();
-                lightWriter.Close();
-                gyroWriter.Close();
-                ToGraphs(sender, e);
-                break;
-        }
+        } else await DisplayAlert("Alert", "Connect to the Device", "OK");
 
     }
 

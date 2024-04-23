@@ -25,7 +25,8 @@
             <lvc:CartesianChart Grid.Row="1"
                 x:Name = "Grapho"
                 Series="{Binding Series}"
-                XAxes="{Binding XAxis}">
+                XAxes="{Binding XAxis}"
+                YAxes="{Binding YAxis}">
             </lvc:CartesianChart>
             <!--<Button Grid.Row="1"
                 x:Name="dataBtn"
