@@ -97,6 +97,13 @@
                 SemanticProperties.Hint="Navigates to game page"
                 Clicked="OnGameBtnClicked"
                 HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="logoutBtn" 
+                Text="Logout" 
+                SemanticProperties.Hint="Logs outs" 
+                Clicked="OnLogoutBtnClicked" 
+                HorizontalOptions="Center" />
         
         </VerticalStackLayout>
     </ScrollView>

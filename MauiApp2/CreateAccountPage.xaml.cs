@@ -88,7 +88,7 @@ public partial class CreateAccountPage : ContentPage
             // We want to execute a POST to User/Authorize
             // We will provide a UserIdentification (for now just username and password)
             // We expect back a DualToken POCO
-            APIResponse<DualToken> response = await api.Post<DualToken, UserIdentification>("User/Register", UserID);
+            APIResponse<DualToken> response = await api.Post<DualToken, UserIdentification>("posts/Register", UserID);
             if (response != null)
             {
                 if (response.WasSuccessful)
@@ -107,17 +107,17 @@ public partial class CreateAccountPage : ContentPage
             Console.WriteLine("New Password===" + createPass);
             
             
-            Ball ball1 = new Ball(null)
+            ViewModel.Ball ball1 = new ViewModel.Ball(null)
             {
                 color = "green", comments = "n/a",core = "",cover = "", name = "ball1-1",weight = 10,serial = Guid.NewGuid()
             };
         
-            Ball ball2 = new Ball(null)
+            ViewModel.Ball ball2 = new ViewModel.Ball(null)
             {
                 color = "red", comments = "", core = "", cover = "", name = "ball 2-1", weight = 123, serial = Guid.NewGuid()
             };
         
-            var bowlingBallList = new List<Ball> { ball1, ball2 };
+            var bowlingBallList = new List<ViewModel.Ball> { ball1, ball2 };
             string bowlingBallListString = JsonSerializer.Serialize(bowlingBallList);
             App.UserRepository.Add(new User
             {

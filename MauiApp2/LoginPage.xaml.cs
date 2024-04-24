@@ -102,7 +102,7 @@ public partial class LoginPage : ContentPage
             //Console.WriteLine("logged in maybe");
             Console.WriteLine("API CONNECTION==");
             //Console.WriteLine((await api.Get("Test/TestAuthorize")).StatusCode);
-            HttpStatusCode authentication = (await api.Get("Test/TestAuthorize")).StatusCode;
+            HttpStatusCode authentication = (await api.Get("tests/testtime")).StatusCode;
             if (authentication == HttpStatusCode.OK)
             {
                 Console.WriteLine(authentication);

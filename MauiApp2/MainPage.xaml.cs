@@ -41,11 +41,9 @@ public partial class MainPage : ContentPage
         user = usernm;
         App.UserRepository.GetAllUsers();
         
-        
-        for (int i = 0 /*App.UserRepository.GetAllUsers().Count-1*/; i < App.UserRepository.GetAllUsers().Count; i++)
+        for (int i = /*0*/App.UserRepository.GetAllUsers().Count-1; i < App.UserRepository.GetAllUsers().Count; i++)
         {
-            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin + " ID: " + 
-                              App.UserRepository.GetAllUsers()[i].UserId + " BallList: " + App.UserRepository.GetAllUsers()[i].BallList);
+            Console.WriteLine(App.UserRepository.GetAllUsers()[i].UserName+" - "+ App.UserRepository.GetAllUsers()[i].LastLogin);
             // App.UserRepository.Delete(App.UserRepository.GetAllUsers()[i].UserId);
             UsrDisplay.Text = $"Hello {App.UserRepository.GetAllUsers()[i].UserName}!";
             UsrTime.Text = $"Time of Login: {App.UserRepository.GetAllUsers()[i].LastLogin}";
@@ -96,5 +94,10 @@ public partial class MainPage : ContentPage
     async private void OnGameBtnClicked(object sender, EventArgs e) //navigate to simulator
     {
         await Navigation.PushAsync(new GamePage());
+    }
+
+    async private void OnLogoutBtnClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new LoginPage());
     }
 }
