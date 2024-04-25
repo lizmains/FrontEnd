@@ -56,33 +56,47 @@
                    HorizontalOptions="Center"
                    />
             
-            <Button 
-                x:Name="NextBtn"
-                Text="Get Stats"
-                SemanticProperties.Hint="Navigate to next page when you click"
-                Clicked="OnNextBtnClicked"
-                HorizontalOptions="Center" />
-            <Button 
-                x:Name="SimBtn"
-                Text="View Simulator"
-                SemanticProperties.Hint="Navigate to sim page when you click"
-                Clicked="OnSimBtnClicked"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="bTBtn"
-                Text="Click to Connect to SmartDot"
-                SemanticProperties.Hint="Will activate bluetooth pairing"
-                Clicked="OnBTClicked"
-                HorizontalOptions="Center" />
-
+            <!-- <Button  -->
+            <!--     x:Name="NextBtn" -->
+            <!--     Text="Get Stats" -->
+            <!--     SemanticProperties.Hint="Navigate to next page when you click" -->
+            <!--     Clicked="OnNextBtnClicked" -->
+            <!--     HorizontalOptions="Center" /> -->
+            <!-- <Button  -->
+            <!--     x:Name="SimBtn" -->
+            <!--     Text="View Simulator" -->
+            <!--     SemanticProperties.Hint="Navigate to sim page when you click" -->
+            <!--     Clicked="OnSimBtnClicked" -->
+            <!--     HorizontalOptions="Center" /> -->
+            <!-- -->
+            <!-- <Button -->
+            <!--     x:Name="bTBtn" -->
+            <!--     Text="Click to Connect to SmartDot" -->
+            <!--     SemanticProperties.Hint="Will activate bluetooth pairing" -->
+            <!--     Clicked="OnBTClicked" -->
+            <!--     HorizontalOptions="Center" /> -->
             
             <Button
-                x:Name="FileBtn"
-                Text="UI Page"
-                SemanticProperties.Hint="Navigate to File Picker Screen"
-                Clicked="OnFileBtnClicked"
-                HorizontalOptions="Center" />
+                x:Name="ballBtn"
+                Text="Ball Arsenal"
+                SemanticProperties.Hint="Navigate to Ball Arsenal Page"
+                Clicked="OnBallArsenalBtnClicked"
+                HorizontalOptions="Center"/>
+            
+            <Button
+                x:Name="smartDotBtn"
+                Text="SmartDot"
+                SemanticProperties.Hint="Navigate to SmartDot Page"
+                Clicked="OnSmartDotBtnClicked"
+                HorizontalOptions="Center"/>
+
+            
+            <!-- <Button -->
+            <!--     x:Name="FileBtn" -->
+            <!--     Text="UI Page" -->
+            <!--     SemanticProperties.Hint="Navigate to File Picker Screen" -->
+            <!--     Clicked="OnFileBtnClicked" -->
+            <!--     HorizontalOptions="Center" /> -->
             
             <Button
                 x:Name="vidBtn"
@@ -96,6 +110,13 @@
                 Text="Games"
                 SemanticProperties.Hint="Navigates to game page"
                 Clicked="OnGameBtnClicked"
+                HorizontalOptions="Center" />
+            
+            <Button 
+                x:Name="Notes"
+                Text="Notes"
+                SemanticProperties.Hint="Navigate to notes page when you click"
+                Clicked="OnNotesBtnClicked"
                 HorizontalOptions="Center" />
         
         </VerticalStackLayout>

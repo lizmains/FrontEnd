@@ -66,15 +66,26 @@ public partial class VideoPage : ContentPage
     // found this code at: https://learn.microsoft.com/en-us/dotnet/maui/platform-integration/device-media/picker?tabs=macios#take-a-photo
     public async void TakeVideo()
     {
-        //IN THE WORKS
-        var video = await MediaPicker.CapturePhotoAsync();
-        // var video = await MediaGallery.CapturePhotoAsync();
-        await MediaGallery.SaveAsync(MediaFileType.Image, await video.OpenReadAsync(), "myMedia.png");
-        if (video == null)
-        {
-            await DisplayAlert("Null Video", "Video could not be saved", "OK");
-        }
 
+        try
+        {
+            await Launcher.OpenAsync("camera");
+            //probs isnt camera
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", "Could not open camera app", "OK");
+            Console.WriteLine();
+            throw;
+        }
+        // //IN THE WORKS
+        // var video = await MediaPicker.CapturePhotoAsync();
+        // // var video = await MediaGallery.CapturePhotoAsync();
+        // await MediaGallery.SaveAsync(MediaFileType.Image, await video.OpenReadAsync(), "myMedia.png");
+        // if (video == null)
+        // {
+        //     await DisplayAlert("Null Video", "Video could not be saved", "OK");
+        // }
     }
     
     public async void PickImage()

@@ -2,13 +2,389 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp2.GamePage">
-    <ContentPage.Content>
-        <Button
-            x:Name="NewGameBtn"
-            Text="New Game"
-            SemanticProperties.Hint="Start new game"
-            Clicked="OnNewGameBtnClicked"
-            HorizontalOptions="Center" />
-    </ContentPage.Content>
+             xmlns:mauiApp2="clr-namespace:MauiApp2"
+             x:Class="MauiApp2.GamePage"
+             Title="Game"
+             x:DataType="mauiApp2:BowlingGameViewModel">
+    
+
+    <VerticalStackLayout Padding="5">
+        <!-- <Entry x:Name="pinCountEntry" Placeholder="Enter pin count" Keyboard="Numeric"/> -->
+            
+        <Grid RowDefinitions="30, 220, 200, 200" Margin="10">
+            <!-- <Grid RowDefinitions="5%, 34%, 31%, 30%" Margin="10"> -->
+                <!-- pins -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/> <!-- First column -->
+                        <ColumnDefinition Width="1*"/> <!-- Second column -->
+                        <ColumnDefinition Width="1*"/> <!-- First column -->
+                        <ColumnDefinition Width="1*"/> <!-- Second column -->
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- game and frame numberts -->
+                    <!-- will eventually be {Binding Game n FrameNum} -->
+                    <!-- <Label -->
+                    <!--     x:Name="GameNum" -->
+                    <!--     Text="{Binding gameNum}" -->
+                    <!--     FontSize="15" -->
+                    <!--     Grid.Column="1" -->
+                    <!-- /> -->
+                    <!-- <Label -->
+                    <!--     x:Name="FrameNum" -->
+                    <!--     Text="{Binding frameNum}" -->
+                    <!--     FontSize="15" -->
+                    <!--     Grid.Column="2" -->
+                    <!-- /> -->
+                </Grid>
+                
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/> <!-- 0 row -->
+                        <RowDefinition Height="Auto"/> <!-- 1 row -->
+                        <RowDefinition Height="Auto"/> <!-- 2 row -->
+                        <RowDefinition Height="Auto"/> <!-- 3 row -->
+                        <RowDefinition Height="Auto"/> <!-- 4 row -->
+                        <!-- Add more rows as needed -->
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/> <!-- First column -->
+                        <ColumnDefinition Width="1*"/> <!-- Second column -->
+                        <ColumnDefinition Width="1*"/> <!-- Third column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fourth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fifth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Sixth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Seventh column -->
+                        <ColumnDefinition Width="1*"/> <!-- Eighth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Ninth column -->
+                        <!-- Add more columns as needed -->
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Top row?\ -->
+                    <Button
+                        x:Name="P7"
+                        Text="7"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="7"/>
+                    <Button
+                        x:Name="P8"
+                        Text="8"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="8"/>
+                    <Button
+                        x:Name="P9"
+                        Text="9"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="1"
+                        Grid.Column="5"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="9"/>
+                    <Button
+                        x:Name="P10"
+                        Text="10"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="1"
+                        Grid.Column="7"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="10"/>
+                    
+                    <!-- Second row -->
+                    <Button
+                        x:Name="P4"
+                        Text="4"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="4"/>
+                    <Button
+                        x:Name="P5"
+                        Text="5"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="5"/>
+                    <Button
+                        x:Name="P6"
+                        Text="6"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="2"
+                        Grid.Column="6"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="6"/>
+                    
+                    <!-- Third row -->
+                    <Button
+                        x:Name="P2"
+                        Text="2"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="3"
+                        Grid.Column="3"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="2"/>
+                    <Button
+                        x:Name="P3"
+                        Text="3"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="3"
+                        Grid.Column="5"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="3"/>
+                    
+                    <!-- Fourth row -->
+                    <Button
+                        x:Name="P1"
+                        Text="1"
+                        WidthRequest = "60"
+                        HeightRequest = "60"
+                        CornerRadius = "30"
+                        BackgroundColor="DarkOrchid"
+                        Grid.Row="4"
+                        Grid.Column="4"
+                        Command="{Binding pinButtonCommand}"
+                        CommandParameter="1"/>
+                </Grid>
+                
+                
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/> <!-- First row -->
+                        <RowDefinition Height="1*"/> <!-- Second row -->
+                        <RowDefinition Height="1*"/> <!-- Third row -->
+                        <RowDefinition Height="1*"/> <!-- Fourth row -->
+                        <RowDefinition Height="1*"/> <!-- Fourth row -->
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/> <!-- First column -->
+                        <ColumnDefinition Width="1*"/> <!-- Second column -->
+                        <ColumnDefinition Width="1*"/> <!-- Third column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fourth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Fifth column -->
+                        <ColumnDefinition Width="1*"/> <!-- Sixth column -->
+                        <!-- Add more columns as needed -->
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Score display -->
+                    <Label
+                        x:Name="FrameP1"
+                        Text="X"
+                        FontSize="32"
+                        Grid.Row="1"
+                        Grid.Column="2"/>
+                    <!-- will eventually be {Binding scoreNum} -->
+                    <Label
+                        x:Name="FrameP2"
+                        Text="X"
+                        FontSize="32"
+                        Grid.Row="1"
+                        Grid.Column="3"/>
+                    
+                    <!-- Quick buttons -->
+                    <Button
+                        x:Name="Foul"
+                        Text="F"
+                        Padding="5"
+                        Grid.Row="2"
+                        Grid.Column="1"/>
+                    <Button
+                        x:Name="Gutterball"
+                        Text="-"
+                        Padding="5"
+                        Grid.Row="2"
+                        Grid.Column="2"/>
+                    <Button
+                        x:Name="Strike"
+                        Text="X"
+                        Grid.Row="2"
+                        Grid.Column="3"/>
+                    <Button
+                        x:Name="Spare"
+                        Text="/"
+                        Grid.Row="2"
+                        Grid.Column="4"/>
+                </Grid>
+            
+            
+            <Grid Grid.Row="3" Margin="10, -20, 10, -10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/> <!-- First row -->
+                    <RowDefinition Height="1*"/> <!-- Second row -->
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <!-- <Frame BackgroundColor="LightGray" Grid.Row="0" > -->
+                <!--                <Editor x:Name="Notes" -->
+                <!--                       Placeholder="Notes" -->
+                <!--                       HeightRequest="60"/> -->
+                <!-- </Frame> -->
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" >
+                    <StackLayout>
+                       <Label x:Name="F1"
+                              Text="{Binding Frames[0].firstRoll}"
+                              FontSize="10"/>
+                       <Label x:Name="F12"
+                              Text="{Binding Frames[0].secondRoll}"
+                              FontSize="10"/>
+                       <Label x:Name="score1"
+                              Text="{Binding Frames[0].frameScore}"
+                              FontSize="10"/>
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" >
+                    <StackLayout>
+                        <Label x:Name="F2"
+                               Text="{Binding Frames[1].firstRoll}"/>
+                        <Label x:Name="F22"
+                               Text="{Binding Frames[1].secondRoll}"/>
+                        <Label x:Name="score2"
+                               Text="{Binding Frames[1].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="3" >
+                    <StackLayout>
+                        <Label x:Name="F3"
+                               Text="{Binding game.Frames[2].firstRoll}"/>
+                        <Label x:Name="F32"
+                               Text="{Binding game.Frames[2].secondRoll}"/>
+                        <Label x:Name="score3"
+                               Text="{Binding game.Frames[2].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="4" >
+                    <StackLayout>
+                        <Label x:Name="F4"
+                               Text="{Binding game.Frames[3].firstRoll}"/>
+                        <Label x:Name="F42"
+                               Text="{Binding game.Frames[3].secondRoll}"/>
+                        <Label x:Name="score4"
+                               Text="{Binding game.Frames[3].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="0" Grid.Column="5" >
+                    <StackLayout>
+                        <Label x:Name="F5"
+                               Text="{Binding game.Frames[4].firstRoll}"/>
+                        <Label x:Name="F52"
+                               Text="{Binding game.Frames[4].secondRoll}"/>
+                        <Label x:Name="score5"
+                               Text="{Binding game.Frames[4].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" >
+                    <StackLayout>
+                        <Label x:Name="F6"
+                               Text="{Binding game.Frames[5].firstRoll}"/>
+                        <Label x:Name="F62"
+                               Text="{Binding game.Frames[5].secondRoll}"/>
+                        <Label x:Name="score6"
+                               Text="{Binding game.Frames[5].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" >
+                    <StackLayout>
+                        <Label x:Name="F7"
+                               Text="{Binding game.Frames[6].firstRoll}"/>
+                        <Label x:Name="F72"
+                               Text="{Binding game.Frames[6].secondRoll}"/>
+                        <Label x:Name="score7"
+                               Text="{Binding game.Frames[6].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="3" >
+                    <StackLayout>
+                        <Label x:Name="F8"
+                               Text="{Binding game.Frames[7].firstRoll}"/>
+                        <Label x:Name="F82"
+                               Text="{Binding game.Frames[7].secondRoll}"/>
+                        <Label x:Name="score8"
+                               Text="{Binding game.Frames[7].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="4" >
+                    <StackLayout>
+                        <Label x:Name="F9"
+                               Text="{Binding game.Frames[8].firstRoll}"/>
+                        <Label x:Name="F92"
+                               Text="{Binding game.Frames[8].secondRoll}"/>
+                        <Label x:Name="score9"
+                               Text="{Binding game.Frames[8].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="LightGray" Grid.Row="1" Grid.Column="5" >
+                    <StackLayout>
+                        <Label x:Name="F10"
+                               Text="{Binding game.Frames[9].firstRoll}"/>
+                        <Label x:Name="F102"
+                               Text="{Binding game.Frames[9].secondRoll}"/>
+                        <Label x:Name="score10"
+                               Text="{Binding game.Frames[9].frameScore}"/> 
+                    </StackLayout>
+                </Frame>
+                
+                
+                <Button
+                    x:Name="PrevFrame"
+                    Text="B"
+                    Clicked="OnPrevFrameBtnClicked"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HeightRequest="35"/>
+                
+                <Button
+                    x:Name="NextFrame"
+                    Text="->"
+                    FontSize="20"
+                    Clicked="OnNextFrameBtnClicked"
+                    Command="{Binding nextShotCommand}"
+                    Grid.Row="2"
+                    Grid.Column="5"
+                    HeightRequest="35"/>
+            </Grid>
+        </Grid>
+            
+        </VerticalStackLayout>
 </ContentPage>

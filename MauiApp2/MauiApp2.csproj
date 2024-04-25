@@ -75,6 +75,15 @@
 	  <MauiXaml Update="FilePage.xaml">
 	    <SubType>Designer</SubType>
 	  </MauiXaml>
+	  <MauiXaml Update="NotePage.xaml">
+	    <SubType>Designer</SubType>
+	  </MauiXaml>
+	  <MauiXaml Update="NewNote.xaml">
+	    <SubType>Designer</SubType>
+	  </MauiXaml>
+	  <MauiXaml Update="NewSmartDot.xaml">
+	    <SubType>Designer</SubType>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -85,6 +94,18 @@
 		<PackageReference Include="Shiny.BluetoothLE" Version="3.0.1" />
 		<PackageReference Include="Shiny.BluetoothLE.Common" Version="3.0.1" />
 		<PackageReference Include="Shiny.Hosting.Maui" Version="3.0.1" />
+		<Compile Update="NotePage.xaml.cs">
+		  <DependentUpon>NotePage.xaml</DependentUpon>
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="NewNote.xaml.cs">
+		  <DependentUpon>NewNote.xaml</DependentUpon>
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="NewSmartDot.xaml.cs">
+		  <DependentUpon>NewSmartDot.xaml</DependentUpon>
+		  <SubType>Code</SubType>
+		</Compile>
         
 	</ItemGroup>
 
