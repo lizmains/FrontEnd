@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.SimPage"
              Title="Sim Page">
+    <ScrollView>
     <VerticalStackLayout
         VerticalOptions="Center">
         <!--<Button 
@@ -31,12 +32,12 @@
                HorizontalOptions="Center"
         />-->
         
-        <Button 
+        <!--<Button 
             x:Name="ScanBtn"
             Text="Scan"
             SemanticProperties.Hint="Navigate to main page when you click"
             Clicked="ScanClicked"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" />-->
 
         <!--<Entry x:Name="weight"
                Placeholder="Enter Ball Weight"
@@ -44,34 +45,46 @@
                Completed="OnDevEnter"
         />--> <!-- Keyboard="Numeric" Displays numeric keyboard on mobile app-->
         
-        <Button 
+       <!-- <Button 
             x:Name="ConnectBtn"
             Text="Connect"
             SemanticProperties.Hint="Connect To Sim Laptop"
             Clicked="OnDevEnter"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" />-->
         <Button 
             x:Name="ConnectPi"
             Text="Connect to Sim"
             SemanticProperties.Hint="Connect To Sim Pi"
             Clicked="OnPiConnect"
             HorizontalOptions="Center" />
-        <Button 
+        <!--<Button 
             x:Name="ServBtn"
             Text="Read From Sim"
             SemanticProperties.Hint="Displays device info in console"
             Clicked="getServices"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" />-->
         <Button 
             x:Name="ReadBtn"
             Text="Read Data"
             SemanticProperties.Hint="Displays Sim Values"
             Clicked="ReadSim"
             HorizontalOptions="Center" />
+        <Label 
+            x:Name="texto"
+            Text=" "
+            FontSize="24"
+            HorizontalOptions="Center">
+        </Label>
         <Label
             x:Name="ReadInfo"
             Text="{Binding info}"
             HorizontalOptions="Center"></Label>
+        <Label 
+            x:Name="blank"
+            Text=" "
+            FontSize="36"
+            HorizontalOptions="Center">
+        </Label>
         <Entry x:Name="WriteData"
                Placeholder="Write text to sim"
                TextChanged="OnWriteChanged"
@@ -83,16 +96,18 @@
             SemanticProperties.Hint="Writes to sim"
             Clicked="WriteToSim"
             HorizontalOptions="Center" />
-        <Button 
+        <!--<Button 
             x:Name="NotifySim"
             Text="Listen to Sim"
             SemanticProperties.Hint="Starts/stops listening to sim"
             Clicked="listen"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" />-->
+        
         
         <Label
             x:Name="DevInfo"
             Text="{Binding names}"
+            FontSize="18"
             HorizontalOptions="Center"></Label>
         
         <Button 
@@ -108,4 +123,5 @@
             Clicked="OnHomeBtnClicked"
             HorizontalOptions="Center" />
     </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

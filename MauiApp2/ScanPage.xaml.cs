@@ -16,6 +16,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Abstractions.Extensions;
 using System.Windows.Input;
+//using Android;
 //using Android.OS.Strictmode;
 using CommunityToolkit.Maui.Converters;
 using MbientLab.MetaWear;
@@ -37,6 +38,7 @@ using DRg = MbientLab.MetaWear.Sensor.GyroBmi160.DataRange;
 using FM = MbientLab.MetaWear.Sensor.GyroBmi160.FilterMode;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using Microsoft.Maui.ApplicationModel;
 
 
 //using Color = System.Drawing.Color;
@@ -144,12 +146,11 @@ public partial class ScanPage : ContentPage
     private void LoadData(object sender, EventArgs e) //updates collectionView to reflect deviceList
     {                       //For UI to update properly, collection bound to view is separate from working list
         devDisplay.Clear(); //called directly by button
-        for (int i=0; i<10; i++)
+        int j;
+        j = deviceList.Count >= 10 ? 10 : deviceList.Count;
+        for (int i=0; i<j; i++)
         {
-            if (deviceList.Count >= 10)
-            {
-                devDisplay.Add(deviceList[i]);
-            }
+            devDisplay.Add(deviceList[i]);
         }
         DevsList.ItemsSource = devDisplay;
     }
@@ -171,18 +172,46 @@ public partial class ScanPage : ContentPage
     
     async void ScanClicked(object sender, EventArgs e)
     {
+        #if ANDROID
+                var enable = new Android.Content.Intent(Android.Bluetooth.BluetoothAdapter.ActionRequestEnable);
+                enable.SetFlags(Android.Content.ActivityFlags.NewTask);
+
+                var disable = new Android.Content.Intent(Android.Bluetooth.BluetoothAdapter.ActionRequestDiscoverable);
+                disable.SetFlags(Android.Content.ActivityFlags.NewTask);
+
+                var bluetoothManager = (Android.Bluetooth.BluetoothManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.BluetoothService);
+                var bluetoothAdapter = bluetoothManager.Adapter;
+
+                if (bluetoothAdapter.IsEnabled)
+                {
+                    Android.App.Application.Context.StartActivity(disable);
+                    // Disable the Bluetooth;
+                }
+                else
+                {
+                    // Enable the Bluetooth
+                    Android.App.Application.Context.StartActivity(enable);
+                }
+
+                var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                if (status == PermissionStatus.Granted)
+                {
+                    DisplayAlert("Alert", "Good", "OK"); 
+                }
+        
+        #endif
         try
         {
-            //deviceList.Clear();
-            ScanBtn.Text = "Scanning...";
-            adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
-            //LoadData();
-            if (!ble.Adapter.IsScanning)
-            {
-                Console.WriteLine("Scanning...");
-                await adapter.StartScanningForDevicesAsync();
-            }
-            //scans for devices and adds discovered devices to device list
+              ScanBtn.Text = "Scanning...";
+              adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
+              //LoadData();
+              if (!ble.Adapter.IsScanning)
+              {
+                  Console.WriteLine("Scanning...");
+                  await adapter.StartScanningForDevicesAsync();
+              }
+              //scans for devices and adds discovered devices to device list  
+            
         }
         catch (Exception ex)
         {
@@ -569,6 +598,7 @@ public partial class ScanPage : ContentPage
             await adapter.DisconnectDeviceAsync(device); 
             Console.WriteLine("Disconnected from " + device.Name);
             device = null;
+            ConDev.Text = "";
         } else Console.WriteLine("No device connected");
         
     }

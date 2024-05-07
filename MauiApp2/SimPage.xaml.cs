@@ -102,7 +102,7 @@ public partial class SimPage : ContentPage
         try
         {
             //deviceList.Clear();
-            ScanBtn.Text = "Scanning...";
+            //ScanBtn.Text = "Scanning...";
             adapter.DeviceDiscovered += (s,a) => deviceList.Add(a.Device);
             //LoadData();
             if (!ble.Adapter.IsScanning)
@@ -214,14 +214,18 @@ public partial class SimPage : ContentPage
     {
         //for (int j = 0; j < 5; j++)
         //{
+        texto.Text = "Sim Data";
            await readChar.ReadAsync();
            Console.WriteLine("Reading sim data...");
            for (int i = 0; i < readChar.Value.Length; i++)
            {
                Console.WriteLine("Byte " + i + ": " + readChar.Value[i]);
            }
-           
-           ReadInfo.Text += "Sim Data: \n"+readChar.StringValue+"\n"; 
+
+           if (readChar.StringValue != null)
+           {
+             ReadInfo.Text = readChar.StringValue+"\n";   
+           }
        // }
         
     }

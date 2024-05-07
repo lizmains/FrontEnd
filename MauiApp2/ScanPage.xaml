@@ -5,9 +5,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MauiApp2;assembly=MauiApp2"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui">
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <local:graphingVM/>
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     <ContentPage.Content>
     <!--<RefreshView x:Name="RefView" IsRefreshing="{Binding refsh}" Command="{Binding StopRef}">-->
         <ScrollView>
@@ -162,10 +162,10 @@
                                              Margin="0,0,10,0"/>
                             
                                     <Label Grid.Column="1" TextColor="White"
-                                           Text=""
+                                           Text="{Binding Name}"
                                     />
                                     <Label Grid.Column="2" TextColor="White"
-                                           Text=""
+                                           Text="{Binding Id}"
                                     />
                                 </Grid>
                             </Frame>
